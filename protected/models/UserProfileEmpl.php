@@ -403,11 +403,45 @@ class UserProfileEmpl extends UserProfile
         $data['cities_names'][] = $v['name'];
       }
 
+      $data['vacs'] = (new Vacancy())->getEmpVacanciesList('active');
+
+      $res = Yii::app()->db->
+        createCommand("
+          SELECT 
+          ra.id_vac, 
+          ra.id_userf idus, 
+          ra.id_point, 
+          DATE_FORMAT(ra.crdate, '%d.%m.%Y %H:%i:%s') crdate, 
+          ra.point, 
+          CONCAT(r.firstname, ' ', r.lastname) fio,
+          r.photo
+        FROM rating_details ra
+        INNER JOIN (
+        SELECT DISTINCT 
+            ra.id_userf
+          FROM 
+            rating_details ra
+          INNER JOIN 
+            resume r ON r.id_user = ra.id_userf
+          WHERE ra.id_user = {$this->id}
+          LIMIT 0, 20
+         ) t1 ON t1.id_userf = ra.id_userf
+         INNER JOIN 
+          resume r 
+          ON 
+            r.id_user = ra.id_userf
+         WHERE 
+          ra.id_user = {$this->id}
+      ")->queryAll();
+
+        $data['rateByUser'] = [];
+        foreach ($res as $key => $val)
+        {
+            $data['rateByUser'][$val['id_vac']][$val['id_point']] = $val;
+        }
+
       return $data;
     }
-
-
-
 
     /**
      * Получаем данные профиля для API

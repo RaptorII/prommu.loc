@@ -90,7 +90,7 @@
 }
 
 .personal__area--button {
-    margin-bottom: 20px;
+    margin: 25px 0;
     text-align: right;
 }
 
@@ -121,6 +121,8 @@
 .upp__title {
     font-size: 20px;
     font-weight: 700;
+    position: absolute;
+    top: 0;
 }
 
 .upp__star-block {
@@ -138,10 +140,9 @@
 .upp__info {
     transition: var(--main-trans);
     position: relative;
-    /*right: 0;*/
-    /*text-align: right;*/
     width: 30px;
     height: 30px;
+    color: var(--color-green);
 }
 .upp__info i{
     opacity: 0.5;
@@ -248,7 +249,33 @@ capacity blocks
     font-weight: 700;
 }
 
+.personal__area--capacity-edit {
+    float: right;
+}
+.personal__area--capacity-edit:before {
+    position: absolute;
+    font-family: "PrommuFont";
+    content: '\e94b';
+    font-size: 30px;
+    top: 5px;
+    right: 10px;
+}
 
+.personal__area--capacity-edit:hover {
+
+}
+
+.ppe__checkbox.active {
+    padding: 20px 0;
+}
+
+.ppe__checkbox.active:before {
+    font-family: "PrommuFont";
+    content: "\e9bd";
+    font-size: 20px;
+    position: relative;
+    top: 3px;
+}
 
 .upp__project-vacancy {
     display: block;
@@ -272,12 +299,16 @@ capacity blocks
     border-top: 1px solid var(--color-green);
 }
 
+.upp__project-item-responded,
 .upp__project-item-messages {
     position: absolute;
     right: 0;
     bottom: 0;
     padding: 0 5px;
     border: 1px solid var(--color-green);
+}
+.upp__project-item-responded {
+    right: 15px;
 }
 
 /*
@@ -297,6 +328,79 @@ try google material design
 .group {
     position: relative;
     margin-bottom: 5px;
+}
+
+.group__point {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    position: relative;
+}
+
+/*
+.group__point:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 0;
+    top: 0;
+}
+*/
+
+.group__point.p0 {
+    background: var(--color-grey);
+}
+
+.group__point.p0:before {
+    content: '\e9be';
+    font-family: "PrommuFont";
+    display: block;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 2px;
+    top: 1px;
+    font-size: 10px;
+    color: var(--color-white);
+}
+
+.group__point.p1 {
+    background: var(--color-green);
+}
+
+.group__point.p1:before {
+    content: '\e93e';
+    font-family: "PrommuFont";
+    display: block;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 2px;
+    top: 1px;
+    font-size: 10px;
+    color: var(--color-white);
+}
+
+.group__point.p-1 {
+    background: var(--color-red);
+}
+
+.group__point.p-1:before {
+    content: '-';
+    display: block;
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 3px;
+    top: -14.5px;
+    font-size: 30px;
+    color: var(--color-white);
+}
+
+.group__wrap {
+    float: right;
 }
 
 #DiContent .group__about {

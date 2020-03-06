@@ -33,6 +33,22 @@ endif;
 //
 //
 //
+
+$arUser = $viData['userInfo'];
+$cntComments = $viData['lastComments']['count'][0] + $viData['lastComments']['count'][1];
+$allVacs = count($viData['vacs']['active']) + count($viData['vacs']['archive']);
+
+
+//display($arUser);
+//display($cntComments);
+//display($isActiveVacs);
+//display($viData['vacs']);
+//display($viData);
+//display($viData['lastComments']);
+
+//display(Share::$UserProfile);
+
+
 ?>
 <meta name="robots" content="noindex,nofollow">
 <?
@@ -40,6 +56,8 @@ $id = $viData['userInfo']['id_user'];
 //Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
 Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-personal-area.css');
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
+
+
 
 if(!in_array(Share::$UserProfile->type, [2,3])): ?>
 <?
@@ -594,11 +612,13 @@ $this->pageTitle = $title;
                             <span class="upp__subtitle">Вакансии:</span>
                             <div class="upp__subtitle">
 
-                                <span class=" js-g-hashint" title="Опубликовано вакансий"><?=$viData['lastJobs']['count']?></span>
+                                <span class=" js-g-hashint" title="Опубликовано вакансий"><?=$allVacs?></span> (
+                                <span class="-green js-g-hashint" title="Активных вакансий"><?=count($viData['vacs']['active'])?></span> /
+                                <span class="-red js-g-hashint" title="Архивных вакансий"><?=count($viData['vacs']['archive'])?></span> )
 
-                                <span class="upp__info">
+                                <!--<span class="upp__info">
                                     <i class="icn-info-three"></i>
-                                </span>
+                                </span>-->
                             </div>
                         </div>
                     </div>
@@ -607,10 +627,16 @@ $this->pageTitle = $title;
                         <div class="upp__rating-block">
                             <span class="upp__subtitle">Отзывы:</span>
                             <div class="upp__subtitle">
-                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
-                                <span class="upp__info">
+
+                                <? if($cntComments):?>
+                                    Вывести отзывы
+                                <? else: ?>
+                                    <span class="upp__subtitle">Отзывы отсутствуют</span>
+                                <? endif;?>
+
+                              <!--  <span class="upp__info">
                                     <i class="icn-info-three"></i>
-                                </span>
+                                </span>-->
                             </div>
                         </div>
                     </div>
@@ -619,10 +645,18 @@ $this->pageTitle = $title;
                         <div class="upp__rating-block">
                             <span class="upp__subtitle">Оценки:</span>
                             <div class="upp__subtitle">
-                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
+
+                                <span class="js-g-hashint" title="Всего оценок">
+                                <?
+                                     echo count($viData['rateByUser']);
+                                ?>
+                                </span>
+
+                                <!--
                                 <span class="upp__info">
                                     <i class="icn-info-three"></i>
                                 </span>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -768,6 +802,11 @@ $this->pageTitle = $title;
                             Основная информация
                         </div>
 
+                        <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                           class="personal__area--capacity-edit js-g-hashint"
+                           title="Редактировать профиль">
+                        </a>
+
                         <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
                             <div class="group__about">Название компании</div>
                             <div class="group__info"><?=$viData['userInfo']['name']?></div>
@@ -810,17 +849,28 @@ $this->pageTitle = $title;
                         <div class="personal__area--capacity-name">
                             Оценки
                         </div>
-                        <div class="personal__area--capacity-data">
+                       <!-- <div class="personal__area--capacity-data">
                             Some Data
-                        </div>
+                        </div>-->
                         <div class="group">
-                            тут инфо про оценки
+
+                            <?php foreach ($viData['rateByUser'] as $key => $val): ?>
+                                <? $arItem = reset($val); ?>
+                                <?= $arItem['fio']; ?>
+                                <div class="group__wrap">
+                                    <?php foreach ($val as $k => $item): ?>
+                                        <span
+                                            class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
+                                            title="Оценка
+                                                <?= $viData['rating']['rateNames'][$k] ?>
+                                                <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
+                                        ">
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endforeach; ?>
+
                         </div>
-                        <!--                        -->
-
-
-                        <!--                        -->
-
                         <div class="personal__area--button">
                             <a href="/rate" class="btn__orange">
                                 Подробнее...
@@ -843,7 +893,6 @@ $this->pageTitle = $title;
                             <?
                             //      COMMENTS
                             ?>
-                            <? if($isActiveVacs): ?>
                                 <? if($cntComments):?>
                                     <span class="upp__subtitle">Отзывы</span>
                                     <hr class="upp__line">
@@ -856,7 +905,6 @@ $this->pageTitle = $title;
                                 <? else: ?>
                                     <span class="upp__subtitle">Отзывы отсутствуют</span>
                                 <? endif;?>
-                            <? endif;?>
                         </div>
                         <div class="personal__area--button">
                             <a href="/rate" class="btn__orange">
@@ -877,6 +925,12 @@ $this->pageTitle = $title;
                         <div class="personal__area--capacity-name">
                             Контактная информация
                         </div>
+
+                        <a
+                           href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                           class="personal__area--capacity-edit js-g-hashint"
+                           title="Редактировать профиль">
+                        </a>
 
                         <?php if($flagOwnProfile): // инфа для владельца ?>
 
@@ -994,17 +1048,16 @@ $this->pageTitle = $title;
             </div>
 
             <div class="col-xs-12 col-sm-4">
-<!--                <div class="personal__area">-->
                     <div class="personal__area--capacity personal__area--capacity-height">
                         <div class="personal__area--capacity-name">
                             Опубликованные вакансии
                         </div>
 
-                        <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
+                        <?php if(sizeof($viData['vacs']['active'])>0): ?>
                             <div class="personal__area--capacity-data">
-                                <?=$viData['lastJobs']['count']?>
+                                <?=count($viData['vacs']['active'])?>
                             </div>
-                            <?php foreach ($viData['lastJobs']['jobs'] as $vacancy): ?>
+                            <?php foreach ($viData['vacs']['items'] as $vacancy): ?>
                                 <div class='upp__project-item'>
                                     <div class="upp__project-info">
                                         <a class='upp__project-vacancy'
@@ -1013,31 +1066,42 @@ $this->pageTitle = $title;
                                         </a>
                                         <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
                                     </div>
-                                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>"
-                                       class="upp__project-item-messages js-g-hashint" title="Обратная связь"
-                                       >
-                                        <?=$vacancy['discuss_cnt']?>
-                                    </a>
+
+                                    <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
+                                        <?php foreach ($viData['lastJobs']['jobs'] as $vacancy): ?>
+                                                <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>"
+                                                   class="upp__project-item-messages js-g-hashint" title="Обратная связь" >
+                                                    <?=$vacancy['discuss_cnt']?></a>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+
+                                    <span class="upp__project-item-responded js-g-hashint" title="Откликнулись"
+                                    >
+                                        <?=$vacancy['responded']?>
+                                    </span>
                                 </div>
                             <?php endforeach; ?>
                         <?php
                             else:
                         ?>
-                            Нет опубликованных вакансий.
+                            Нет активных вакансий.
                         <?
                             endif;
                         ?>
 
 
                     </div>
-<!--                </div>-->
             </div>
 
         </div>
 <!--    </div>-->
 <!--</div>-->
 <?
-//display($viData);
+/*display($arUser);
+display($cntComments);
+display($isActiveVacs);
+display($viData);*/
+
 ?>
 
 <!--<div class="form__field-hint tooltip tooltipstered"></div>-->

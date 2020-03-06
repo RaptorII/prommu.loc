@@ -5,6 +5,8 @@
 	$arUser = $viData['user']['userInfo'];
 	$cntComments = $viData['user']['lastComments']['count'][0] + $viData['user']['lastComments']['count'][1];
 	$isActiveVacs = strpos(Yii::app()->request->requestUri, DS . MainConfig::$PAGE_VACANCIES)!==false;
+
+	display($viData);
 ?>
 <div class='row employer-vacansies-list'>
 	<div class="col-xs-12">
