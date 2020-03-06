@@ -1051,17 +1051,22 @@ $this->pageTitle = $title;
                                     </div>
 
                                     <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
-                                        <?php foreach ($viData['lastJobs']['jobs'] as $vacancy): ?>
-                                                <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>"
+                                        <?php foreach ($viData['lastJobs']['jobs'] as $vac):
+                                            if ($vac['id']== $vacancy['id']):
+                                            ?>
+                                                <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vac['id'] ?>"
                                                    class="upp__project-item-messages js-g-hashint" title="Обратная связь" >
-                                                    <?=$vacancy['discuss_cnt']?></a>
-                                        <?php endforeach; ?>
+                                                    <?=$vac['discuss_cnt']?></a>
+                                            <?php
+                                            endif;
+                                            endforeach; ?>
                                     <?php endif; ?>
 
-                                    <span class="upp__project-item-responded js-g-hashint" title="Откликнулись"
-                                    >
+                                    <? if ($vacancy['responded']): ?>
+                                    <span class="upp__project-item-responded js-g-hashint" title="Откликнулись">
                                         <?=$vacancy['responded']?>
                                     </span>
+                                    <? endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php
