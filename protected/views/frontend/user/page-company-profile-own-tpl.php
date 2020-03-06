@@ -38,17 +38,6 @@ $arUser = $viData['userInfo'];
 $cntComments = $viData['lastComments']['count'][0] + $viData['lastComments']['count'][1];
 $allVacs = count($viData['vacs']['active']) + count($viData['vacs']['archive']);
 
-
-//display($arUser);
-//display($cntComments);
-//display($isActiveVacs);
-//display($viData['vacs']);
-//display($viData);
-//display($viData['lastComments']);
-
-//display(Share::$UserProfile);
-
-
 ?>
 <meta name="robots" content="noindex,nofollow">
 <?
@@ -785,266 +774,260 @@ $this->pageTitle = $title;
 
         <div class="row personal__area personal__area-flex">
             <div class="col-xs-12 col-sm-4">
-<!--                <div class="personal__area">-->
+                <?
+                // main info
 
-                    <?
-                    // main info
+                $allInfo = $viData['userAllInfo']['emplInfo'];
+                $allAttr = $viData['userAllInfo']['userAttribs'];
+                $isBlocked = Share::$UserProfile->exInfo->isblocked==3;
 
-                    $allInfo = $viData['userAllInfo']['emplInfo'];
-                    $allAttr = $viData['userAllInfo']['userAttribs'];
-                    $isBlocked = Share::$UserProfile->exInfo->isblocked==3;
+                $id = $this->ViewModel->isInArray($viData['userAllInfo']['cotype'], 'id', $allInfo['type']);
 
-                    $id = $this->ViewModel->isInArray($viData['userAllInfo']['cotype'], 'id', $allInfo['type']);
+                ?>
+                <div class="personal__area--capacity">
+                    <div class="personal__area--capacity-name">
+                        Основная информация
+                    </div>
 
-                    ?>
-                    <div class="personal__area--capacity">
-                        <div class="personal__area--capacity-name">
-                            Основная информация
-                        </div>
+                    <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                       class="personal__area--capacity-edit js-g-hashint"
+                       title="Редактировать профиль">
+                    </a>
 
-                        <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-                           class="personal__area--capacity-edit js-g-hashint"
-                           title="Редактировать профиль">
+                    <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
+                        <div class="group__about">Название компании</div>
+                        <div class="group__info"><?=$viData['userInfo']['name']?></div>
+                    </div>
+
+                    <?php if($id>=0): ?>
+                    <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
+                        <div class="group__about">Тип компании</div>
+                        <div class="group__info"><?=$viData['userAllInfo']['cotype'][$id]['name']?></div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="group ppe__field<?=($isBlocked && !count($viData['cities_names']) ?' error':'')?>">
+                        <div class="group__about">Город</div>
+                        <div class="group__info"><?=implode(', ', $viData['cities_names']);?></div>
+                    </div>
+
+                    <?php if(strlen($allAttr[99]['val'])>0): ?>
+                    <div class="group">
+                        <div class="group__about">Сайт компании</div>
+                        <div class="group__info"><?=$allAttr[99]['val']?></div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if(strlen($allInfo['aboutme'])): ?>
+                    <div class="group">
+                        <div class="group__about">О компании</div>
+                        <div class="group__info"><?=$allInfo['aboutme']?></div>
+                    </div>
+                    <?php endif; ?>
+
+                    <br />
+
+                </div>
+
+                <?
+                // grades
+                ?>
+                <div class="personal__area--capacity">
+                    <div class="personal__area--capacity-name">
+                        Оценки
+                    </div>
+                   <!-- <div class="personal__area--capacity-data">
+                        Some Data
+                    </div>-->
+                    <div class="group">
+
+                        <?php foreach ($viData['rateByUser'] as $key => $val): ?>
+                            <? $arItem = reset($val); ?>
+                            <?= $arItem['fio']; ?>
+                            <div class="group__wrap">
+                                <?php foreach ($val as $k => $item): ?>
+                                    <span
+                                        class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
+                                        title="Оценка
+                                            <?= $viData['rating']['rateNames'][$k] ?>
+                                            <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
+                                    ">
+                                    </span>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
+
+                    </div>
+                    <div class="personal__area--button">
+                        <a href="/rate" class="btn__orange">
+                            Подробнее...
                         </a>
 
-                        <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
-                            <div class="group__about">Название компании</div>
-                            <div class="group__info"><?=$viData['userInfo']['name']?></div>
-                        </div>
-
-                        <?php if($id>=0): ?>
-                        <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
-                            <div class="group__about">Тип компании</div>
-                            <div class="group__info"><?=$viData['userAllInfo']['cotype'][$id]['name']?></div>
-                        </div>
-                        <?php endif; ?>
-
-                        <div class="group ppe__field<?=($isBlocked && !count($viData['cities_names']) ?' error':'')?>">
-                            <div class="group__about">Город</div>
-                            <div class="group__info"><?=implode(', ', $viData['cities_names']);?></div>
-                        </div>
-
-                        <?php if(strlen($allAttr[99]['val'])>0): ?>
-                        <div class="group">
-                            <div class="group__about">Сайт компании</div>
-                            <div class="group__info"><?=$allAttr[99]['val']?></div>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if(strlen($allInfo['aboutme'])): ?>
-                        <div class="group">
-                            <div class="group__about">О компании</div>
-                            <div class="group__info"><?=$allInfo['aboutme']?></div>
-                        </div>
-                        <?php endif; ?>
-
-                        <br />
-
                     </div>
+                </div>
 
-                    <?
-                    // grades
-                    ?>
-                    <div class="personal__area--capacity">
-                        <div class="personal__area--capacity-name">
-                            Оценки
-                        </div>
-                       <!-- <div class="personal__area--capacity-data">
-                            Some Data
-                        </div>-->
-                        <div class="group">
-
-                            <?php foreach ($viData['rateByUser'] as $key => $val): ?>
-                                <? $arItem = reset($val); ?>
-                                <?= $arItem['fio']; ?>
-                                <div class="group__wrap">
-                                    <?php foreach ($val as $k => $item): ?>
-                                        <span
-                                            class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
-                                            title="Оценка
-                                                <?= $viData['rating']['rateNames'][$k] ?>
-                                                <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
-                                        ">
-                                        </span>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endforeach; ?>
-
-                        </div>
-                        <div class="personal__area--button">
-                            <a href="/rate" class="btn__orange">
-                                Подробнее...
-                            </a>
-
-                        </div>
+                <?
+                // feedback
+                ?>
+                <div class="personal__area--capacity">
+                    <div class="personal__area--capacity-name">
+                        Отзывы
                     </div>
+                    <!--<div class="personal__area--capacity-data">
+                        Some Data
+                    </div>-->
+                    <div class="group">
+                        <?
+                        //      COMMENTS
+                        ?>
+                            <? if($cntComments):?>
+                                <span class="upp__subtitle">Отзывы</span>
+                                <hr class="upp__line">
+                                <div class="upp__reviews-cnt">Отрицательных: <span class="upp__review upp__review-red"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][1]?></a></span></div>
+                                <div class="upp__reviews-cnt">Положительных: <span class="upp__review upp__review-green"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][0]?></a></span></div>
 
-                    <?
-                    // feedback
-                    ?>
-                    <div class="personal__area--capacity">
-                        <div class="personal__area--capacity-name">
-                            Отзывы
-                        </div>
-                        <!--<div class="personal__area--capacity-data">
-                            Some Data
-                        </div>-->
-                        <div class="group">
-                            <?
-                            //      COMMENTS
-                            ?>
-                                <? if($cntComments):?>
-                                    <span class="upp__subtitle">Отзывы</span>
-                                    <hr class="upp__line">
-                                    <div class="upp__reviews-cnt">Отрицательных: <span class="upp__review upp__review-red"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][1]?></a></span></div>
-                                    <div class="upp__reviews-cnt">Положительных: <span class="upp__review upp__review-green"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][0]?></a></span></div>
-
-                                    <? if($cntComments>3): ?>
-                                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__btn-rating-list">все отзывы</a>
-                                    <? endif; ?>
-                                <? else: ?>
-                                    <span class="upp__subtitle">Отзывы отсутствуют</span>
-                                <? endif;?>
-                        </div>
-                        <div class="personal__area--button">
-                            <a href="/rate" class="btn__orange">
-                                Подробнее...
-                            </a>
-                        </div>
+                                <? if($cntComments>3): ?>
+                                    <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__btn-rating-list">все отзывы</a>
+                                <? endif; ?>
+                            <? else: ?>
+                                <span class="upp__subtitle">Отзывы отсутствуют</span>
+                            <? endif;?>
                     </div>
-
-<!--                </div>-->
+                    <div class="personal__area--button">
+                        <a href="/rate" class="btn__orange">
+                            Подробнее...
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="col-xs-12 col-sm-4">
-<!--                <div class="personal__area">-->
-                    <?
-                    // contact info
-                    ?>
-                    <div class="personal__area--capacity personal__area--capacity-height">
-                        <div class="personal__area--capacity-name">
-                            Контактная информация
+                <?
+                // contact info
+                ?>
+                <div class="personal__area--capacity personal__area--capacity-height">
+                    <div class="personal__area--capacity-name">
+                        Контактная информация
+                    </div>
+
+                    <a
+                       href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                       class="personal__area--capacity-edit js-g-hashint"
+                       title="Редактировать профиль">
+                    </a>
+
+                    <?php if($flagOwnProfile): // инфа для владельца ?>
+
+                        <?php if(strlen($allInfo['firstname'])>0): ?>
+                        <div class="group">
+                            <div class="group__about">Имя</div>
+                            <div class="group__info"><?=$allInfo['firstname']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(strlen($allInfo['lastname'])>0): ?>
+                        <div class="group">
+                            <div class="group__about">Фамилия</div>
+                            <div class="group__info"><?=$allInfo['lastname']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(strlen($allInfo['contact'])>0): ?>
+                        <div class="group">
+                            <div class="group__about">Контактное лицо</div>
+                            <div class="group__info"><?=$allInfo['contact']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'inn'); ?>
+                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">ИНН</div>
+                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                        </div>
+                        <? endif; ?>
+
+                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'legalindex'); ?>
+                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Юридический адрес</div>
+                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                        </div>
+                        <? endif; ?>
+
+                        <div class="group ppe__field<?=($isBlocked && !$allInfo['email'] ?' error':'')?>">
+                            <div class="group__about">E-mail</div>
+                            <div class="group__info"><?=$allInfo['email']?></div>
                         </div>
 
-                        <a
-                           href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-                           class="personal__area--capacity-edit js-g-hashint"
-                           title="Редактировать профиль">
-                        </a>
+                        <div class="group ppe__field<?=($isBlocked && !$allAttr[1]['val'] ?' error':'')?>">
+                            <div class="group__about">Телефон</div>
+                            <div class="group__info"><?=$allAttr[1]['val']?></div>
+                        </div>
 
-                        <?php if($flagOwnProfile): // инфа для владельца ?>
+                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'stationaryphone'); ?>
+                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Городской телефон</div>
+                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                        </div>
+                        <? endif; ?>
 
-                            <?php if(strlen($allInfo['firstname'])>0): ?>
-                            <div class="group">
-                                <div class="group__about">Имя</div>
-                                <div class="group__info"><?=$allInfo['firstname']?></div>
-                            </div>
-                            <?php endif; ?>
+                        <?php
+                        //messangers
+                        $idViber = $this->ViewModel->isInArray($allAttr, 'key', 'viber');
+                        $idWhatsApp = $this->ViewModel->isInArray($allAttr, 'key', 'whatsapp');
+                        $idTelegram = $this->ViewModel->isInArray($allAttr, 'key', 'telegram');
+                        $idGoogleAllo = $this->ViewModel->isInArray($allAttr, 'key', 'googleallo');
+                        ?>
 
-                            <?php if(strlen($allInfo['lastname'])>0): ?>
-                            <div class="group">
-                                <div class="group__about">Фамилия</div>
-                                <div class="group__info"><?=$allInfo['lastname']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if(strlen($allInfo['contact'])>0): ?>
-                            <div class="group">
-                                <div class="group__about">Контактное лицо</div>
-                                <div class="group__info"><?=$allInfo['contact']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'inn'); ?>
-                            <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">ИНН</div>
-                                <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
-                            </div>
-                            <? endif; ?>
-
-                            <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'legalindex'); ?>
-                            <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Юридический адрес</div>
-                                <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
-                            </div>
-                            <? endif; ?>
-
-                            <div class="group ppe__field<?=($isBlocked && !$allInfo['email'] ?' error':'')?>">
-                                <div class="group__about">E-mail</div>
-                                <div class="group__info"><?=$allInfo['email']?></div>
-                            </div>
-
-                            <div class="group ppe__field<?=($isBlocked && !$allAttr[1]['val'] ?' error':'')?>">
-                                <div class="group__about">Телефон</div>
-                                <div class="group__info"><?=$allAttr[1]['val']?></div>
-                            </div>
-
-                            <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'stationaryphone'); ?>
-                            <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Городской телефон</div>
-                                <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
-                            </div>
-                            <? endif; ?>
-
-                            <?php
-                            //messangers
-                            $idViber = $this->ViewModel->isInArray($allAttr, 'key', 'viber');
-                            $idWhatsApp = $this->ViewModel->isInArray($allAttr, 'key', 'whatsapp');
-                            $idTelegram = $this->ViewModel->isInArray($allAttr, 'key', 'telegram');
-                            $idGoogleAllo = $this->ViewModel->isInArray($allAttr, 'key', 'googleallo');
-                            ?>
-
-                            <?php if(isset($allAttr[$idViber]['val']) && $allAttr[$idViber]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Viber</div>
-                                <div class="group__info"><?=$allAttr[$idViber]['val']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if(isset($allAttr[$idWhatsApp]['val']) && $allAttr[$idWhatsApp]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Whatsapp</div>
-                                <div class="group__info"><?=$allAttr[$idWhatsApp]['val']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if(isset($allAttr[$idTelegram]['val']) && $allAttr[$idTelegram]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Telegram</div>
-                                <div class="group__info"><?=$allAttr[$idTelegram]['val']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if(isset($allAttr[$idGoogleAllo]['val']) && $allAttr[$idGoogleAllo]['val'] !== '') : ?>
-                            <div class="group">
-                                <div class="group__about">Google Allo</div>
-                                <div class="group__info"><?=$allAttr[$idGoogleAllo]['val']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php if(strlen($allAttr[100]['val'])>0): ?>
-                            <div class="group">
-                                <div class="group__about">Должность</div>
-                                <div class="group__info"><?=$allAttr[100]['val']?></div>
-                            </div>
-                            <?php endif; ?>
-
-                            <?php
-                            //news
-                            $isNews = false;
-                            foreach ($allAttr as $v)
-                                $v['key']=='isnews' && $isNews=$v['val'];
-                            ?>
-                            <? if($isNews): ?>
-                                <div class="ppe__checkbox <?=$isNews ? 'active' : ''?>">Получение новостей об изменениях и новых возможностях на сайте</div>
-                            <? endif; ?>
-
+                        <?php if(isset($allAttr[$idViber]['val']) && $allAttr[$idViber]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Viber</div>
+                            <div class="group__info"><?=$allAttr[$idViber]['val']?></div>
+                        </div>
                         <?php endif; ?>
-                    </div>
-<!--                </div>-->
+
+                        <?php if(isset($allAttr[$idWhatsApp]['val']) && $allAttr[$idWhatsApp]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Whatsapp</div>
+                            <div class="group__info"><?=$allAttr[$idWhatsApp]['val']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(isset($allAttr[$idTelegram]['val']) && $allAttr[$idTelegram]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Telegram</div>
+                            <div class="group__info"><?=$allAttr[$idTelegram]['val']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(isset($allAttr[$idGoogleAllo]['val']) && $allAttr[$idGoogleAllo]['val'] !== '') : ?>
+                        <div class="group">
+                            <div class="group__about">Google Allo</div>
+                            <div class="group__info"><?=$allAttr[$idGoogleAllo]['val']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(strlen($allAttr[100]['val'])>0): ?>
+                        <div class="group">
+                            <div class="group__about">Должность</div>
+                            <div class="group__info"><?=$allAttr[100]['val']?></div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php
+                        //news
+                        $isNews = false;
+                        foreach ($allAttr as $v)
+                            $v['key']=='isnews' && $isNews=$v['val'];
+                        ?>
+                        <? if($isNews): ?>
+                            <div class="ppe__checkbox <?=$isNews ? 'active' : ''?>">Получение новостей об изменениях и новых возможностях на сайте</div>
+                        <? endif; ?>
+
+                    <?php endif; ?>
+                </div>
             </div>
 
             <div class="col-xs-12 col-sm-4">
@@ -1096,12 +1079,5 @@ $this->pageTitle = $title;
         </div>
 <!--    </div>-->
 <!--</div>-->
-<?
-/*display($arUser);
-display($cntComments);
-display($isActiveVacs);
-display($viData);*/
-
-?>
 
 <!--<div class="form__field-hint tooltip tooltipstered"></div>-->
