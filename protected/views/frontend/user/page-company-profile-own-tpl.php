@@ -42,8 +42,7 @@ $allVacs = count($viData['vacs']['active']) + count($viData['vacs']['archive']);
 <meta name="robots" content="noindex,nofollow">
 <?
 $id = $viData['userInfo']['id_user'];
-//Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
-Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-personal-area.css');
+
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
 
 
@@ -63,8 +62,11 @@ $this->pageTitle = $title;
         <div class='row'>
 
             <?php
+
+            if (!share::isEmployer()):
+                Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
+
             //start
-                /*
             ?>
             <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
                 <div class="upp__img-block">
@@ -519,7 +521,10 @@ $this->pageTitle = $title;
                     </div>
                 <? endif; ?>
             </div>
-            */
+
+            <?php //end
+            elseif(Share::isEmployer()):
+            Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-personal-area.css');
             ?>
 
             <div class="col-xs-12">
@@ -883,8 +888,16 @@ $this->pageTitle = $title;
                             <? if($cntComments):?>
                                 <span class="upp__subtitle">Отзывы</span>
                                 <hr class="upp__line">
-                                <div class="upp__reviews-cnt">Отрицательных: <span class="upp__review upp__review-red"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][1]?></a></span></div>
-                                <div class="upp__reviews-cnt">Положительных: <span class="upp__review upp__review-green"><a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][0]?></a></span></div>
+                                <div class="upp__reviews-cnt">Отрицательных:
+                                    <span class="upp__review upp__review-red">
+                                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][1]?></a>
+                                    </span>
+                                </div>
+                                <div class="upp__reviews-cnt">Положительных:
+                                    <span class="upp__review upp__review-green">
+                                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][0]?></a>
+                                    </span>
+                                </div>
 
                                 <? if($cntComments>3): ?>
                                     <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__btn-rating-list">все отзывы</a>
@@ -1031,57 +1044,60 @@ $this->pageTitle = $title;
             </div>
 
             <div class="col-xs-12 col-sm-4">
-                    <div class="personal__area--capacity personal__area--capacity-height">
-                        <div class="personal__area--capacity-name">
-                            Опубликованные вакансии
-                        </div>
-
-                        <?php if(sizeof($viData['vacs']['active'])>0): ?>
-                            <div class="personal__area--capacity-data">
-                                <?=count($viData['vacs']['active'])?>
-                            </div>
-                            <?php foreach ($viData['vacs']['items'] as $vacancy): ?>
-                                <div class='upp__project-item'>
-                                    <div class="upp__project-info">
-                                        <a class='upp__project-vacancy'
-                                           href='<?= MainConfig::$PAGE_VACANCY . DS . $vacancy['id'] ?>'>
-                                            <?= $vacancy['title'] ?>
-                                        </a>
-                                        <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
-                                    </div>
-
-                                    <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
-                                        <?php foreach ($viData['lastJobs']['jobs'] as $vac):
-                                            if ($vac['id']== $vacancy['id']):
-                                            ?>
-                                                <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vac['id'] ?>"
-                                                   class="upp__project-item-messages js-g-hashint" title="Обратная связь" >
-                                                    <?=$vac['discuss_cnt']?></a>
-                                            <?php
-                                            endif;
-                                            endforeach; ?>
-                                    <?php endif; ?>
-
-                                    <? if ($vacancy['responded']): ?>
-                                    <span class="upp__project-item-responded js-g-hashint" title="Откликнулись">
-                                        <?=$vacancy['responded']?>
-                                    </span>
-                                    <? endif; ?>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php
-                            else:
-                        ?>
-                            Нет активных вакансий.
-                        <?
-                            endif;
-                        ?>
-
-
+                <div class="personal__area--capacity personal__area--capacity-height">
+                    <div class="personal__area--capacity-name">
+                        Опубликованные вакансии
                     </div>
+
+                    <?php if(sizeof($viData['vacs']['active'])>0): ?>
+                        <div class="personal__area--capacity-data">
+                            <?=count($viData['vacs']['active'])?>
+                        </div>
+                        <?php foreach ($viData['vacs']['items'] as $vacancy): ?>
+                            <div class='upp__project-item'>
+                                <div class="upp__project-info">
+                                    <a class='upp__project-vacancy'
+                                       href='<?= MainConfig::$PAGE_VACANCY . DS . $vacancy['id'] ?>'>
+                                        <?= $vacancy['title'] ?>
+                                    </a>
+                                    <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
+                                </div>
+
+                                <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
+                                    <?php foreach ($viData['lastJobs']['jobs'] as $vac):
+                                        if ($vac['id']== $vacancy['id']):
+                                        ?>
+                                            <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vac['id'] ?>"
+                                               class="upp__project-item-messages js-g-hashint" title="Обратная связь" >
+                                                <?=$vac['discuss_cnt']?></a>
+                                        <?php
+                                        endif;
+                                        endforeach; ?>
+                                <?php endif; ?>
+
+                                <? if ($vacancy['responded']): ?>
+                                <span class="upp__project-item-responded js-g-hashint" title="Откликнулись">
+                                    <?=$vacancy['responded']?>
+                                </span>
+                                <? endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php
+                        else:
+                    ?>
+                        Нет активных вакансий.
+                    <?
+                        endif;
+                    ?>
+
+                </div>
             </div>
 
         </div>
+    <?php
+    endif;
+    ?>
+
 <!--    </div>-->
 <!--</div>-->
 

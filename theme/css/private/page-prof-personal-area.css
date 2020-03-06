@@ -250,15 +250,17 @@ capacity blocks
 }
 
 .personal__area--capacity-edit {
-    float: right;
+    position: absolute;
+    right: 25px;
+    top: 35px;
 }
 .personal__area--capacity-edit:before {
     position: absolute;
     font-family: "PrommuFont";
     content: '\e94b';
     font-size: 30px;
-    top: 5px;
-    right: 10px;
+    top: -30px;
+    right: -15px;
 }
 
 .personal__area--capacity-edit:hover {

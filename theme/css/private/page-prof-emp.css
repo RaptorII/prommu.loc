@@ -886,14 +886,14 @@ a.upp__project-info {
 .upp-logo-main__active .disable i {
   background: #D6D6D6
 }
-/*
+
 @media (min-width: 990px) {
   #DiContent .content-block {
     margin: 20px auto 0 auto;
     width: 80%
   }
 }
-*/
+
 
 #DiContent .question_popup.prmu-btn.prmu-btn_normal {
     display: inline-flex;
