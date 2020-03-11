@@ -752,6 +752,7 @@ class Vacancy extends ARModel
         $sql = "SELECT e.id, e.ispremium, e.sort, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
+                   e.ismoder,
                    e.sweek,
                    e.smonth,
                    e.svisit,
@@ -817,6 +818,7 @@ class Vacancy extends ARModel
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data[$val['id']]['sort'] = (boolean)$val['sort'];
             $data[$val['id']]['is_active'] = true;
+            $data[$val['id']]['is_moder'] = (boolean)$val['ismoder'];
             $data[$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data[$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
             $data[$val['id']]['is_temp'] =  (boolean)$val['istemp'];
