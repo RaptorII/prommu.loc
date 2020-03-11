@@ -741,9 +741,6 @@ class SearchVac extends Model
         $s1 .= $filterPostSelf;
         if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
         
-         var_dump($filterPost);
-         var_dump($filter);
-         
         // тип занятости
         if( isset($data['busyType']) ) $filter[] = "e.istemp = {$data['busyType']}";
         // пол
