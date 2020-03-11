@@ -1885,7 +1885,7 @@ class Vacancy extends ARModel
 
             $fields = array(
                 'status' => $isDeactivate ? 0 : 1,
-                'ismoder' => 0, // деактивировать модерацию
+                'ismoder' => $isDeactivate ? 0 : 100,
                 'bdate' => $isDeactivate ? '0000-00-00 00:00:00' : date('Y-m-d H:i:s')
             );
 
