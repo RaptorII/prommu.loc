@@ -80,7 +80,7 @@ class Api
                 case 'vacancy_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyData(); break;
                 case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
                 case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
-                case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
+                case 'vacancy_activate' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
                 
                 case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
                 
