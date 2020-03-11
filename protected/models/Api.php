@@ -4449,7 +4449,8 @@ public function vac(){
 
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($profile);
-            $commo = compact('idvac', 'deactivate', 'idus');   
+            $commo = compact('idvac', 'deactivate', 'idus'); 
+            var_dump($commo);
             $dat = $Vacancy->vacActivate($commo);
             
            } catch (Exception $e)
