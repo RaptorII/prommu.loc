@@ -733,27 +733,59 @@ class UserController extends AppController
 
     public function actionVacpub()
     {
-        // no profile for guest
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
-        //
-        // проверка реги на завершенность
-        $this->directToCompleteRegistration();
-        //
-        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('vacancy-title') )
-        {
-            $res = (new Vacancy())->saveVacpubData();
-            if(!$res['err']){
-                $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['idvac']);
-            }
-        }
+      if(Share::isApplicant())
+      {
+        throw new CHttpException(404, 'Error');
+      }
+      else if(Share::isGuest())
+      {
+        $this->redirect(MainConfig::$PAGE_LOGIN);
+      }
 
-        $model = new Vacancy();
-        $data = $model->getVacPubFormData();
-        $this->setBreadcrumbs($title = 'Публикация вакансии', MainConfig::$PAGE_VACPUB);
-        $this->render($this->ViewModel->pageVacpub,
-                array('viData' => $data, 'IS_PUBDATA' => 1),
-                array('htmlTitle' => $title)
-            );
+      $rq = Yii::app()->getRequest();
+      $model = new VacancyCreate($rq->getParam('vacancy'));
+
+      $rq->isPostRequest && $model->setDataByStep();
+      $model->getDataByStep();
+      if($model->id_vacancy)
+      {
+        $model->finish_link = MainConfig::$PAGE_VACANCY . DS . $model->id_vacancy;
+        if($rq->getParam('premium')==1)
+        {
+          $arCity = [];
+          $arPrice = [];
+          foreach ($model->dataOther->prices as $v)
+          {
+            if(in_array($v['id_city'],$rq->getParam('premium_region')))
+            {
+              $arCity[] = $v['id_city'];
+              $arPrice[] = $v['price'];
+            }
+          }
+          $order = new PrommuOrder();
+          $arOrder = $order->orderPremiumInCreationVac(
+            $model->id_vacancy,
+            $arCity,
+            $arPrice,
+            $rq->getParam('premium_period')
+          );
+          $model->finish_link = $order->createPayLink($arOrder['account'], '', $arOrder['cost']);
+          /*
+          if($rq->getParam('personal')==='individual') // физ лица
+          {
+            $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
+            $link && $this->redirect($link);
+          }
+          if($rq->getParam('personal')==='legal') // юр лица
+          {
+            $model->setLegalEntityReceipt($data['id']);
+            $this->redirect(MainConfig::$PAGE_SERVICES);
+          }
+          */
+        }
+      }
+
+      $this->renderVacPub($model);
     }
 
 

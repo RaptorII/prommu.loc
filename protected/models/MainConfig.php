@@ -303,4 +303,7 @@ class MainConfig
     public static $YANDEX_METRIC_ID = '23945542'; // номер счетчика Яндекс метрики
     public static $YANDEX_METRIC_OAUTH_TOKEN = 'AgAAAAAL8_bxAAYTjsQiiiZgMk99mK3e_ae5O7A'; // OAuth-токен
     public static $YANDEX_METRIC_OFFLINE_CONVERSIONS = 'https://api-metrika.yandex.ru/management/v1/counter/23945542/offline_conversions/upload?client_id_type=CLIENT_ID';
+
+    /* */
+    public static $AJAX_GET_CITIES = '/ajax/GetCitiesByName';
 }

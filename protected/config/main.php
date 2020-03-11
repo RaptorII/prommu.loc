@@ -20,6 +20,7 @@ return array(
         'application.models.project.*',
         'application.models.mailing.*',
         'application.models.services.*',
+        'application.models.vacancy.*',
         'application.components.*',
         'ext.eoauth.*',
         'ext.eoauth.lib.*',
@@ -194,6 +195,7 @@ return array(
                 '<controller:user>/<action:vacancies>/<id:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:vacancies>/<section:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:vacancies>/<section:archive>/<id:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:vacpub>/<vacancy:[\w-]+>' => '<controller>/<action>',
                 // vacancy
                 '<controller:site>/<action:vacancy>/<id:\d+>/<section:invited>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер

@@ -408,6 +408,14 @@ class UserRegister
             $arData['transition']='(none)';
           }
         }
+        if ($arData['transition']=='ru.jooble.org' && $arData['canal']=='direct')
+        {
+          $arData['canal'] = 'referal';
+        }
+        if (strripos($arData['transition'],'.prom')!==false && $arData['canal']=='direct')
+        {
+          $arData['canal'] = 'referal';
+        }
         //
         foreach ($arData as $k => $v)
         {

@@ -818,21 +818,28 @@ class UserProfileEmpl extends UserProfile
 
         return $res;
     }
-
-
-
+    /**
+     * @return array
+     * Проверка полей при редактировании ЛК
+     */
     private function checkFieldsProfile()
     {
-        $ret = array('err' => 0,);
+      $rq = Yii::app()->getRequest();
+      $arResult = [];
+      // Название компании
+      $value = $rq->getParam('name');
+      if(!strlen(trim($value)))
+      {
+        $arResult['name']='- введите Название компании';
+      }
+      // Тип компании
+      $value = $rq->getParam('companyType');
+      if(!intval($value))
+      {
+        $arResult['companyType']='- выберите Тип компании';
+      }
 
-        $val = Yii::app()->getRequest()->getParam('name');
-        if( trim($val) == '' )
-        {
-            $ret = array('err' => 1,
-                'item' => 'name',
-                'msg' => 'Введите Название компании',
-                );
-         } //endif
+
 
         $val = Yii::app()->getRequest()->getParam('type');
         if( trim($val) == 'не выбран' )

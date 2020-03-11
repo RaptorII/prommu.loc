@@ -159,7 +159,7 @@
               <div class="col-xs-12 col-md-6">
                 <h4>Кто нужен</h4>
                 <div class="d-indent">
-                  <span>Опыт работы: <b><?=Vacancy::$EXPERIENCE[$vacancy['exp']]?></b></span>
+                  <span>Опыт работы: <b><?=Vacancy::EXPERIENCE[$vacancy['exp']]?></b></span>
                 </div>
                 <div class="row">
                   <div class="col-xs-12 col-sm-6">

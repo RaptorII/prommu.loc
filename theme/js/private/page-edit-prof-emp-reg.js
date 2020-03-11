@@ -4,9 +4,7 @@ jQuery(function($){
     oldEmail = $('.epe__input-mail').val(),
     emailTimer = null,
     oldPhone = $('#phone-code').val(),
-    oldFlag = '',
-    confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
-  confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
+    oldFlag = '';
   //
   //
   $(document).on('click', function(e){
@@ -153,13 +151,16 @@ jQuery(function($){
   // check fields
   function checkField(e){
     var val = $(e).val(),
-      label = $(e).closest('.epe__label'),
-      res = false;
+        id = $(e).prop('id'),
+        label = $(e).closest('.epe__label'),
+        res = false;
 
-    if($(e).hasClass('epe__input-mail')){
+    if(id=='epe-email')
+    {
       res = epattern.test(val) ? remErr(label) : addErr(label);
       $('.epe__email').removeClass('erroremail');
-      if(res && val!=oldEmail){
+      if(res && val!=oldEmail)
+      {
         clearTimeout(emailTimer);
         emailTimer = setTimeout(function(){
           $.ajax({
@@ -173,9 +174,6 @@ jQuery(function($){
               }
               else{
                 $('.epe__email').removeClass('erroremail error');
-                $('#conf-email').removeClass('complete')
-                  .html('<p>Почта не подтверждена. <em>Подтвердить</em></p>');
-                confirmEmail = false;
               }
             }
           });
@@ -200,11 +198,6 @@ jQuery(function($){
       }
       else{
         remErr($inp.closest('.epe__label'));
-        if($inp.val()!==oldPhone){
-          $('#conf-phone').removeClass('complete')
-            .html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-          confirmPhone = false;
-        }
       }
     }
     else{
@@ -213,11 +206,6 @@ jQuery(function($){
       }
       else{
         remErr($inp.closest('.epe__label'));
-        if($inp.val()!==oldPhone){
-          $('#conf-phone').removeClass('complete')
-            .html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-          confirmPhone = false;
-        }
       }
     }
   }

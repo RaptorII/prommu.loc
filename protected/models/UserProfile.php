@@ -344,15 +344,17 @@ abstract class UserProfile extends CModel
    */
   public static function emailVerification($newEmail, $oldEmail=false)
   {
-    if(!filter_var($oldEmail,FILTER_VALIDATE_EMAIL))
+    if(!filter_var($newEmail,FILTER_VALIDATE_EMAIL))
     {
       return true;
     }
+    $newEmail = filter_var($newEmail,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     $condition = "email=:n";
     $arParams = [':n'=>$newEmail];
     if($oldEmail)
     {
+      $oldEmail = filter_var($oldEmail,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $condition .= " AND email<>:o";
       $arParams[':o'] = $oldEmail;
     }

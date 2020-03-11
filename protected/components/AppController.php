@@ -331,4 +331,31 @@ class AppController extends CController
     }
     parent::render('index');
   }
+  /**
+   * @param $model - object
+   * @throws CHttpException
+   */
+  public function renderVacPub($model)
+  {
+    if(isset($model->errors['access'])) // вакансия не найдена
+    {
+      $this->render(
+        '//layouts/message',
+        ['message'=>$model->errors['access']]
+      );
+    }
+    else // вакансия новая, либо из базы
+    {
+      if(Yii::app()->request->isAjaxRequest)
+      {
+        parent::renderPartial($model->getView(), ['model'=>$model]);
+      }
+      else
+      {
+        $this->layout = '//user/vacpub/index';
+        $this->ViewModel->init();
+        parent::render($model->getView(), ['model'=>$model], false);
+      }
+    }
+  }
 }

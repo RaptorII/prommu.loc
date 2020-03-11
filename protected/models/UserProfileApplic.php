@@ -1086,8 +1086,10 @@ class UserProfileApplic extends UserProfile
 
         return $ret;
     }
-
-
+    /**
+     * @return array
+     * Проверка полей при редактировании ЛК
+     */
     private function checkFieldsProfile()
     {
       $rq = Yii::app()->getRequest();

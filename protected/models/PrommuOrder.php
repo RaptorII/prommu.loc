@@ -829,5 +829,74 @@ class PrommuOrder {
 
     return $arRes;
   }
+  /*
+   *  определение цены для формы создания вакансии
+   */
+  public function getPriceByCity($arCity, $service)
+  {
+    $arRes = [];
+    if(!count($arCity))
+    {
+      return $arRes;
+    }
+
+    $arTemp = [];
+    foreach ($arCity as $v)
+    {
+      $arTemp[] = [
+        'id_city' => $v['id_city'],
+        'region' => $this->convertedRegion([$v['region']])
+      ];
+    }
+
+    foreach ($arTemp as $v)
+    {
+      $arRegions = $this->getRegionalPrice($service, $v['region'], false);
+      $query = Yii::app()->db->createCommand() // запрос в цикле чтоб не сумировались одинаковые регионы
+                        ->select('SUM(price)')
+                        ->from('service_prices')
+                        ->where([
+                          'and',
+                          "service='$service'",
+                          ['in','region',$arRegions]
+                        ])
+                        ->queryScalar();
+      $arRes[] = ['id_city'=>$v['id_city'], 'price'=>$query];
+    }
+    return $arRes;
+  }
+  /**
+   *  Формирование заказа для формы создания вакансии
+   */
+  public function orderPremiumInCreationVac($id_vacancy, $arCity, $arPrice, $period)
+  {
+    $arRes = [];
+    $arRes['cost'] = 0;
+    $arRes['id'] = [];
+    $day = 60 * 60 * 24;
+    $from = strtotime('today');;
+    $to = $from + $period*$day;
+    $days = ($to - $from) / $day;
+
+    for($i=0, $n=sizeof($arCity); $i<$n; $i++)
+    {
+      $price = intval($arPrice[$i] * $days);
+      $arRes['id'][] = $this->serviceOrder(
+        Share::$UserProfile->id,
+        $price,
+        $arCity[$i],
+        0,
+        0,
+        date('Y-m-d', $from),
+        date('Y-m-d', $to),
+        $id_vacancy,
+        'vacancy'
+      );
+      $arRes['cost'] += $price;
+    }
+
+    $arRes['account'] = Share::$UserProfile->id . '.' . implode('.', $arRes['id']) . '.vacancy.' . time();
+    return $arRes;
+  }
 }
 ?>

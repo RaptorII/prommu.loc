@@ -1117,4 +1117,16 @@ class AjaxController extends AppController
         Yii::app()->end();
       }
     }
+  /**
+   *  список городов для нового универсального списка городов
+   */
+  public function actionGetCitiesByName()
+  {
+    $rq = Yii::app()->getRequest();
+    $country = $rq->getParam('country') ?: 0;
+    $query = $rq->getParam('query');
+    $limit = $rq->getParam('limit', '10');
+    echo CJSON::encode(City::getCitiesByName($query, $country, $limit));
+    Yii::app()->end();
+  }
 }

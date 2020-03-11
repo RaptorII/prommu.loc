@@ -363,11 +363,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <div class="erv__label erv__select" data-info="Опыт работы *">
                                 <input type="text" name="str-expirience" class="erv__input erv__required"
                                        placeholder="Опыт работы *" id="rv-expirience"
-                                       value="<?=Vacancy::$EXPERIENCE[$viData['vac']['exp']] ?>" disabled>
+                                       value="<?=Vacancy::EXPERIENCE[$viData['vac']['exp']] ?>" disabled>
                                 <div class="erv__veil" id="rv-expirience-veil"></div>
                                 <ul class="erv__select-list" id="rv-expirience-list">
                                     <i class="erv__select-list-icon">OK</i>
-                                    <?php foreach (Vacancy::$EXPERIENCE as $k => $v): ?>
+                                    <?php foreach (Vacancy::EXPERIENCE as $k => $v): ?>
                                         <li>
                                             <input type="radio" name="expirience" value="<?= $k ?>"
                                                    id="expirience-<?= $k ?>"
@@ -1091,7 +1091,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <?php if ($vacancy['exp']): ?>
                         <div class="sv__attributes-item ico3">
                             <div class="sv__attributes-name"><b>Опыт работы:</b></div>
-                            <div class="sv__attributes-val"><span><?=Vacancy::$EXPERIENCE[$vacancy['exp']] ?></span></div>
+                            <div class="sv__attributes-val"><span><?=Vacancy::EXPERIENCE[$vacancy['exp']] ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>

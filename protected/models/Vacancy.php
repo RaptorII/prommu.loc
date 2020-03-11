@@ -15,16 +15,31 @@ class Vacancy extends ARModel
     /** @var int актуальные */
     static public $SCOPE_ACTUAL = 3;
     /** @var array варианты опыта */
-    public static $EXPERIENCE = array(
-            1 => 'Без опыта', 
+    const EXPERIENCE = [
+            1 => 'Можно без опыта',
             2 => 'До 1 месяца', 
             3 => 'От 1 до 3 месяцев', 
             4 => 'От 3 до 6 месяцев', 
             5 => 'От 6 до 12 месяцев', 
             6 => 'от 1 до 2-х лет', 
             7 => 'Более 2-х лет'
-        );
-
+        ];
+    const WORK_TYPE = [0 => 'Временная', 1 => 'Постоянная'];
+    const SELF_EMPLOYED = [0 => 'Физическое лицо', 1 => 'Самозанятый'];
+    const MIN_AGE_FROM = 14;
+    const SALARY_TYPE = [
+      0 => 'руб / час',
+      1 => 'руб / неделя',
+      2 => 'руб / месяц',
+      3 => 'руб / посещение'
+    ];
+    const SALARY_TIME = [
+      130 => 'На следующий день',
+      132 => 'После окончания проекта',
+      133 => 'После окончания проекта в течении недели',
+      134 => 'В конце рабочего дня',
+      163 => 'Ежемесячно'
+    ];
     public $company_search;
     public $responses;
     // empl_vacations.status
@@ -5050,5 +5065,125 @@ WHERE id_vac = {$inVacId}";
     }
 
     return $arRes;
+  }
+  /**
+   * @return array
+   */
+  public static function getPostsSortList()
+  {
+    return Yii::app()->db->createCommand()
+      ->select('id, name')
+      ->from('user_attr_dict')
+      ->where('id_par=110')
+      ->order('npp, name')
+      ->queryAll();
+  }
+  /**
+   * @param $objData
+   * @param $objUser
+   */
+  public function createVacancy($objData, $objUser)
+  {
+    $date = date('Y-m-d H:i:s');
+    // создание вакансии
+    $arInsert = [
+      'id_user' => $objUser->id_user,
+      'id_empl' => $objUser->id,
+      'title' => $objData->title,
+      'requirements' => $objData->requirements,
+      'duties' => $objData->duties,
+      'conditions' => $objData->conditions,
+      'remdate' => Share::dateFormatToMySql($objData->edate),
+      'istemp' => $objData->istemp,
+      'shour' => ($objData->salary_type==0 ? $objData->salary : 0),
+      'sweek' => ($objData->salary_type==1 ? $objData->salary : 0),
+      'smonth' => ($objData->salary_type==2 ? $objData->salary : 0),
+      'svisit' => ($objData->salary_type==3 ? $objData->salary : 0),
+      'exp' => $objData->exp,
+      'isman' => in_array('man',$objData->gender),
+      'iswoman' => in_array('woman',$objData->gender),
+      'ismed' => isset($objData->medbook),
+      'isavto' => isset($objData->car),
+      'agefrom' => $objData->age_from,
+      'ageto' => $objData->age_to,
+      'contacts' => null, // !!!
+      'iscontshow' => 0, // !!!
+      'status' => self::$STATUS_NO_ACTIVE,
+      'ismoder' => self::$ISMODER_NEW,
+      'crdate' => $date,
+      'smart' => isset($objData->smartphone),
+      'repost' => '000', // !!!
+      'card' => isset($objData->card),
+      'cardPrommu' => isset($objData->card_prommu),
+      'self_employed' => $objData->self_employed
+    ];
+    Yii::app()->db->createCommand()->insert(self::tableName(), $arInsert);
+    $vacancy = Yii::app()->db->getLastInsertID();
+    // добавление городов вакансии
+    $arInsert = [];
+    foreach ($objData->city as $v)
+    {
+      $arInsert[] = [
+        'id_vac' => $vacancy,
+        'id_city' => $v,
+        'bdate' => Share::dateFormatToMySql($objData->bdate),
+        'edate' => Share::dateFormatToMySql($objData->edate)
+      ];
+    }
+    Share::multipleInsert(['empl_city'=>$arInsert]);
+    // добавление атрибутов
+    $arInsert = [
+      [ // должность
+        'id_vac' => $vacancy,
+        'id_attr' => reset($objData->post),
+        'key' => reset($objData->post),
+        'crdate' => $date
+      ],
+      [ // Сроки оплаты
+        'id_vac' => $vacancy,
+        'id_attr' => $objData->salary_time,
+        'key' => $objData->salary_time,
+        'crdate' => $date
+      ],
+      [ // Комментарии по оплате
+        'id_vac' => $vacancy,
+        'id_attr' => 165,
+        'key' => 'salary-comment',
+        'val' => $objData->salary_comment,
+        'crdate' => $date
+      ]
+    ];
+
+    Share::multipleInsert(['empl_attribs'=>$arInsert]);
+
+    Yii::app()->user
+      ->setFlash('prommu_flash',
+        "<div class='big-flash'>
+                        <p>Уважаемый «" . $objUser->name . "»!</p>
+                        <p>Вы только что добавили новую вакансию на сервис Prommu.
+                        На данном этапе она еще не опубликована на сервисе.</p>
+                        <p>После закрытия этого информационного окна, Вы можете посмотреть
+                        добавленную информацию, изменить, дополнить,
+                        <span style='color:#ff921d;'>продублировать</span> ее с указанием адресов
+                        работы и других необходимых данных.</p>
+                        <p>После этого необходимо нажать кнопку
+                        <span style='color:#ff921d;'>«ОПУБЛИКОВАТЬ ВАКАНСИЮ»</span>.</p>
+                        <p>По окончанию модерации (в рабочее время до 15 минут) Ваша вакансия
+                        будет размещена на сервисе.</p>
+                        <p>Просмотреть и отредактировать данную вакансию Вы можете в любой момент
+                        времени в личном кабинете - категория
+                        <span style='color:#ff921d;'>«МОИ ВАКАНСИИ»</span>.</p>
+                        <p>Быстрого и лёгкого поиска Вам персонала.</p>
+                        <i>С найлучшими пожеланиями команда Промму!</i>
+                    </div>");
+
+    Mailing::set(3,
+      [
+        'email_user' => $objUser->email,
+        'company_user' => $objUser->name,
+        'id_vacancy' => $vacancy
+      ]
+    );
+    return $vacancy;
   }
 }

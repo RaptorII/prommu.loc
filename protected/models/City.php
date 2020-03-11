@@ -833,4 +833,50 @@ class City extends CActiveRecord
 
         return $city;
     }
+    /**
+     * универасальный поиск
+     */
+    public static function getCitiesByName($search, $country, $limit)
+    {
+      $name = urldecode($search);
+      $name = trim($name);
+      $name = stripslashes($name);
+      $country = intval($country);
+
+      if(!empty($name))
+      {
+        $sql = "SELECT id_city id, name, ismetro, id_co
+                  FROM city
+                  WHERE name LIKE '%{$name}%' AND (id_co={$country} OR {$country}=0)
+                  ORDER BY CASE 
+                  WHEN name LIKE '{$name}' THEN 0
+                  WHEN name LIKE '{$name}%' THEN 1
+                  WHEN name LIKE '%{$name}%' THEN 2
+                  ELSE 3 END
+                  LIMIT {$limit}";
+      }
+      else
+      {
+        $sql = "SELECT id_city id, name, ismetro, id_co
+                  FROM city
+                  WHERE id_co={$country} OR {$country}=0
+                  ORDER BY sort ASC
+                  LIMIT {$limit}";
+      }
+
+      $query = Yii::app()->db->createCommand($sql)->queryAll();
+
+      return (!$query ? [] : $query);
+    }
+    /**
+     * @param $arr - массив ID городов
+     * @return mixed
+     */
+    public function getCities($arr)
+    {
+      return Yii::app()->db->createCommand()
+              ->from('city')
+              ->where(['in','id_city',$arr])
+              ->queryAll();
+    }
 }
