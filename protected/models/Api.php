@@ -377,7 +377,7 @@ class Api
             $cardPrommu = $filter['cardPrommu'] ?: null;
             $qs = $filter['qs'] ?: null;
             
-            var_dump($cities);
+            
             $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'cities', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
@@ -385,7 +385,7 @@ class Api
             $filter = [];
         } // endif
 
-
+        var_dump($filter);
         // получаем данные страницы
         $SearchVac = new SearchVac();
         $pages = new CPagination($SearchVac->searchVacationsCount($filter));
