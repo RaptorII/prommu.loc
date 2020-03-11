@@ -650,7 +650,7 @@ class SearchVac extends Model
         if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
           $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
           
-        var_dump($data['posts']);
+        
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
@@ -730,12 +730,12 @@ class SearchVac extends Model
             $filterPost = 'ea.id_attr IN ('.join(',', $data['posts']).')';
         }
         
-        
-        // $s1 = '';
-        // if( $filterPost ) $s1 = $filterPost;
-        // if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
-        // $s1 .= $filterPostSelf;
-        // if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
+       
+        $s1 = '';
+        if( $filterPost ) $s1 = $filterPost;
+        if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
+        $s1 .= $filterPostSelf;
+        if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
 
         // тип занятости
         if( isset($data['busyType']) ) $filter[] = "e.istemp = {$data['busyType']}";
