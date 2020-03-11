@@ -629,7 +629,7 @@ class SearchVac extends Model
         if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
           $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
           
-        varr_dump($data['cities']);
+        var_dump($data['cities']);
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
