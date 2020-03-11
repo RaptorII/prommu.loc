@@ -385,7 +385,7 @@ class Api
             $filter = [];
         } // endif
 
-        var_dump($filter);
+        // var_dump($filter);
         // получаем данные страницы
         $SearchVac = new SearchVac();
         $pages = new CPagination($SearchVac->searchVacationsCount($filter));
