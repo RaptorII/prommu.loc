@@ -4444,14 +4444,12 @@ public function vac(){
         try
         {   
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $cloud = Yii::app()->getRequest()->getParam('cloud');
-            $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
-            $idvac = $cloud['idvac'];
-            $deactive = $cloud['deactive'];
+            $idvac = Yii::app()->getRequest()->getParam('idvac');
+            $deactivate = Yii::app()->getRequest()->getParam('activate');
 
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($profile);
-            $commo = compact('idvac', 'deactive', 'idus');   
+            $commo = compact('idvac', 'deactivate', 'idus');   
             $dat = $Vacancy->vacActivate($commo);
             
            } catch (Exception $e)
