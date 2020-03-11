@@ -69,7 +69,7 @@ class SearchVac extends Model
     public function getVacationsAPI($props = [])
     {
         $filter = $props['filter'] ?: [];
-       
+        vae_dump($filter);
         $filter = $this->renderSQLFilterAPI(['filter' => $filter]);
 
         $data = $this->searchVacationsAPI($filter, $props['profile']);
@@ -621,7 +621,7 @@ class SearchVac extends Model
         // города
         $data['cities'] = $inProps['filter']['cities'] ? $inProps['filter']['cities']: Yii::app()->getRequest()->getParam('cities');
         // все должности
-        $data['posts'] = $inProps['filter']['posts'] ?$inProps['filter']['posts']: Yii::app()->getRequest()->getParam('post');
+        $data['posts'] = $inProps['filter']['posts'] ? $inProps['filter']['posts']: Yii::app()->getRequest()->getParam('post');
         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'];
         if( Yii::app()->getRequest()->getParam('ismed') || $inProps['filter']['ismed']  ) $data['ismed'] = $inProps['filter']['ismed'];
         if( Yii::app()->getRequest()->getParam('isavto') || $inProps['filter']['isavto']  ) $data['isavto'] = $inProps['filter']['isavto'];
