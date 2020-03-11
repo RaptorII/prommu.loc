@@ -711,11 +711,11 @@ class SearchVac extends Model
         }
         
         
-        $s1 = '';
-        if( $filterPost ) $s1 = $filterPost;
-        if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
-        $s1 .= $filterPostSelf;
-        if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
+        // $s1 = '';
+        // if( $filterPost ) $s1 = $filterPost;
+        // if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
+        // $s1 .= $filterPostSelf;
+        // if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
 
         // тип занятости
         if( isset($data['busyType']) ) $filter[] = "e.istemp = {$data['busyType']}";
