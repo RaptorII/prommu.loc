@@ -69,7 +69,7 @@ class SearchVac extends Model
     public function getVacationsAPI($props = [])
     {
         $filter = $props['filter'] ?: [];
-        vae_dump($filter);
+        var_dump($filter);
         $filter = $this->renderSQLFilterAPI(['filter' => $filter]);
 
         $data = $this->searchVacationsAPI($filter, $props['profile']);
