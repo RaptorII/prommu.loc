@@ -678,7 +678,6 @@ class SearchVac extends Model
         // addmetro
         if( filter_var(Yii::app()->getRequest()->getParam('addmetro'), FILTER_SANITIZE_NUMBER_INT) ) $data['metro'] = 1;
     
-        var_dump($data['posts']);
         
         // create filter string
         $filter = [];
@@ -734,12 +733,17 @@ class SearchVac extends Model
         }
         
        
+        
+       
         $s1 = '';
         if( $filterPost ) $s1 = $filterPost;
         if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
         $s1 .= $filterPostSelf;
         if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
-
+        
+         var_dump($filterPost);
+         var_dump($filter);
+         
         // тип занятости
         if( isset($data['busyType']) ) $filter[] = "e.istemp = {$data['busyType']}";
         // пол
