@@ -163,7 +163,27 @@ class SearchVac extends Model
 
         return $ret;
     }
+    
+    // получение кол-ва вакансий
+    public function searchVacationsCountApi($props = [])
+    {
+        $filter = $props['filter'] ?: [];
+        $filter = $this->renderSQLFilterApi(['filter' => $filter]);
 
+        $sql = "SELECT COUNT(DISTINCT e.id)
+                FROM empl_vacations e
+                INNER JOIN empl_city c ON c.id_vac = e.id 
+                {$filter['table']}
+                INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
+                {$filter['filter']}
+                AND e.status = 1 AND e.ismoder = 100 AND e.in_archive=0 AND e.remdate >= CURDATE()
+                ORDER BY e.ispremium DESC, e.id DESC ";
+
+        $res = Yii::app()->db->createCommand($sql);
+
+        return $res->queryScalar();
+    }
+    
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
