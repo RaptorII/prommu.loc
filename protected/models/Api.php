@@ -388,7 +388,7 @@ class Api
         // var_dump($filter);
         // получаем данные страницы
         $SearchVac = new SearchVac();
-        $pages = new CPagination($SearchVac->searchVacationsCount($filter));
+        $pages = new CPagination($SearchVac->searchVacationsCountApi($filter));
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchVac);
         
