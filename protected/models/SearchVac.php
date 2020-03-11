@@ -677,7 +677,9 @@ class SearchVac extends Model
         if(  (($int = filter_var(Yii::app()->getRequest()->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvt'])) ) $data['salVisitT'] = $int;
         // addmetro
         if( filter_var(Yii::app()->getRequest()->getParam('addmetro'), FILTER_SANITIZE_NUMBER_INT) ) $data['metro'] = 1;
-
+    
+        var_dump($data['posts']);
+        
         // create filter string
         $filter = [];
         $table = [];
@@ -727,7 +729,7 @@ class SearchVac extends Model
         if( !empty($data['posts']) )
         {
             // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            var_dump($data['posts']);
+            
             $filterPost = 'ea.id_attr IN ('.join(',', $data['posts']).')';
         }
         
