@@ -875,8 +875,27 @@ class City extends CActiveRecord
     public function getCities($arr)
     {
       return Yii::app()->db->createCommand()
-              ->from('city')
-              ->where(['in','id_city',$arr])
-              ->queryAll();
+        ->from('city')
+        ->where(['in', 'id_city', $arr])
+        ->queryAll();
+    }
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public static function getCityIdByUserId($id)
+    {
+        $city = Yii::app()->db->createCommand("
+            SELECT 
+                id_city
+            FROM 
+                user_city
+            WHERE 
+                id_user={$id}
+        ")->queryAll();
+
+        $city = $city[0]['id_city'];
+
+        return $city;
     }
 }

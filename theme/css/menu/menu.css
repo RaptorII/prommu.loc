@@ -1,0 +1,169 @@
+.small-menu__profile {
+
+}
+
+.small-menu__profile .user__info-logo {
+    width: 65px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid #CBD880;
+    transition: var(--main-trans);
+}
+
+.small-menu__profile .user__info-logo:hover {
+    border-color: var(--color-orange);
+    transition: var(--main-trans);
+}
+
+.small-menu__wrap {
+    position: relative;
+}
+
+.small-menu__profile .small-menu__drop {
+    background: var(--color-white);
+    padding: 0 20px;
+    position: absolute;
+    border: 2px solid var(--color-green);
+    width: 250px;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    top: 85px;
+    transition: var(--main-trans);
+    z-index: -1;
+}
+
+.small-menu__wrap:hover .small-menu__drop {
+    display: block;
+    top: 65px;
+    overflow: unset;
+    opacity: 1;
+    visibility: visible;
+    transition: var(--main-trans);
+    z-index: 10;
+}
+
+.small-menu__section {
+    display: block;
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.small-menu__section + .small-menu__section {
+    border-top: 1px solid var(--color-green);
+    padding: 10px 0 0 0;
+}
+
+.small-menu__section-item {
+    position: relative;
+    padding: 3px 0;
+}
+
+/* icons */
+.small-menu__section [class*=" icn-"],
+.small-menu__section [class^=icn-] {
+    width: 36px;
+    left: 15px;
+}
+
+.icn-exit-icon-prommu {
+    font-size: 16px;
+    padding: 0 10px;
+    top: 2px;
+}
+
+.icn-exit-icon-prommu:before {
+    content: "\e9dc";
+}
+
+.icn-download-st {
+    font-size: 25px;
+    padding: 0 5px;
+    top: -3px;
+}
+
+.icn-download-st:before {
+    content: "\e9cb";
+}
+
+.icn-telegram-icon {
+    font-size: 18px;
+    padding: 0 9px;
+    top: 0;
+}
+.icn-telegram-icon:before {
+    content: "\e834";
+}
+
+#DiLogoWrapp .small-menu__section-link {
+    transition: var(--main-trans);
+    text-decoration: none;
+    font-size: 16px;
+    padding-left: 30px;
+}
+
+#DiLogoWrapp .to-orange {
+    transition: var(--main-trans);
+}
+#DiLogoWrapp .to-orange:hover {
+    color: var(--color-orange);
+    transition: var(--main-trans);
+}
+
+#DiLogoWrapp .to-green {
+    transition: var(--main-trans);
+}
+#DiLogoWrapp .to-green:hover {
+    color: var(--color-green);
+    transition: var(--main-trans);
+}
+
+.small-menu__wrap .pa__menu-item-icon {
+    display: table-cell;
+}
+
+#DiLogoWrapp .pa__menu-link.active {
+    color: var(--color-green);
+}
+
+
+.pa__menu-link i:before {
+    font-family: "PrommuFont";
+    content: '';
+    display: block;
+    font-size: 16px;
+    -webkit-transition: opacity .3s ease-out;
+    -moz-transition: opacity .3s ease-out;
+    -o-transition: opacity .3s ease-out;
+    transition: opacity .3s ease-out;
+}
+.employer i:before,
+.applicant i:before {
+    font-style: normal;
+    padding: 0 5px;
+}
+
+.pa__menu-20.applicant i:before{ content: '\e953'; }
+.pa__menu-75.applicant i:before{ content: '\e947'; }
+.pa__menu-23.applicant i:before{ content: '\e94a'; }
+.pa__menu-78.applicant i:before{ content: '\e90f'; }
+.pa__menu-21.applicant i:before{ content: '\e982'; }
+.pa__menu-22.applicant i:before{ content: ''; }
+.pa__menu-25.applicant i:before{ content: ''; }
+.pa__menu-80.applicant i:before{ content: '\e950'; }
+.pa__menu-83.applicant i:before{ content: '\e935'; }
+.pa__menu-82.applicant i:before{ content: ''; }
+.pa__menu-84.applicant i:before{ content: '\e945'; }
+
+.pa__menu-15.employer i:before{ content: '\e953'; }
+.pa__menu-76.employer i:before{ content: '\e947'; }
+.pa__menu-16.employer i:before{ content: '\e94a'; }
+.pa__menu-17.employer i:before{ content: '\e945'; }
+.pa__menu-18.employer i:before{ content: '\e982'; }
+.pa__menu-14.employer i:before{ content: ''; }
+.pa__menu-79.employer i:before{ content: '\e90f'; }
+.pa__menu-19.employer i:before{ content: ''; }
+.pa__menu-27.employer i:before{ content: '\e935'; }
+.pa__menu-81.employer i:before{ content: '\e950'; }

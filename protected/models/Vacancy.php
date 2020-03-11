@@ -4157,6 +4157,7 @@ WHERE id_vac = {$inVacId}";
                         ispremium,
                         sort,
                         if(ismoder=100,1,0) ismoder,
+                        DATE_FORMAT(crdate,'%d.%m.%Y') crdate,
                         DATE_FORMAT(remdate,'%d.%m.%Y') remdate,
                         if(remdate>=CURRENT_DATE(),0,1) archive_date")
                     ->from('empl_vacations')

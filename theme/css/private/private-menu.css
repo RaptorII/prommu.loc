@@ -124,7 +124,7 @@
     text-align: center;
 }
 .pa__menu-link i:before {
-    font-family: PrommuFont;
+    font-family: "PrommuFont";
     content: '';
     display: block;
     font-size: 16px;

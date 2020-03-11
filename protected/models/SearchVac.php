@@ -69,6 +69,7 @@ class SearchVac extends Model
     public function getVacationsAPI($props = [])
     {
         $filter = $props['filter'] ?: [];
+        
         $filter = $this->renderSQLFilterAPI(['filter' => $filter]);
 
         $data = $this->searchVacationsAPI($filter, $props['profile']);
@@ -162,7 +163,27 @@ class SearchVac extends Model
 
         return $ret;
     }
+    
+    // получение кол-ва вакансий
+    public function searchVacationsCountApi($props = [])
+    {
+        $filter = $props['filter'] ?: [];
+        $filter = $this->renderSQLFilterApi(['filter' => $filter]);
 
+        $sql = "SELECT COUNT(DISTINCT e.id)
+                FROM empl_vacations e
+                INNER JOIN empl_city c ON c.id_vac = e.id 
+                {$filter['table']}
+                INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
+                {$filter['filter']}
+                AND e.status = 1 AND e.ismoder = 100 AND e.in_archive=0 AND e.remdate >= CURDATE()
+                ORDER BY e.ispremium DESC, e.id DESC ";
+
+        $res = Yii::app()->db->createCommand($sql);
+
+        return $res->queryScalar();
+    }
+    
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
@@ -618,9 +639,9 @@ class SearchVac extends Model
         // quicksearch
         if( ($s1 = filter_var(Yii::app()->getRequest()->getParam('qs'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) || $inProps['filter']['qs'] ) $data['qs'] = $s1 ? $s1 : $inProps['filter']['qs'];
         // города
-        if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
+        $data['cities'] = $inProps['filter']['cities'] ? $inProps['filter']['cities']: Yii::app()->getRequest()->getParam('cities');
         // все должности
-        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
+        $data['posts'] = $inProps['filter']['posts'] ? $inProps['filter']['posts']: Yii::app()->getRequest()->getParam('post');
         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'];
         if( Yii::app()->getRequest()->getParam('ismed') || $inProps['filter']['ismed']  ) $data['ismed'] = $inProps['filter']['ismed'];
         if( Yii::app()->getRequest()->getParam('isavto') || $inProps['filter']['isavto']  ) $data['isavto'] = $inProps['filter']['isavto'];
@@ -629,7 +650,7 @@ class SearchVac extends Model
         if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
           $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
           
-          
+        
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
@@ -706,10 +727,10 @@ class SearchVac extends Model
         if( !empty($data['posts']) )
         {
             // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
+            $filterPost = 'ea.id_attr IN ('.join(',', $data['posts']).')';
         }
         
-        
+       
         $s1 = '';
         if( $filterPost ) $s1 = $filterPost;
         if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
