@@ -1868,8 +1868,8 @@ class Vacancy extends ARModel
      */
     public function vacActivate($inProps=[])
     {
-        $id = $inProps['idvac']?:filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $isDeactivate = $inProps['deactive']?:filter_var(Yii::app()->getRequest()->getParam('d', 0), FILTER_SANITIZE_NUMBER_INT);
+        $id = $inProps['idvac']? $inProps['idvac']:filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+        $isDeactivate = $inProps['deactive']?$inProps['deactive']:filter_var(Yii::app()->getRequest()->getParam('d', 0), FILTER_SANITIZE_NUMBER_INT);
         $idus = $inProps['idus'];
 
         $error = -100;
@@ -1901,7 +1901,7 @@ class Vacancy extends ARModel
             
         
 
-            if( $isDeactivate )
+            if( !$isDeactivate )
             {
                 $message = 'Вакансия снята с публикации';
             }
