@@ -98,7 +98,6 @@ class SearchVac extends Model
         
         foreach ($res as $key => $val)
         {
-            var_dump($val);
             
             if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array()) ;
             
