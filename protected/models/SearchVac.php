@@ -69,7 +69,7 @@ class SearchVac extends Model
     public function getVacationsAPI($props = [])
     {
         $filter = $props['filter'] ?: [];
-        var_dump($filter);
+       
         $filter = $this->renderSQLFilterAPI(['filter' => $filter]);
 
         $data = $this->searchVacationsAPI($filter, $props['profile']);
@@ -707,7 +707,7 @@ class SearchVac extends Model
         if( !empty($data['posts']) )
         {
             // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
+            $filterPost = 'ea.id_attr IN ('.join(',', $data['posts']).')';
         }
         
         
