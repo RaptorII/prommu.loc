@@ -618,9 +618,9 @@ class SearchVac extends Model
         // quicksearch
         if( ($s1 = filter_var(Yii::app()->getRequest()->getParam('qs'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) || $inProps['filter']['qs'] ) $data['qs'] = $s1 ? $s1 : $inProps['filter']['qs'];
         // города
-        if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
+        if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?$inProps['filter']['city']: Yii::app()->getRequest()->getParam('cities');
         // все должности
-        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
+        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?$inProps['filter']['posts']: Yii::app()->getRequest()->getParam('post');
         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'];
         if( Yii::app()->getRequest()->getParam('ismed') || $inProps['filter']['ismed']  ) $data['ismed'] = $inProps['filter']['ismed'];
         if( Yii::app()->getRequest()->getParam('isavto') || $inProps['filter']['isavto']  ) $data['isavto'] = $inProps['filter']['isavto'];
