@@ -1868,7 +1868,7 @@ class Vacancy extends ARModel
      */
     public function vacActivate($inProps=[])
     {   
-        var_dump($inProps);
+        
         $id = $inProps['idvac']? $inProps['idvac']:filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
         $isDeactivate = $inProps['deactivate']?$inProps['deactivate']:filter_var(Yii::app()->getRequest()->getParam('d', 0), FILTER_SANITIZE_NUMBER_INT);
         $idus = $inProps['idus'];
