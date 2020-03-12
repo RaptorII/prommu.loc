@@ -5088,6 +5088,12 @@ WHERE id_vac = {$inVacId}";
   public function createVacancy($objData, $objUser)
   {
     $date = date('Y-m-d H:i:s');
+    $repost = 0;
+    in_array('vk',$objData->repost) && $repost|=1;
+    in_array('facebook',$objData->repost) && $repost|=2;
+    in_array('telegram',$objData->repost) && $repost|=4;
+    $repost = decbin($repost);
+    $repost = str_pad($repost, 3, "0", STR_PAD_LEFT);
     // создание вакансии
     $arInsert = [
       'id_user' => $objUser->id_user,
@@ -5109,19 +5115,24 @@ WHERE id_vac = {$inVacId}";
       'isavto' => isset($objData->car),
       'agefrom' => $objData->age_from,
       'ageto' => $objData->age_to,
-      'contacts' => null, // !!!
-      'iscontshow' => 0, // !!!
       'status' => self::$STATUS_NO_ACTIVE,
       'ismoder' => self::$ISMODER_NEW,
       'crdate' => $date,
+      'mdate' => $date,
       'smart' => isset($objData->smartphone),
-      'repost' => '000', // !!!
+      'repost' => $repost,
       'card' => isset($objData->card),
       'cardPrommu' => isset($objData->card_prommu),
       'self_employed' => $objData->self_employed
     ];
     Yii::app()->db->createCommand()->insert(self::tableName(), $arInsert);
     $vacancy = Yii::app()->db->getLastInsertID();
+    // сортировка
+    Yii::app()->db->createCommand()->update(
+      self::tableName(),
+      ['sort'=>$vacancy],
+      ['id'=>$vacancy]
+    );
     // добавление городов вакансии
     $arInsert = [];
     foreach ($objData->city as $v)

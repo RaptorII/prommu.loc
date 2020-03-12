@@ -76,6 +76,49 @@
     ?>
     <hr>
     <div class="form__field">
+      <div class="form__content-flex form__flex-wrap">
+        <div class="form__field-content form__content-indent form__field-first"><b>ПУБЛИКАЦИЯ В СОЦСЕТЯХ</b></div>
+        <div class="form__field-content form__content-indent form__field-first">
+          <div class="form__content-flex form__flex-wrap">
+            <div class="form__content-3 form__content-mfull">
+              <input
+                type="checkbox"
+                name="repost[]"
+                value="vk"
+                id="repost_vk"
+                class="form__field-checkbox"
+                <?=in_array('vk',$model->data->repost)?' checked="checked"':''?>>
+              <label for="repost_vk" class="form__checkbox-label">Вконтакте</label>
+            </div>
+            <div class="form__content-3 form__content-mfull">
+              <input
+                type="checkbox"
+                name="repost[]"
+                value="facebook"
+                id="repost_facebook"
+                class="form__field-checkbox"
+                <?=in_array('facebook',$model->data->repost)?' checked="checked"':''?>>
+              <label for="repost_facebook" class="form__checkbox-label">Facebook</label>
+            </div>
+            <div class="form__content-3 form__content-mfull">
+              <input
+                type="checkbox"
+                name="repost[]"
+                value="telegram"
+                id="repost_telegram"
+                class="form__field-checkbox"
+                <?=in_array('telegram',$model->data->repost)?' checked="checked"':''?>>
+              <label for="repost_telegram" class="form__checkbox-label">Telegram</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?
+    //
+    ?>
+    <hr>
+    <div class="form__field">
       <div class="form__field-content form__content-indent form__field-first">
           <input
             type="checkbox"
@@ -122,15 +165,6 @@
     //
     ?>
     <input type="hidden" name="step" value="<?=$model->step?>">
-    <?
-    //
-    ?>
-    <? if($model->finish_link): ?>
-      <script>
-        $('body').addClass('prmu-load');
-        document.location.href = "<?=$model->finish_link?>";
-      </script>
-    <? endif; ?>
   </div>
 </div>
 <script>

@@ -110,6 +110,7 @@ class VacancyCreate
   {
     $rq = Yii::app()->getRequest();
     $step = $rq->getParam('step');
+
     if($step==1)
     {
       // Заголовок
@@ -315,6 +316,12 @@ class VacancyCreate
       {
         $this->data->card = true;
       }
+      // соцсети
+      $v = $rq->getParam('repost');
+      if(in_array('vk',$v) || in_array('facebook',$v) || in_array('telegram',$v))
+      {
+        $this->data->repost = $v;
+      }
     }
 
     if(!count($this->errors)) // ошибок нет
@@ -377,12 +384,47 @@ class VacancyCreate
       );
     }
   }
-  /*
+  /**
    * @param $step = integer(1,2,3,4,5)
    * @return = string
    */
   public function getView($step = false)
   {
     return self::VIEW_TEMPLATE . ($step ?: $this->step);
+  }
+  /**
+   * @return array
+   * Метод проверяет необходимость оплаты и устанавливает необходимые значения в объекте. И возвращает массив после PrommuOrder
+   */
+  public function checkPayment()
+  {
+    $arRes = [];
+    if(!$this->id_vacancy)
+    {
+      return $arRes;
+    }
+
+    $rq = Yii::app()->getRequest();
+    if($rq->getParam('premium')==1)
+    {
+      $arCity = [];
+      $arPrice = [];
+      foreach ($this->dataOther->prices as $v)
+      {
+        if(in_array($v['id_city'],$rq->getParam('premium_region')))
+        {
+          $arCity[] = $v['id_city'];
+          $arPrice[] = $v['price'];
+        }
+      }
+      $model = new PrommuOrder();
+      $arRes = $model->orderPremiumInCreationVac(
+        $this->id_vacancy,
+        $arCity,
+        $arPrice,
+        $rq->getParam('premium_period')
+      );
+    }
+    return $arRes;
   }
 }
