@@ -1890,19 +1890,12 @@ class Vacancy extends ARModel
                 'bdate' => $isDeactivate ? '0000-00-00 00:00:00' : date('Y-m-d H:i:s')
             );
 
-        $title = $Q1['title'];
-        // $text = "Опубликована вакансия $title";
-        //   $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
-        //                file_get_contents($sendto);
-           // $this->getDigest($Q1['id'],  $Q1['title']);
-           
+            $title = $Q1['title'];
             $res = Yii::app()->db->createCommand()
                 ->update('empl_vacations', $fields, 'id = :id', array(':id' => $id));
 
-            
-        
 
-            if( !$isDeactivate )
+            if(!$isDeactivate)
             {
                 $message = 'Вакансия снята с публикации';
             }
@@ -1936,7 +1929,7 @@ class Vacancy extends ARModel
                             ]
                         );
 
-                $message = 'Ваша вакансия отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 15 минут в рабочее время.';
+                $message = 'Ваша вакансия активирована и отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 15 минут в рабочее время.';
             }
 
             $error = 0;
