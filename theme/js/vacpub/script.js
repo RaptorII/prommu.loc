@@ -43,7 +43,10 @@ var CreateVacancy = (function () {
     }
     else if(step==='5')
     {
-
+      $('form').attr('data-params','');
+      $('form').submit(function(){
+        $('body').addClass('prmu-load');
+      });
     }
     // инициализация подсказок
     Hinter.bind('.tooltip', { side: 'right' });

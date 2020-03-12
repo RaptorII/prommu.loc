@@ -248,4 +248,20 @@ class ServiceCloud
       'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'
     );
   }
+  /**
+   * @param $arr
+   * Получаем записи по массиву id
+   */
+  public function getServices($arr)
+  {
+    if(!is_array($arr) || !count($arr))
+    {
+      return false;
+    }
+    return Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('service_cloud')
+      ->where(['in','id',$arr])
+      ->queryAll();
+  }
 }

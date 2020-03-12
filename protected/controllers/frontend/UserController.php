@@ -747,45 +747,22 @@ class UserController extends AppController
 
       $rq->isPostRequest && $model->setDataByStep();
       $model->getDataByStep();
-      if($model->id_vacancy)
+      if($model->id_vacancy) // вакансия создана
       {
-        $model->finish_link = MainConfig::$PAGE_VACANCY . DS . $model->id_vacancy;
-        if($rq->getParam('premium')==1)
+        $arOrder = $model->checkPayment();
+        if(count($arOrder)) // страница выбора типа оплаты
         {
-          $arCity = [];
-          $arPrice = [];
-          foreach ($model->dataOther->prices as $v)
-          {
-            if(in_array($v['id_city'],$rq->getParam('premium_region')))
-            {
-              $arCity[] = $v['id_city'];
-              $arPrice[] = $v['price'];
-            }
-          }
-          $order = new PrommuOrder();
-          $arOrder = $order->orderPremiumInCreationVac(
-            $model->id_vacancy,
-            $arCity,
-            $arPrice,
-            $rq->getParam('premium_period')
-          );
-          $model->finish_link = $order->createPayLink($arOrder['account'], '', $arOrder['cost']);
-          /*
-          if($rq->getParam('personal')==='individual') // физ лица
-          {
-            $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
-            $link && $this->redirect($link);
-          }
-          if($rq->getParam('personal')==='legal') // юр лица
-          {
-            $model->setLegalEntityReceipt($data['id']);
-            $this->redirect(MainConfig::$PAGE_SERVICES);
-          }
-          */
+          $this->redirect(MainConfig::$PAGE_PAYMENT . '?receipt=' . implode(',',$arOrder['id']));
+        }
+        else
+        {
+          $this->redirect(MainConfig::$PAGE_VACANCY . DS . $model->id_vacancy);
         }
       }
-
-      $this->renderVacPub($model);
+      else // в процессе создания
+      {
+        $this->renderVacPub($model);
+      }
     }
 
 
@@ -1048,11 +1025,59 @@ class UserController extends AppController
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $rq = Yii::app()->getRequest();
+        // ветка для оплаты при создании вакансии
+        if(!empty($rq->getParam('receipt')))
+        {
+          if($rq->isPostRequest)
+          {
+            $model = new PrommuOrder();
+            $service = new ServiceCloud();
+            $arItems = $service->getServices($rq->getParam('receipt'));
+            $arId = [];
+            $price = 0;
+            foreach ($arItems as $v)
+            {
+              $arId[] = $v['id'];
+              $price += $v['sum'];
+            }
+
+            if($rq->getParam('personal')==='individual') // физ лица
+            {
+              $link = $model->createPayLink(
+                Share::$UserProfile->id . '.' . implode('.', $arId) . '.vacancy.' . time(), // пока только премиум
+                '',
+                $price
+              );
+              $link && $this->redirect($link);
+            }
+            if($rq->getParam('personal')==='legal') // юр лица
+            {
+              $model->setLegalEntityReceipt($arId);
+              $this->redirect(MainConfig::$PAGE_SERVICES);
+            }
+            Yii::app()->end();
+          }
+          $arUser = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+          $arUser['inn'] = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
+          isset($arUser['inn'][0]['val']) && $arUser['inn']=$arUser['inn'][0]['val'];
+          $data = [
+            'user' => $arUser,
+            'receipt' => explode(',',$rq->getParam('receipt'))
+          ];
+          $service = new ServiceCloud();
+          $data['receipt_items'] = $service->getServices($data['receipt']);
+          if(!count($data['receipt_items']) || count($data['receipt_items'])!=count($data['receipt'])) // если с урлом что-то не так - нам такой плательщик не нужен
+          {
+            throw new CHttpException(404, 'Error');
+          }
+          $this->render(MainConfig::$PAGE_PAYMENT_VIEW, ['viData' => $data]);
+          Yii::app()->end();
+        }
+        // ветка для оплаты в обычном режиме
         if(!$rq->isPostRequest)
             throw new CHttpException(404, 'Error');
 
         $model = new PrommuOrder();
-        $view = MainConfig::$PAGE_PAYMENT_VIEW;
         $service = $rq->getParam('service');
         $vac = $rq->getParam('vacancy');
         $vacPrc = $rq->getParam('vacancy_price');
@@ -1197,7 +1222,7 @@ class UserController extends AppController
                 'employer' => $emp,
                 'user' => $arUser
             );
-        $this->render($view, array('viData' => $data));
+        $this->render(MainConfig::$PAGE_PAYMENT_VIEW, ['viData' => $data]);
     }
     /*
     *       Отзыв / рейтинг

@@ -106,6 +106,19 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
         <?php endforeach; ?>
         <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
       <?endif;?>
+      <?if(count($viData['receipt_items'])): // оплата при создании вакансии ?>
+        <?
+          $price = 0;
+          foreach ($viData['receipt_items'] as $v)
+          {
+            $price += $v['sum'];
+            ?>
+            <input type="hidden" name="receipt[]" value="<?=$v['id']?>">
+            <?
+          }
+        ?>
+        <span id="payment-result"><?=$price.' '?> рублей</span>
+      <? endif; ?>
       <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
       <input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
 
