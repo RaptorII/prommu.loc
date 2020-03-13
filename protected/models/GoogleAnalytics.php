@@ -61,7 +61,6 @@ class GoogleAnalytics
       {
         continue;
       }
-      $arT = $arRequest;
       $arr = [
         'v' => '1',
         't' => 'event',
@@ -70,12 +69,17 @@ class GoogleAnalytics
         'ec' => 'offline', // Категория
         'ea' => 'user' // Действие
       ];
-      $arT[] = http_build_query($arr);
-      $str = implode("\n",$arT);
-      if((strlen($str) / 1000) < 16) // общий размер запроса не может превышать 16 Кб
+
+      array_push($arRequest, $arr);
+      $str = implode("\n",$arRequest);
+      if(strlen($str) < 16384) // общий размер запроса не может превышать 16 Кб
       {
         $arRequest[] = http_build_query($arr);
         $arUpdate[] = $client;
+      }
+      else
+      {
+        array_pop($arRequest);
       }
     }
 
@@ -142,7 +146,7 @@ class GoogleAnalytics
 
     file_put_contents(
       __DIR__ . "/_GA_measurement_protocol_log.txt",
-      date('Y.m.d H:i:s') . ' ' . $url . PHP_EOL . print_r($arUpdate,true)
+      date('Y.m.d H:i:s') . ' ' . $url . ' ' . count($arUpdate) . ' ' . implode(', ',$arUpdate)
       . PHP_EOL,
       FILE_APPEND
     );
