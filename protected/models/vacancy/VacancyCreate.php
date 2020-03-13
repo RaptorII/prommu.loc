@@ -115,7 +115,7 @@ class VacancyCreate
     {
       // Заголовок
       $v = trim($rq->getParam('title'));
-      $v = preg_replace("/[^a-zA-zа-яА-Я0-9]/", '', $v);
+      $v = preg_replace("/[^a-zA-zа-яА-Я0-9]/u", '', $v);
       $v = substr($v,0,self::TITLE_LENGTH);
       if(!strlen($v))
       {
