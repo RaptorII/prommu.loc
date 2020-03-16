@@ -789,7 +789,7 @@ class Vacancy extends ARModel
                 a.id_attr
               , a.val
               , d.name
-              , d.key
+              , a.key
             FROM empl_vacations e
             LEFT JOIN empl_attribs a ON e.id = a.id_vac
             LEFT JOIN user_attr_dict d ON a.id_attr = d.id
