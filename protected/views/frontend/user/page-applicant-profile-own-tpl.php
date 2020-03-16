@@ -1099,7 +1099,8 @@ if (!share::isApplicant()):
 //    display($cookieView);
 //    display($bigSrc);
 //    display($src);
-    display($viData['userInfo']);
+//    display($viData['userInfo']);
+//    display($viData['userInfo']['rateByUser']);
 ?>
 
 <div class="row">
@@ -1528,6 +1529,40 @@ if (!share::isApplicant()):
                 Оценки
             </div>
 
+            <div class="group">
+            <?php if(count($viData['userInfo']['rateByUser'])){
+                foreach ($viData['userInfo']['rateByUser'] as $key => $val): ?>
+                    <div class="group__line">
+                        <? $arItem = reset($val); ?>
+                        <?= $arItem['name']; ?>
+                        <div class="group__wrap">
+                            <?php foreach ($val as $k => $item): ?>
+                                <span
+                                        class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
+                                        title="Оценка
+                                                <?= $viData['rating']['rateNames'][$k] ?>
+                                                <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
+                                        ">
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                <?php endforeach;
+                } else { ?>
+                <div class="group">
+                    <span class="upp__subtitle">
+                        Оценки отсутствуют
+                    </span>
+                </div>
+            <? } ?>
+
+            </div>
+            <div class="personal__area--button">
+                <a href="/rate" class="btn__orange">
+                    Подробнее...
+                </a>
+
+            </div>
         </div>
 
         <div class="personal__area--capacity">
@@ -1630,12 +1665,6 @@ if (!share::isApplicant()):
                 <div class="ppp__subtitle">Не заполнено</div>
             <? endif; ?>
 
-
-
-
-
-
-
             <br>
         </div>
 
@@ -1709,9 +1738,6 @@ if (!share::isApplicant()):
                 <div class="ppp__subtitle">Не заполнено</div>
             <? endif; ?>
 
-
-
-
             <br>
         </div>
     </div>
@@ -1781,34 +1807,6 @@ endif;
 ?>
 <? /* ?>
 
-<? $empty = true; ?>
-      <? if(!empty($info['userAttribs'][9]['val'])): ?>
-        <div class="ppp__field">
-          <span class="ppp__field-name">Рост:</span>
-          <span class="ppp__field-val"><?=$info['userAttribs'][9]['val']?></span>
-        </div>
-        <? $empty = false; ?>
-      <? endif; ?>
-      <? if(!empty($info['userAttribs'][10]['val'])): ?>
-        <div class="ppp__field">
-          <span class="ppp__field-name">Вес:</span>
-          <span class="ppp__field-val"><?=$info['userAttribs'][10]['val']?></span>
-        </div>
-        <? $empty = false; ?>
-      <? endif; ?>
-      <?
-        $arAttrib = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Объем груди',15=>'Объем талии',16=>'Объем бедер');
-        foreach($arAttrib as $id => $name):?>
-        <? if($data = $info['userAttribs'][$this->ViewModel->isInArray($info['userAttribs'], 'idpar', $id)]['name']): ?>
-          <div class="ppp__field">
-            <span class="ppp__field-name"><?=$name?>:</span>
-            <span class="ppp__field-val"><?=$data?></span>
-          </div>
-          <? $empty = false; ?>
-        <? endif; ?>
-      <? endforeach; ?>
-      <? if($empty): ?>
-        <div class="ppp__subtitle">Не заполнено</div>
-      <? endif; ?>
+
 
  <? */ ?>
