@@ -12,45 +12,42 @@ class GoogleAnalytics
   {
     $hour = date('G');
     $min = date('i');
-    if(intval($hour)==0 && intval($min)<5) // из-за неточностей крона проверяем реги в последние минуты предыдущего дня
+    if(
+      ($hour<23 && ($min%5>0))
+      ||
+      ($hour==23 && $min<50 && ($min%5>0))
+    )
     {
-      $date = strtotime('yesterday');
-    }
-    else
-    {
-      $date = strtotime('today');
+      return false;
     }
 
-    $bDate = date('Y-m-d H:i:s',$date);
-    $eDate = date('Y-m-d H:i:s',($date + 86400));
-
-    $arUser = Yii::app()->db->createCommand()
-      ->select('ur.user')
-      ->from('user u')
-      ->join('user_register ur','ur.id_user=u.id_user')
+    $arIp = Yii::app()->db->createCommand()
+      ->selectDistinct("ur.ip")
+      ->from('user_register_page_cnt urpc')
+      ->join('user_register ur', 'ur.user=urpc.user')
       ->where(
-        'u.crdate between :bdate and :edate',
-        [':bdate'=>$bDate, ':edate'=>$eDate]
+        'urpc.page=:page AND (urpc.time BETWEEN :bdate AND :edate)',
+        [
+          ':page' => UserRegister::$PAGE_USER_LEAD,
+          ':bdate' => strtotime('today'),
+          ':edate' => (strtotime('tomorrow')-1)
+        ]
       )
       ->queryColumn();
 
+    if(!count($arIp))
+    {
+      return false;
+    }
+
     $arRes = Yii::app()->db->createCommand()
-      ->select('client')
+      ->select("client")
       ->from('user_client')
-      ->where([
-        'and',
-        'is_send_to_ga=0',
-        ['in','user',$arUser]
-      ])
+      ->where(['and','is_send_to_ga=0',['in','ip',$arIp]])
       ->queryColumn();
 
     if(!count($arRes))
     {
-      file_put_contents(
-        __DIR__ . "/_GA_measurement_protocol_log.txt",
-        date('Y.m.d H:i:s') . ' search_error' . PHP_EOL,
-        FILE_APPEND
-      );
       return false;
     }
 

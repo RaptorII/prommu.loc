@@ -41,12 +41,6 @@ class AjaxController extends AppController
       {
         $arRes['user'] = $urh;
       }
-      if(empty($arRes['client'])) // каким-то непонятным образом проскакивают юзеры без клиента
-      {
-        Yii::app()->end();
-        file_put_contents('client2.txt', date('d.m.Y H:i')."\n".print_r($arRes,true)."\n", FILE_APPEND | LOCK_EX);
-        return;
-      }
 
       file_put_contents('client.txt', date('d.m.Y H:i')."\t".' client - '.$arRes['client'].' ip - '.$ip."\n", FILE_APPEND | LOCK_EX);
         
@@ -70,7 +64,12 @@ class AjaxController extends AppController
         Yii::app()->db->createCommand()
           ->update('user_client', $arRes, 'ip like :ip', [':ip'=>$ip]);
       }
-      Yii::app()->session['is_set_client'] = true;
+
+      if($arRes['client'] && $arRes['ym_client'])
+      {
+        Yii::app()->session['is_set_client'] = true;
+      }
+
       Yii::app()->end();
     }
     // actionIndex вызывается всегда, когда action не указан явно.

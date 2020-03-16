@@ -663,6 +663,38 @@
             });
           }
         }
+        else if((typeof ga==='function') && clientCnt>6)
+        {
+          var name = "_ga", tmp, gaClient, tracker,
+              matches = document.cookie.match(new RegExp(
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+
+          matches = decodeURIComponent(matches);
+          tmp = matches.split('.');
+          gaClient = tmp[2] + '.' + tmp[3];
+          gaClient = gaClient.split(',');
+          gaClient = gaClient[0];
+
+          if (gaClient === "undefined.undefined")
+          {
+            tracker = ga.getAll()[0];
+            gaClient = tracker.get('clientId');
+          }
+
+          if(!gaClient.length)
+          {
+            setTimeout(function(){ setClient() },2500);
+          }
+          else
+          {
+            $.ajax({
+              type: 'GET',
+              url: '/ajax/createclient',
+              data: 'ga=' + gaClient
+            });
+          }
+        }
         else
         {
           setTimeout(function(){ setClient() },500);

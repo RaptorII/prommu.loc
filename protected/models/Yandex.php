@@ -201,42 +201,53 @@ class Yandex //extends CActiveRecord
   public static function generateCSVForMetric($beginDate=false, $endDate=false)
   {
     $bDate = strtotime('yesterday');
-    $eDate = $bDate + 86400;
+    $eDate = strtotime('today')-1;
     if($beginDate && $endDate)
     {
       $bDate = strtotime($beginDate);
-      $eDate = strtotime($endDate) + 86400;
-    }
-
-    $bDate = date('Y-m-d H:i:s',$bDate);
-    $eDate = date('Y-m-d H:i:s',$eDate);
-
-    $arRes = Yii::app()->db->createCommand()
-      ->select('ur.user, UNIX_TIMESTAMP(u.crdate) time')
-      ->from('user u')
-      ->join('user_register ur','ur.id_user=u.id_user')
-      ->where(
-        'u.crdate between :bdate and :edate',
-        [':bdate'=>$bDate, ':edate'=>$eDate]
-      )
-      ->queryAll();
-
-    $arUser = [];
-    foreach ($arRes as $v)
-    {
-      $arUser[] = $v['user'];
+      $eDate = strtotime($endDate);
     }
 
     $query = Yii::app()->db->createCommand()
-      ->select('ym_client, user')
+      ->select("ur.ip, urpc.time")
+      ->from('user_register_page_cnt urpc')
+      ->join('user_register ur', 'ur.user=urpc.user')
+      ->where(
+        'urpc.page=:page AND (urpc.time BETWEEN :bdate AND :edate)',
+        [
+          ':page' => UserRegister::$PAGE_USER_LEAD,
+          ':bdate' => $bDate,
+          ':edate' => $eDate
+        ]
+      )
+      ->queryAll();
+
+    if(!count($query))
+    {
+      return false;
+    }
+
+    $arIp = $arTime = [];
+    foreach ($query as $v)
+    {
+      $arIp[] = $v['ip'];
+      $arTime[$v['ip']] = $v['time'];
+    }
+
+    $arRes = Yii::app()->db->createCommand()
+      ->select("ip, ym_client")
       ->from('user_client')
-      ->where(['in','user',$arUser])
+      ->where([
+        'and',
+        'ym_client is not null',
+        ['in','ip',$arIp]
+      ])
       ->queryAll();
 
     $content = "ClientId,Target,DateTime";
     $bResult = false;
     $goal='offline';
-    foreach ($arRes as $v)
+    foreach ($arRes as $key => $v)
     {
       /*switch ($v['page'])
       {
@@ -248,22 +259,15 @@ class Yandex //extends CActiveRecord
         case UserRegister::$PAGE_USER_LEAD: $goal=5; break;
         default: $goal=6; break;
       }*/
-
-      foreach ($query as $j)
-      {
-        if($v['user']==$j['user'])
-        {
-          $content .= PHP_EOL . $j['ym_client'] . "," . $goal . "," . $v['time'];
-          $bResult = true;
-        }
-      }
+      $content .= PHP_EOL . $v['ym_client'] . "," . $goal . "," . $arTime[$v['ip']];
+      $bResult = true;
     }
 
     if(!$bResult)
     {
       file_put_contents(
         __DIR__ . "/_YM_offline_conversions_log.txt",
-        date('Y.m.d H:i:s') . ' search_error user=' . count($arRes) . ' clients=' . count($query) . PHP_EOL,
+        date('Y.m.d H:i:s') . ' search_error user=' . count($query) . ' clients=' . count($arRes) . PHP_EOL,
         FILE_APPEND
       );
       return false;
@@ -297,7 +301,7 @@ class Yandex //extends CActiveRecord
 
     file_put_contents(
       __DIR__ . "/_YM_offline_conversions_log.txt",
-      date('Y.m.d H:i:s') . ' success user=' . count($arRes) . ' clients=' . count($query) . PHP_EOL,
+      date('Y.m.d H:i:s') . ' success user=' . count($query) . ' clients=' . count($arRes) . PHP_EOL,
       FILE_APPEND
     );
     return $result;
