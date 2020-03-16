@@ -788,6 +788,8 @@ class Vacancy extends ARModel
             
             
             ///attribs
+            $data[$val['id']]['locations'] = $this->getLocations((int)$val['id']);
+            
             $data[$val['id']]['id'] = (int)$val['id'];
             $data[$val['id']]['title'] = $val['title'];
             
@@ -809,12 +811,8 @@ class Vacancy extends ARModel
             
             $data[$val['id']]['created_at'] = $val['crdate'];
             $data[$val['id']]['removed_at'] = $val['remdate'];
-                
-           
             $data[$val['id']]['is_man'] = (boolean)$val['isman'];
             $data[$val['id']]['is_woman'] = (boolean)$val['iswoman'];
-            
-            
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data[$val['id']]['sort'] = (boolean)$val['sort'];
             $data[$val['id']]['is_active'] = true;
@@ -825,7 +823,6 @@ class Vacancy extends ARModel
             $data[$val['id']]['smart'] = (boolean)$val['smart'];
             $data[$val['id']]['card'] = (boolean)$val['card'];
             $data[$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
-            
             
             $data[$val['id']]['requirements'] = $val['requirements'];
             $data[$val['id']]['conditions'] = $val['conditions'];
