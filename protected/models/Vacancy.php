@@ -763,7 +763,6 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
-                   ea.key,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -797,11 +796,11 @@ class Vacancy extends ARModel
             LEFT JOIN user_attr_dict d ON a.id_attr = d.id
             WHERE e.id = {$idvac}
             ORDER BY a.id_attr";
-            $res = Yii::app()->db->createCommand($sql)->queryAll();
+            $attribs = Yii::app()->db->createCommand($sql)->queryAll();
 
-            foreach ($res as $key => $val)
+            foreach ($attribs as $keys => $vals)
             {
-                $data[$val['id']]['id']['attribs'][$val['key']] = $val;
+                $data[$val['id']]['id']['attribs'][$val['key']] = $vals;
             } 
         
             if( !isset($data[$val['id']])) $data[$val['id']] = array('city' => array(), 'posts' => array()) ;
