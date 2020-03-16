@@ -789,8 +789,8 @@ class Vacancy extends ARModel
             
             ///attribs
             $locat = $this->getLocations((int)$val['id']);
-            for($i = 0; $i < count($locat); $i++){
-                 $data[$val['id']]['locations'][] = $locat[$i];
+            foreach($locat as $locations){
+                 $data[$val['id']]['locations'][] = $locations;
             }
            
             
