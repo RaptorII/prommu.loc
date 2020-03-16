@@ -763,6 +763,14 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
+                   ea.manh,
+                   ea.weig,
+                   ea.hcolor,
+                   ea.hlen,
+                   ea.ycolor,
+                   ea.chest,
+                   ea.waist,
+                   ea.thigh,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -789,8 +797,8 @@ class Vacancy extends ARModel
             
             ///attribs
             $locat = $this->getLocations((int)$val['id']);
-            foreach($locat as $locations){
-                 $data[$val['id']]['locations'][] = $locations;
+            for($i = 0; $i < count($locat); $i++){
+                 $data[$val['id']]['locations'][] = $locat[$i];
             }
            
             
