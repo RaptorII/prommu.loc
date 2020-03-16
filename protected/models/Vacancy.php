@@ -797,7 +797,10 @@ class Vacancy extends ARModel
             $attribs = Yii::app()->db->createCommand($sql)->queryAll();
 
             foreach ($attribs as $keys => $vals)
-            {
+            {   
+                if($vals['val'] == null){
+                    $vals['val'] = $vals['name'];
+                }
                 $data[$val['id']]['attribs'][] = $vals;
             } 
         
