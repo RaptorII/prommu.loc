@@ -798,7 +798,7 @@ class Vacancy extends ARModel
 
             foreach ($attribs as $keys => $vals)
             {
-                $data[$val['id']]['attribs'][$val['key']] = $vals;
+                $data[$val['id']]['attribs'][] = $vals;
             } 
         
             if( !isset($data[$val['id']])) $data[$val['id']] = array('city' => array(), 'posts' => array()) ;
