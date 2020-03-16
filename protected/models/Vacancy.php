@@ -798,9 +798,12 @@ class Vacancy extends ARModel
 
             foreach ($attribs as $keys => $vals)
             {   
+            
                 if($vals['val'] == null){
                     $vals['val'] = $vals['name'];
                 }
+                unset($vals['name']);
+                
                 $data[$val['id']]['attribs'][] = $vals;
             } 
         
