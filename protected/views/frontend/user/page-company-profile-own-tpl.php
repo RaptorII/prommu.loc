@@ -766,12 +766,11 @@ $this->pageTitle = $title;
 
                                 </div>
                             </div>
+                            <?//end efficiency popup?>
 
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
 

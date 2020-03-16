@@ -37,6 +37,10 @@ if ($route !== "about/empl" &&
         echo $content;
     } else { ?>
         <div class="container">
+
+            <?php //off old employer profile
+            if (!Share::isApplicant()):
+            ?>
             <div class="row content-menu-box mt20">
                 <div class="col-xs-12 mobile-none">
                     <div class="content-header">Личный кабинет соискателя </div>
@@ -72,6 +76,9 @@ if ($route !== "about/empl" &&
                 </div>
             </div>
             <!--end menu            -->
+            <?php
+            endif;
+            ?>
 
             <div class="row content-header-box mt20">
                 <div class="col-xs-12">

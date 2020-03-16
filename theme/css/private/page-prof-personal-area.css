@@ -115,7 +115,13 @@
 }
 
 .upp__img-block-main .upp__change-logo:hover {
-    color: #ABB820
+    color: #ABB820;
+}
+
+.upp-logo__item-onl {
+    max-width: 75px;
+    display: block;
+    text-align: center;
 }
 
 .upp__title {
@@ -327,6 +333,10 @@ try google material design
     color: var(--color-dark);
 }
 
+#DiContent span.group__info {
+    border-bottom: none;
+}
+
 .group {
     position: relative;
     margin-bottom: 5px;
@@ -338,6 +348,37 @@ try google material design
     display: inline-block;
     position: relative;
 }
+
+.group__about--9 {}
+.group__about--10 {}
+.group__about--11 {}
+.group__about--12 {}
+.group__about--13 {}
+.group__about--14 {}
+.group__about--15 {}
+.group__about--16 {}
+
+.group__about--9:before,
+.group__about--10:before,
+.group__about--11:before,
+.group__about--12:before,
+.group__about--13:before,
+.group__about--14:before,
+.group__about--15:before,
+.group__about--16:before {
+    content: "\e994";
+    font-family: "PrommuFont";
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+}
+.group__about--10:before {content: "\e99c";}
+.group__about--11:before {content: "\e999";}
+.group__about--12:before {content: "\e99a";}
+.group__about--13:before {content: "\e904";}
+.group__about--14:before {content: "\e997";}
+.group__about--15:before {content: "\e99e";}
+.group__about--16:before {content: "\e99b";}
 
 /*
 .group__point:before {
@@ -524,4 +565,57 @@ try google material design
 
 .upp__table-cnt-minus {
     background-color: #ED2036
+}
+
+
+/*
+*/
+
+.self_employed-user,
+.confirmed-user {
+    color: var(--color-green);
+}
+
+.self_employed-user:before,
+.confirmed-user:before {
+    content: '\e992';
+    font-family: "PrommuFont";
+    font-size: 30px;
+    line-height: 30px;
+    color: var(--color-green);
+    cursor: default;
+    text-align: left;
+    position: relative;
+    top: 8px;
+    left: -5px;
+}
+
+.self_employed-user:before {
+    content: '\e967';
+}
+
+.personal__area--flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.personal__area--flex-column .personal__area--capacity{
+    flex: 1 0 auto;
+}
+
+.personal__area--vac {
+    font-size: 13px;
+}
+.personal__area--vac + .personal__area--vac {
+    margin-top: 5px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-green);
+}
+
+.personal__area--vac-name {
+    font-weight: bold;
+}
+
+.personal__area--capacity-scroll {
+    overflow-x: auto;
 }
