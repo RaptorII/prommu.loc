@@ -2,12 +2,15 @@
   auth form
  */
 .auth-form__header.row {
-  border-bottom: 1px solid #c8c8c8;
-  margin: 8px 0 48px;
+  /*border-bottom: 1px solid #c8c8c8;*/
+  /*margin: 8px 0 48px;*/
+  margin: 8px 0 8px;
   text-align: left;
-  padding: 0 0 32px 0;
+  /*padding: 0 0 32px 0;*/
+  padding: 0 0 20px 0;
 }
 
+h2.auth-form__title,
 .auth-form__title {
   text-transform: uppercase;
   margin: 0;
@@ -15,6 +18,17 @@
   font-family: "RobotoCondensedBold", sans-serif, verdana;
   color: #444649;
   text-align: center;
+}
+
+.auth-form__content {
+  padding: 30px 0 0 0;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #c8c8c8;
+  border-top: 1px solid #c8c8c8;
+}
+
+.auth-form__bottom {
+  margin-bottom: 30px;
 }
 
 /*********/
@@ -29,7 +43,7 @@
 }
 
 .auth-form__form .auth-form__preview {
-  padding-bottom: 95px;
+  padding-bottom: 25px;
 }
 
 .auth-form__social .auth-form__preview {
@@ -319,11 +333,15 @@
 }
 
 .auth-form__reg-link {
-  display: inline-block;
+  display: block;
   cursor: pointer;
-  /*color: #abb820;*/
+  /* color: #abb820; */
   position: relative;
   text-decoration: underline;
+  margin: 20px auto;
+  width: 230px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .auth-form__reg-list {
