@@ -22,13 +22,17 @@ h2.auth-form__title,
 
 .auth-form__content {
   padding: 30px 0 0 0;
-  margin-bottom: 30px;
   /*border-bottom: 1px solid #c8c8c8;*/
   /*border-top: 1px solid #c8c8c8;*/
 }
 
+.user-profile-page__line {
+  border-bottom: 1px solid #c8c8c8;
+  margin-top: 0;
+}
+
 .auth-form__bottom {
-  margin: 20px 0 0 0;
+  margin: 0;
 }
 
 /*********/
@@ -39,7 +43,7 @@ h2.auth-form__title,
 }
 
 #DiContent .auth-form__form {
-  padding: 0 54px 50px 70px;
+  padding: 0 54px 0px 70px;
 }
 
 .auth-form__form .auth-form__preview {
@@ -47,6 +51,7 @@ h2.auth-form__title,
 }
 
 .auth-form__social .auth-form__preview {
+  padding-top: 20px;
   padding-bottom: 35px;
 }
 
@@ -193,6 +198,7 @@ h2.auth-form__title,
 
 .auth-form__restore {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 #DiContent .auth-form__restore a {
@@ -215,7 +221,6 @@ h2.auth-form__title,
 #DiContent .auth-form__social {
   padding: 0 45px;
   text-align: left;
-  border-left: 1px solid #c8c8c8;
 }
 
 .auth-form__social-link {
@@ -647,4 +652,13 @@ media
 .auth-form__selection label:last-child:after {
   content: '\e976';
   font-size: 35px;
+}
+
+@media screen and (min-width: 767px) {
+  .auth-form__form {
+    border-right: 1px solid #c8c8c8;
+  }
+  .auth-form__bottom .auth-form__bottom-pad {
+    padding: 0 54px 0 50px;
+  }
 }

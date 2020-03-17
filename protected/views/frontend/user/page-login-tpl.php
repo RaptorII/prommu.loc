@@ -8,14 +8,14 @@
 <div class='row'>
   <div class='col-xs-12 auth-form__wrap'>
     <div class="row auth-form__header">
-        <div class="col-xs-12 col-sm-12">
+        <div class="col-xs-12 col-sm-8">
             <h1 class='auth-form__title'>Вход</h1>
         </div>
-<!--        <div class="col-xs-12 col-sm-4"></div>-->
     </div>
 
     <div class="row auth-form__content">
         <div class="col-xs-12 col-sm-8 auth-form__form">
+          <hr class="user-profile-page__line">
           <span class="auth-form__preview">
             Введите свои данные:
           </span>
@@ -55,24 +55,6 @@
               <a href='/<?= MainConfig::$PAGE_PASS_RESTORE ?>'>Забыли пароль?</a>
             </div>
           </form>
-
-          <div class="row auth-form__bottom">
-            <div class="col-xs-12 center">
-                <span class='auth-form__preview'>Ещё не регистрировались у нас на сервисе?</span>
-                <span class='auth-form__preview'>Жмите на кнопку, регистрация занимает не более пяти минут.</span>
-
-                <div class="auth-form__reg-link btn__orange">
-                    <a href="/user/register">
-                        Регистрация
-                    <!--<ul class="auth-form__reg-list">
-                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
-                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
-                    </ul>
-                    -->
-                    </a>
-                </div>
-            </div>
-          </div>
         </div>
         <div class="col-xs-12 col-sm-4 auth-form__social">
           <span class="auth-form__preview">Либо войдите через социальные сети:</span>
@@ -86,6 +68,19 @@
           </div>
         </div>
     </div>
+      <div class="row auth-form__bottom">
+          <div class="col-xs-12 col-sm-8 center auth-form__bottom-pad">
+              <hr class="user-profile-page__line">
+              <span class='auth-form__preview'>Ещё не регистрировались у нас на сервисе?</span>
+              <span class='auth-form__preview'>Жмите на кнопку, регистрация занимает не более пяти минут.</span>
+
+              <div class="auth-form__reg-link btn__orange">
+                  <a href="/user/register">
+                      Регистрация
+                  </a>
+              </div>
+          </div>
+      </div>
 
   </div>
 </div>
