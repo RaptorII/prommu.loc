@@ -1659,7 +1659,29 @@ if (!share::isApplicant()):
                     ?>
                     <div class="group">
                         <div class="group__about">Метро</div>
-                        <div class="group__info"><?=implode(', ', $arMetroes)?></div>
+
+                        <?
+                        if (count($arMetroes)<=2): ?>
+                            <div class="group__info"><?=implode(', ', $arMetroes)?></div>
+                        <?
+                        endif;
+                        ?>
+
+                        <?
+                        if (count($arMetroes)>2): ?>
+                            <div class="group__info">
+                                <?=$arMetroes[1].', '?>
+                                <?=$arMetroes[2].'... '?>
+                                <div class="group__info--drop">
+                                    <?=implode(', ', $arMetroes)?>
+                                </div>
+                            </div>
+                        <?
+                        endif;
+                        ?>
+
+
+
                     </div>
                 <? endif; ?>
             <?
