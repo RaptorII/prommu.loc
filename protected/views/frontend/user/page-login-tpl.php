@@ -62,11 +62,14 @@
                 <span class='auth-form__preview'>Жмите на кнопку, регистрация занимает не более пяти минут.</span>
 
                 <div class="auth-form__reg-link btn__orange">
-                Регистрация
-                    <ul class="auth-form__reg-list">
+                    <a href="/user/register">
+                        Регистрация
+                    <!--<ul class="auth-form__reg-list">
                         <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
                         <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
                     </ul>
+                    -->
+                    </a>
                 </div>
             </div>
           </div>

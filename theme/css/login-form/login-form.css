@@ -23,12 +23,12 @@ h2.auth-form__title,
 .auth-form__content {
   padding: 30px 0 0 0;
   margin-bottom: 30px;
-  border-bottom: 1px solid #c8c8c8;
-  border-top: 1px solid #c8c8c8;
+  /*border-bottom: 1px solid #c8c8c8;*/
+  /*border-top: 1px solid #c8c8c8;*/
 }
 
 .auth-form__bottom {
-  margin: 20px 0 30px 0;
+  margin: 20px 0 0 0;
 }
 
 /*********/
@@ -348,6 +348,11 @@ h2.auth-form__title,
   text-transform: uppercase;
 }
 
+#DiContent .auth-form__reg-link a:hover,
+#DiContent .auth-form__reg-link a:focus {
+  color: var(--color-white);
+  text-decoration: none;
+}
 .auth-form__reg-list {
   display: none;
   position: absolute;
