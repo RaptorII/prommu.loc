@@ -4,7 +4,7 @@
 .auth-form__header.row {
   /*border-bottom: 1px solid #c8c8c8;*/
   /*margin: 8px 0 48px;*/
-  margin: 8px 0 8px;
+  margin: 5px 0 5px;
   text-align: left;
   /*padding: 0 0 32px 0;*/
   padding: 0;
@@ -21,9 +21,7 @@ h2.auth-form__title,
 }
 
 .auth-form__content {
-  padding: 30px 0 0 0;
-  /*border-bottom: 1px solid #c8c8c8;*/
-  /*border-top: 1px solid #c8c8c8;*/
+  padding: 20px 0 0 0;
 }
 
 .user-profile-page__line {
@@ -44,6 +42,10 @@ h2.auth-form__title,
 
 #DiContent .auth-form__form {
   padding: 0 54px 0px 70px;
+}
+
+#DiContent .content-block {
+  margin-top: 0;
 }
 
 .auth-form__form .auth-form__preview {
