@@ -75,7 +75,7 @@
               <span class='auth-form__preview'>Жмите на кнопку, регистрация занимает не более пяти минут.</span>
 
               <div class="auth-form__reg-link btn__orange">
-                  <a href="/user/register">
+                  <a href="/user/register/type">
                       Регистрация
                   </a>
               </div>
