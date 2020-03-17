@@ -1522,6 +1522,7 @@ if (!share::isApplicant()):
                 </div>
             <? endif; ?>
 
+            <br>
         </div>
 
         <div class="personal__area--capacity">
@@ -1530,15 +1531,20 @@ if (!share::isApplicant()):
             </div>
 
             <div class="group">
-            <?php if(count($viData['userInfo']['rateByUser'])){
+            <?php
+            $i=0;
+            ?>
+            <?php
+            if(count($viData['userInfo']['rateByUser'])){
                 foreach ($viData['userInfo']['rateByUser'] as $key => $val): ?>
+                    <? if ($i>=4) break; ?>
                     <div class="group__line">
                         <? $arItem = reset($val); ?>
                         <?= $arItem['name']; ?>
                         <div class="group__wrap">
                             <?php foreach ($val as $k => $item): ?>
                                 <span
-                                        class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
+                                        class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hinttop"
                                         title="Оценка
                                                 <?= $viData['rating']['rateNames'][$k] ?>
                                                 <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
@@ -1547,8 +1553,10 @@ if (!share::isApplicant()):
                             <?php endforeach; ?>
                         </div>
                     </div>
-                <?php endforeach;
-                } else { ?>
+                <?php
+                    $i++;
+                endforeach;
+            } else { ?>
                 <div class="group">
                     <span class="upp__subtitle">
                         Оценки отсутствуют
@@ -1569,6 +1577,55 @@ if (!share::isApplicant()):
             <div class="personal__area--capacity-name">
                 Отзывы
             </div>
+
+            <?php if($flagOwnProfile): ?>
+
+                <div class="personal__area--capacity-data">
+                    <?php if($cntComments): ?>
+                    <span class="ppp__subtitle">
+                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link js-g-hashint" title="Всего отзывов">
+                            <b class="-green"><?=$cntComments?></b>
+                        </a>
+                    </span>
+                    (
+                    <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link -green js-g-hashint" title="Положительных отзывов">
+                        <?=$viData['lastComments']['count'][0]?>
+                    </a>
+                    /
+                    <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link red js-g-hashint" title="Отрицательных отзывов">
+                        <?=$viData['lastComments']['count'][1]?>
+                    </a>
+                    )
+                    <?endif?>
+                </div>
+
+                <?php if(!$cntComments): ?>
+                    <span class="ppp__subtitle">Отзывы отсутствуют</span><br>
+                <?php endif;?>
+                <?php if($cntComments): ?>
+                    <div class="ppp__comments">
+                        <?php for($i=0; $n=$cntComments, $i<$n, $i<2; $i++):
+                            $comm = $viData['lastComments']['comments'][$i];
+                            if(isset($comm)): ?>
+                                <div class="ppp__comments-item <?=$comm['isneg']?'negative':''?>">
+                                    <div class="ppp__comm-name"><a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $comm['id_user']?>"><?=$comm['fio']?></a> <?=DateTime::createFromFormat('d.m.y', $comm['crdate'])->format('d/m/Y');?></div>
+                                    <div>
+                                        <?=mb_strimwidth($comm['message'], 0, 100, "...");?>
+                                    </div>
+                                </div>
+                            <?php endif;
+                        endfor; ?>
+                    </div>
+                    <hr class="upp__line">
+                    <?php if($cntComments>0): ?>
+                        <div class="personal__area--button">
+                            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
+                                Подробнее...
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
 
         </div>
     </div>

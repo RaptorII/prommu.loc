@@ -623,10 +623,25 @@ $this->pageTitle = $title;
                             <div class="upp__subtitle">
 
                                 <? if($cntComments):?>
-                                    Вывести отзывы
+                                    (
+                                    <span class="upp__review upp__review-red">
+                                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>"
+                                           class="upp__link">
+                                            <?=$viData['rate']['lastComments']['count'][1]?>
+                                        </a>
+                                        </span>
+                                    /
+                                    <span class="upp__review upp__review-green">
+                                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>"
+                                           class="upp__link">
+                                            <?=$viData['rate']['lastComments']['count'][0]?>
+                                        </a>
+                                    </span>
+                                    )
                                 <? else: ?>
                                     <span class="upp__subtitle">Отзывы отсутствуют</span>
                                 <? endif;?>
+
 
                               <!--  <span class="upp__info">
                                     <i class="icn-info-three"></i>
@@ -885,8 +900,6 @@ $this->pageTitle = $title;
                         //      COMMENTS
                         ?>
                             <? if($cntComments):?>
-                                <span class="upp__subtitle">Отзывы</span>
-                                <hr class="upp__line">
                                 <div class="upp__reviews-cnt">Отрицательных:
                                     <span class="upp__review upp__review-red">
                                         <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>" class="upp__link"><?=$viData['rate']['lastComments']['count'][1]?></a>
