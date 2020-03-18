@@ -175,8 +175,8 @@ class UserNotifications
       self::$APP_NEW_VACANCIES => $l,
       self::$APP_CONFIRMATIONS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
       self::$APP_REFUSALS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
-      self::$APP_START_VACANCY_TOMORROW => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
-      self::$APP_START_VACANCY => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
+      self::$APP_START_VACANCY_TOMORROW => MainConfig::PAGE_USER_VACANCIES_LIST . DS . $item['id_vacancy'],
+      self::$APP_START_VACANCY => MainConfig::PAGE_USER_VACANCIES_LIST . DS . $item['id_vacancy'],
       self::$APP_SET_RATING => MainConfig::$PAGE_SETRATE . DS . $item['id_vacancy'],
       self::$APP_NEW_RATING => DS . MainConfig::$PAGE_RATE
     ];

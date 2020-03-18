@@ -822,8 +822,8 @@ class UserController extends AppController
             $id = $rq->getParam('id');
             $isArchive = $rq->getParam('section')==='archive';
             $link = $isArchive 
-                ? MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE 
-                : MainConfig::$PAGE_APPLICANT_VACS_LIST;
+                ? MainConfig::PAGE_USER_VACANCIES_LIST_ARCHIVE
+                : MainConfig::PAGE_USER_VACANCIES_LIST;
             
             if($id>0)
             {

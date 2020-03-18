@@ -1,11 +1,11 @@
 <?
 	$url = Yii::app()->request->requestUri;
-	$archive = MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE;
+	$archive = MainConfig::PAGE_USER_VACANCIES_LIST_ARCHIVE;
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'vacancies/app-item.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vacancies/app-item.js', CClientScript::POS_END);
   $link = Yii::app()->getRequest()->getParam('section')==='archive' 
-      ? MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE 
-      : MainConfig::$PAGE_APPLICANT_VACS_LIST;
+      ? MainConfig::PAGE_USER_VACANCIES_LIST_ARCHIVE
+      : MainConfig::PAGE_USER_VACANCIES_LIST;
   $vacancy = $viData['item'];
   $employer = $viData['user'][$vacancy['employer']];
 ?>

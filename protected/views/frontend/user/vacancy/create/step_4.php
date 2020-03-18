@@ -7,7 +7,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Описание <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Описание <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint form__field-niceditor">
         <? if($model->errors['requirements']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -25,7 +25,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Обязанности</label>
+      <label class="form__field-label text__nowrap">Обязанности</label>
       <div class="form__field-content form__content-indent form__content-hint form__field-niceditor">
         <div id="duties_panel" class="form__textarea-panel"></div>
         <textarea
@@ -39,7 +39,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Условия</label>
+      <label class="form__field-label text__nowrap">Условия</label>
       <div class="form__field-content form__content-indent form__content-hint form__field-niceditor">
         <div id="conditions_panel" class="form__textarea-panel"></div>
         <textarea

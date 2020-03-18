@@ -4,7 +4,7 @@
   <h6 class="form__header-h6">Введите данные</h6>
   <div class="form__container">
     <div class="form__field form__field-first">
-      <label class="form__field-label text_nowrap">Заголовок <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Заголовок <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint">
         <? if($model->errors['title']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -14,7 +14,7 @@
           name="title"
           value="<?=$model->data->title?>"
           class="form__field-input prmu-required prmu-check<?=($model->errors['title']?' prmu-error':'')?>"
-          data-params='{"limit":"<?=VacancyCreate::TITLE_LENGTH?>","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}'
+          data-params='{"limit":"<?=VacancyCheckFields::TITLE_LENGTH?>","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}'
           autocomplete="off">
       </div>
       <div class="form__field-hint tooltip" title="Заголовок должен быть кратким и отражать суть вакансии. Например: Раздача листовок / Расклейка объявлений / Подработка промоутером / Аниматор на детский праздник"></div>
@@ -23,7 +23,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Должность <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Должность <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint">
         <? if($model->errors['post']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -43,7 +43,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Город <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Город <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint">
         <? if($model->errors['city']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -64,7 +64,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Дата <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Дата <span class="text__red">*</span></label>
       <div class="form__field-content form__content-flex form__content-hint" data-params='{"minDate":"0","maxDate":"+2M"}' id="period">
         <div class="form__content-2 form__content-indent">
           <? if($model->errors['bdate']): ?>

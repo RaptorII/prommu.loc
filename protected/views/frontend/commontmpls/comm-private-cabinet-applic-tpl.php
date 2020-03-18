@@ -93,8 +93,8 @@ if ($route !== "about/empl" &&
                             $vacClass .= $arNotif['cnt'] ? ' active' : '';
                             ?>
                             <? if(Share::isApplicant()): ?>
-                                <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_APPLICANT_VACS_LIST ? ' current' : '')?>">
-                                    <a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="addvac">
+                                <div class="small-menu__item<?=($curUrl==MainConfig::PAGE_USER_VACANCIES_LIST ? ' current' : '')?>">
+                                    <a href="<?=MainConfig::PAGE_USER_VACANCIES_LIST?>" class="addvac">
                                         <span class="small-menu__circle">
                                             <span class="small-menu__icon icn-prj-prommu color-white"></span>
                                         </span>

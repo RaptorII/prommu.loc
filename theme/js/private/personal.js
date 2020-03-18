@@ -1,147 +1,4 @@
 'use strict'
-/**
- *
- */
-var CreateVacancy = (function () {
-  //
-  function CreateVacancy()
-  {
-    this.init();
-  }
-  //
-  CreateVacancy.prototype.init = function ()
-  {
-    let self = this,
-        step = $('[name="step"]').val();
-
-    // Проверка ввода полей
-    new CheckInputFields();
-
-    if(step==='1')
-    {
-      new InitSelect('#posts');
-      new InitSelect('#cities');
-      new InitPeriod('#period');
-    }
-    else if(step==='2')
-    {
-      new InitSelect('#work_type');
-      new InitSelect('#experience');
-      new InitSelect('#self_employed');
-      new InitPeriod('#period');
-    }
-    else if(step==='3')
-    {
-      new InitSelect('#salary');
-      new InitSelect('#salary_time');
-    }
-    else if(step==='4')
-    {
-      new InitNicEditor('#requirements','#requirements_panel');
-      new InitNicEditor('#duties','#duties_panel');
-      new InitNicEditor('#conditions','#conditions_panel');
-    }
-    else if(step==='5')
-    {
-      $('form').attr('data-params','');
-      $('form').submit(function(){
-        $('body').addClass('prmu-load');
-      });
-    }
-    // инициализация подсказок
-    Hinter.bind('.tooltip', { side: 'right' });
-    // выравниваем лейблы
-    self.changeLabelWidth();
-    $( window ).on('resize',function() {
-      self.changeLabelWidth();
-    });
-    // проверяем обязательные поля
-    new CheckRequiredFields(self);
-    // запуск анимашки
-    self.startSvg();
-  };
-  //
-  CreateVacancy.prototype.changeLabelWidth = function ()
-  {
-    $('.form__field-label').css('minWidth','inherit');
-    var max = 0;
-    $.each($('.form__field-label'),function(){
-      if($(this).width()>max)
-      {
-        max = $(this).width();
-      }
-    });
-    $('.form__field-label').css('minWidth',max+'px');
-  };
-  //
-  CreateVacancy.prototype.startSvg = function ()
-  {
-    let self = this,
-      height = window.innerHeight,
-      width = window.innerWidth,
-      s = Snap('.svg-bg');
-
-    for (var i = 0; i < 50; i++) {
-      var obj = s.rect(self.getRandom(0, width),
-        self.getRandom(0, height),
-        self.getRandom(20, 80),
-        self.getRandom(30, 170));
-      obj.attr({opacity: Math.random(), transform: 'r30'});
-    }
-    self.svgPulse(s,width,height);
-  };
-  //
-  CreateVacancy.prototype.getRandom = function (min, max)
-  {
-    return Math.floor((Math.random() * max) + min);
-  };
-  //
-  CreateVacancy.prototype.svgPulse = function (s, width, height)
-  {
-    let self = this;
-    s.selectAll('rect').forEach(function (e)
-    {
-      e.animate({
-        x: self.getRandom(0, width),
-        y: self.getRandom(0, height),
-        width: self.getRandom(20, 120),
-        height: self.getRandom(30, 420),
-        opacity: Math.random() / 2 ,
-      }, 20000, mina.easeinout);
-    });
-  };
-  //
-  return CreateVacancy;
-}());
-/**
- * подсказки
- */
-var Hinter = (function () {
-  function Hinter() {
-    var self = this;
-  }
-  Hinter.prototype.init = function () { };
-  Hinter.bind = function (inSel, inOpts) {
-    if (inOpts === void 0) { inOpts = {}; }
-    var defUserOpts = { side: 'bottom', animation: 'fade'};
-    var opts = this.options;
-    if (this.hintSide[inOpts.side])
-      defUserOpts.side = this.hintSide[inOpts.side];
-    if (this.hintAnimation[inOpts.animation])
-      defUserOpts.animation = this.hintAnimation[inOpts.animation];
-    $.extend(opts, defUserOpts);
-    $(inSel).tooltipster(opts);
-  };
-  Hinter.hintSide = { 'top': 'top', 'bottom': 'bottom', 'right': 'right', 'left': 'left' };
-  Hinter.hintAnimation = { 'fade': 'fade', 'swing': 'swing' };
-  Hinter.options = {
-    side: 'bottom',
-    theme: ['tooltipster-noir-customized'],
-    animation: 'fade',
-    contentAsHTML: true
-  };
-  return Hinter;
-}());
 /*
 *
 * Проверка обязательных полей
@@ -158,9 +15,9 @@ var CheckRequiredFields = (function () {
   CheckRequiredFields.prototype.init = function ()
   {
     let self = this,
-        arInputs = $('.prmu-required'),
-        arForms = [],
-        callBackFunction = arguments[0];
+      arInputs = $('.prmu-required'),
+      arForms = [],
+      callBackFunction = arguments[0];
 
     if(!arInputs.length) // если обязательных полей нет - останавливаемся
     {
@@ -169,7 +26,7 @@ var CheckRequiredFields = (function () {
 
     $.each(arInputs,function(){ // собираем все формы с обязательными полями
       let input = this,
-          form = $(input).closest('form');
+        form = $(input).closest('form');
 
       if(form.length)
       {
@@ -186,53 +43,76 @@ var CheckRequiredFields = (function () {
     {
       return;
     }
-    //
     // события отправки всех форм
     for (let i=0; i<arForms.length; i++)
     {
       $(arForms[i]).off();
       $(arForms[i]).on('submit',function(e){
         let bText = self.checkTextFields(arForms[i]),
-            bSelect = self.checkSelectFields(arForms[i]),
-            bCheckbox = self.checkCheckboxFields(arForms[i]),
-            bNicEditor = self.checkNicEditorFields(arForms[i]);
+          bSelect = self.checkSelectFields(arForms[i]),
+          bCheckbox = self.checkCheckboxFields(arForms[i]),
+          bNicEditor = self.checkNicEditorFields(arForms[i]);
         // если хотя бы один false - отмена отправки
         if(bText || bSelect || bCheckbox || bNicEditor)
         {
           return false;
         }
         // ошибок нет, отправляем форму
-        let params = JSON.parse(arForms[i].dataset.params);
-        if(params!=undefined && params.ajax!=undefined) // по ajax
+        if(arForms[i].dataset.params!=undefined && arForms[i].dataset.params.length)
         {
-          e.preventDefault();
-          $('body').addClass('prmu-load');
-          $.ajax({
-            type: 'POST',
-            url: arForms[i].action,
-            data: $(arForms[i]).serialize(),
-            success: function(result){
-              $(arForms[i]).html(result);
-              callBackFunction.init();
-              $('body').removeClass('prmu-load');
-            }
-          });
-        }
-        else // просто
-        {
+          let params = JSON.parse(arForms[i].dataset.params);
+          if(params!=undefined && params.ajax!=undefined) // по ajax
+          {
+            e.preventDefault();
 
+            if(typeof MainScript==='function') // разные типы загрузок
+            {
+              MainScript.stateLoading(true);
+            }
+            else
+            {
+              $('body').addClass('prmu-load');
+            }
+            $.ajax({
+              type: 'POST',
+              url: arForms[i].action,
+              data: $(arForms[i]).serialize(),
+              success: function(result){
+                callBackFunction.init(arForms[i],result);
+                if(typeof MainScript==='function') // разные типы загрузок
+                {
+                  MainScript.stateLoading(false);
+                }
+                else
+                {
+                  $('body').removeClass('prmu-load');
+                }
+              },
+              error: function()
+              {
+                confirm('Системная ошибка');
+                if(typeof MainScript==='function') // разные типы загрузок
+                {
+                  MainScript.stateLoading(false);
+                }
+                else
+                {
+                  $('body').removeClass('prmu-load');
+                }
+              }
+            });
+          }
         }
       });
     }
   };
-  //
   // Проверка всех обязательных текстовых полей формы
   CheckRequiredFields.prototype.checkTextFields = function ()
   {
     let self = this,
-        form = arguments[0],
-        arTextInputs = $(form).find('[type="text"].prmu-required'),
-        bError = false;
+      form = arguments[0],
+      arTextInputs = $(form).find('[type="text"].prmu-required'),
+      bError = false;
 
     if(!arTextInputs.length) // если текстовых полей нет - завершаем
     {
@@ -241,7 +121,7 @@ var CheckRequiredFields = (function () {
 
     $.each(arTextInputs,function () {
       let val = $(this).val(),
-          objP = self.getParams(this);
+        objP = self.getParams(this);
 
       if(!val.trim().length) // пустое поле
       {
@@ -273,14 +153,13 @@ var CheckRequiredFields = (function () {
 
     return bError;
   };
-  //
   // Проверка всех обязательных селектов формы
   CheckRequiredFields.prototype.checkSelectFields = function ()
   {
     let self = this,
-        form = arguments[0],
-        arSelect = $(form).find('.prmu-required select'),
-        bError = false;
+      form = arguments[0],
+      arSelect = $(form).find('.prmu-required select'),
+      bError = false;
 
     if(!arSelect.length) // если селектов нет - завершаем
     {
@@ -289,8 +168,8 @@ var CheckRequiredFields = (function () {
 
     $.each(arSelect,function(){
       let main = $(this).closest('.prmu-required'),
-          option = $(main).find('option:selected'),
-          objP = self.getParams(main[0]);
+        option = $(main).find('option:selected'),
+        objP = self.getParams(main[0]);
 
       if(!option.length || (option.length && !option[0].value.length))
       {
@@ -318,15 +197,14 @@ var CheckRequiredFields = (function () {
 
     return bError;
   };
-  //
   // Проверка всех обязательных чекбоксов формы
   CheckRequiredFields.prototype.checkCheckboxFields = function ()
   {
     let self = this,
-        arCheckboxes = $(arguments[0]).find('[type="checkbox"].prmu-required'),
-        arNames = [],
-        arNamesChecked = [],
-        bError = false;
+      arCheckboxes = $(arguments[0]).find('[type="checkbox"].prmu-required'),
+      arNames = [],
+      arNamesChecked = [],
+      bError = false;
 
     if(!arCheckboxes.length)
     {
@@ -352,7 +230,7 @@ var CheckRequiredFields = (function () {
         {
           $.each($('[name="' + this + '"].prmu-required'), function(){
             let input = this,
-                objP = self.getParams(input);
+              objP = self.getParams(input);
 
             $(input).next('label').addClass('prmu-error');
             if(objP.hasMessage)
@@ -369,7 +247,7 @@ var CheckRequiredFields = (function () {
         {
           $.each($('[name="' + this + '"].prmu-required'), function(){
             let input = this,
-                objP = self.getParams(input);
+              objP = self.getParams(input);
 
             $(input).next('label').removeClass('prmu-error');
             if(objP.hasMessage)
@@ -399,14 +277,13 @@ var CheckRequiredFields = (function () {
     }
     return bError;
   };
-  //
   // Проверка всех textErea с nicEditor формы
   CheckRequiredFields.prototype.checkNicEditorFields = function ()
   {
     let self = this,
-        arArea = $(arguments[0]).find('textarea.prmu-required'),
-        bError = false,
-        arNicEditMain = [], arNewArea = [];
+      arArea = $(arguments[0]).find('textarea.prmu-required'),
+      bError = false,
+      arNicEditMain = [], arNewArea = [];
 
     if(!arArea.length)
     {
@@ -450,14 +327,13 @@ var CheckRequiredFields = (function () {
     });
     return bError;
   };
-  //
   // получаем параметры объекта
   CheckRequiredFields.prototype.getParams = function ()
   {
     let params = arguments[0].dataset.params!=undefined
-          ? JSON.parse(arguments[0].dataset.params)
-          : undefined,
-        hasMessage = params!=undefined && params.parent_tag!=undefined && params.message!=undefined;
+      ? JSON.parse(arguments[0].dataset.params)
+      : undefined,
+      hasMessage = params!=undefined && params.parent_tag!=undefined && params.message!=undefined;
 
     return {params:params, hasMessage:hasMessage};
   };
@@ -489,7 +365,6 @@ var CheckInputFields = (function () {
       self.changeInputText(this);
     });
   };
-  //
   // ограничение по кол-ву
   CheckInputFields.prototype.changeInputText = function ()
   {
@@ -581,7 +456,7 @@ var InitSelect = (function () {
           else if($(e.target).is('.form__select-selected b')) // удаляем из списка, если multiple
           {
             let parent = $(e.target).parent(),
-                id = parent[0].dataset.id;
+              id = parent[0].dataset.id;
 
             $(self.select).find('option[value="' + id + '"]').remove();
             $(e.target).parent().remove();
@@ -603,18 +478,15 @@ var InitSelect = (function () {
         self.showList(false);
       }
     });
-    //
     //  событие поиска
-    //
     $(self.main).on('input','.form__select-search',function(){ self.showList(true) });
   };
-  //
   // строим весь список
   InitSelect.prototype.showList = function ()
   {
     let self = this,
-        list = $(self.main).find('.form__select-list'),
-        arS=[], arL=[], v='';
+      list = $(self.main).find('.form__select-list'),
+      arS=[], arL=[], v='';
 
     if(self.data.search && $(self.main).find('.form__select-search').length) // если есть строка поиска
     {
@@ -716,13 +588,12 @@ var InitSelect = (function () {
       }
     }
   };
-  //
   // строим список
   InitSelect.prototype.buildList = function ()
   {
     let self = this,
-        html='',
-        list = $(self.main).find('.form__select-list');
+      html='',
+      list = $(self.main).find('.form__select-list');
 
     // если список уже создавался
     if(list.length)
@@ -782,13 +653,12 @@ var InitSelect = (function () {
       $(self.main).find('.form__select-search').focus();
     }
   };
-  //
   // выбираем из списка
   InitSelect.prototype.setSelected = function ()
   {
     let self = this,
-        id = arguments[0],
-        name = arguments[1];
+      id = arguments[0],
+      name = arguments[1];
 
     if(!id.length) // клик по поиску
     {
@@ -804,7 +674,7 @@ var InitSelect = (function () {
     if(!self.select.multiple) // если селект не мультипл
     {
       let option = $(self.select).find('option[value=' + id + ']'),
-          selected = $(self.main).find('.form__select-selected');
+        selected = $(self.main).find('.form__select-selected');
 
       self.selected = [];
       if(selected.length)
@@ -816,10 +686,10 @@ var InitSelect = (function () {
         $(self.main).append('<div class="form__select-selected">' + name + '</div>');
       }
       self.selected.push(id);
-      $.each($(self.select).find('option'),function(){ $(this).attr('selected',false) });
+      $.each($(self.select).find('option'),function(){ $(this).prop('selected',false) });
       option.length
-        ? $(option).attr('selected',true)
-        : $(self.select).append('<option value="' + id + '" selected="selected">');
+        ? $(option).prop('selected',true)
+        : $(self.select).append('<option value="' + id + '" selected>');
     }
     else // если селект мультипл
     {
@@ -827,7 +697,7 @@ var InitSelect = (function () {
         + id + '">' + name + '<b></b></div>');
       if(!$(self.select).find('[value="' + id + '"]').length)
       {
-        $(self.select).append('<option value="' + id + '" selected="selected">');
+        $(self.select).append('<option value="' + id + '" selected>');
       }
       self.selected.push(id);
     }
@@ -837,9 +707,11 @@ var InitSelect = (function () {
   //
   return InitSelect;
 }());
-//
-// событие инициализации datepicker
-//
+/**
+ *
+ *    событие инициализации datepicker
+ *
+ */
 var InitPeriod = (function () {
   //
   function InitPeriod() {
@@ -887,9 +759,11 @@ var InitPeriod = (function () {
   //
   return InitPeriod;
 }());
-//
-// Инициализация редактора
-//
+/**
+ *
+ *    Инициализация редактора
+ *
+ */
 var InitNicEditor = (function () {
   //
   function InitNicEditor() {
@@ -938,126 +812,3 @@ var InitNicEditor = (function () {
   //
   return InitNicEditor;
 }());
-//
-// Блок заказа Премиум услуги
-//
-var ServicePremium = (function () {
-  //
-  function ServicePremium() {
-    this.init(arguments[0]);
-  }
-  //
-  ServicePremium.prototype.init = function ()
-  {
-    let self = this,
-        max = arguments[0].period;
-
-    self.prices = arguments[0].prices;
-    // ввод периода
-    $('#premium_input').on('change input',function(e){
-      let v = $(this).val();
-
-      v = v.replace(/\D+/g,'');
-
-      if(v==='')
-      {
-        if(e.type=='change')
-        {
-          v = 1;
-        }
-      }
-      else if(v>max)
-      {
-        v = max;
-      }
-      else if(v<1)
-      {
-        v = 1;
-      }
-      $(this).val(v);
-
-      if(e.type=='change')
-      {
-        self.setPrice();
-        self.setInfo();
-      }
-    });
-    // изменение списка городов
-    $('[name="premium_region[]"]').on('change',function(){
-      let input = this,
-          checked = false;
-      $.each($('[name="premium_region[]"]'),function(){
-        if($(this).is(':checked'))
-        {
-          checked = true;
-        }
-      });
-      if(!checked) // один город полюбому должен быть чекнутый
-      {
-        setTimeout(function(){
-          $(input).prop('checked', true);
-          self.setPrice();
-        },10);
-      }
-      else
-      {
-        self.setPrice();
-      }
-    });
-    //
-    self.setPrice();
-    self.setInfo();
-  };
-  //
-  ServicePremium.prototype.setPrice = function ()
-  {
-    let self = this,
-        price = 0,
-        period = Number($('#premium_input').val());
-
-    $.each($('[name="premium_region[]"]'),function(){
-      let v = $(this).val();
-      if($(this).is(':checked'))
-      {
-        $.each(self.prices,function(){
-          if(v===this.id_city)
-          {
-            price += Number(this.price);
-          }
-        })
-      }
-    });
-    $('#premium_price').text(price * period);
-  };
-  //
-  ServicePremium.prototype.setInfo = function ()
-  {
-    let period = Number($('#premium_input').val()),
-        percent = 0;
-
-    if(period==1)
-    {
-      percent = 89;
-    }
-    else if(period==2)
-    {
-      percent = 98;
-    }
-    else
-    {
-      percent = 100;
-    }
-    $('#premium_percent').text(percent);
-    $('#premium_days').text(period);
-  };
-  //
-  return ServicePremium;
-}());
-/**
- *
- *
- *
- */
-$(document).ready(function () {
-  new CreateVacancy();
-});

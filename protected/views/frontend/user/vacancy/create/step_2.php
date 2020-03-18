@@ -8,7 +8,7 @@
     ?>
     <? !isset($model->data->istemp) && $model->data->istemp=0; // По умолчанию временная ?>
     <div class="form__field form__field-first">
-      <label class="form__field-label text_nowrap">Тип работы</label>
+      <label class="form__field-label text__nowrap">Тип работы</label>
       <div class="form__field-content form__content-indent">
         <? if($model->errors['istemp']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -27,7 +27,7 @@
     ?>
     <? !isset($model->data->exp) && $model->data->exp=1; // По умолчанию без опыта ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Опыт работы</label>
+      <label class="form__field-label text__nowrap">Опыт работы</label>
       <div class="form__field-content form__content-indent">
         <? if($model->errors['exp']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -46,7 +46,7 @@
     ?>
     <? !isset($model->data->self_employed) && $model->data->self_employed=0; // По умолчанию без опыта ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Налоговый статус</label>
+      <label class="form__field-label text__nowrap">Налоговый статус</label>
       <div class="form__field-content form__content-indent">
         <? if($model->errors['self_employed']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -64,7 +64,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Возраст <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Возраст <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent" id="age">
         <? if($model->errors['age']): ?>
           <span class="prmu-error-mess">Значение "От" должно быть больше 14 и меньше значения "До"</span>
@@ -96,7 +96,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Пол <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Пол <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent">
         <? if($model->errors['gender']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>

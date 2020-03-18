@@ -339,10 +339,7 @@ class AppController extends CController
   {
     if(isset($model->errors['access'])) // вакансия не найдена
     {
-      $this->render(
-        '//layouts/message',
-        ['message'=>$model->errors['access']]
-      );
+      $this->renderMessage($model->errors['access']);
     }
     else // вакансия новая, либо из базы
     {
@@ -352,10 +349,20 @@ class AppController extends CController
       }
       else
       {
-        $this->layout = '//user/vacpub/index';
+        $this->layout = '//user/vacancy/create/index';
         $this->ViewModel->init();
         parent::render($model->getView(), ['model'=>$model], false);
       }
     }
+  }
+  /**
+   * @param $message - string
+   */
+  public function renderMessage($message)
+  {
+    $this->render(
+      '//layouts/message',
+      ['message'=>$message]
+    );
   }
 }

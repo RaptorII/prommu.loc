@@ -7,7 +7,7 @@
     //
     ?>
     <div class="form__field form__field-first">
-      <label class="form__field-label text_nowrap">Заработная плата <span class="text_red">*</span></label>
+      <label class="form__field-label text__nowrap">Заработная плата <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint">
         <? if($model->errors['salary']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -42,7 +42,7 @@
     ?>
     <? !isset($model->data->salary_time) && $model->data->salary_time=130; // По умолчанию 'На следующий день' ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Сроки оплаты</label>
+      <label class="form__field-label text__nowrap">Сроки оплаты</label>
       <div class="form__field-content form__content-indent">
         <? if($model->errors['salary_time']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
@@ -60,7 +60,7 @@
     //
     ?>
     <div class="form__field">
-      <label class="form__field-label text_nowrap">Комментарии</label>
+      <label class="form__field-label text__nowrap">Комментарии</label>
       <div class="form__field-content form__content-indent">
         <textarea
           class="form__field-input form__textarea"

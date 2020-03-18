@@ -13,15 +13,17 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <meta property="og:image" content="https://prommu.com/images/logo.png" />
   <?php
-    $bUrl = Yii::app()->baseUrl;
-    $gcs = Yii::app()->getClientScript();
-    $gcs->registerCoreScript('jquery');
-    $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'form/style.css');
-    $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacpub/script.js', CClientScript::POS_HEAD);
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . '/dist/libs.js', CClientScript::POS_END);
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
+  $bUrl = Yii::app()->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCoreScript('jquery');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'form/style.css');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'private/personal.css');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClientScript::POS_HEAD);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/create.js', CClientScript::POS_HEAD);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . '/dist/libs.js', CClientScript::POS_END);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
   ?>
 </head>
   <body>

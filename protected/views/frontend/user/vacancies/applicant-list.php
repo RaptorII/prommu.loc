@@ -1,6 +1,6 @@
 <?
 	$url = Yii::app()->request->requestUri;
-	$archive = MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE;
+	$archive = MainConfig::PAGE_USER_VACANCIES_LIST_ARCHIVE;
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'vacancies/app-list.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vacancies/app-list.js', CClientScript::POS_END);
 ?>
@@ -13,11 +13,11 @@
 					<span class="app-projects__tabs-item actual enable">
 						<span>Действующие</span>
 					</span>
-					<a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE?>" class="app-projects__tabs-item archive">
+					<a href="<?=MainConfig::PAGE_USER_VACANCIES_LIST_ARCHIVE?>" class="app-projects__tabs-item archive">
 						<span>Архив</span>
 					</a>
 				<? else: ?>
-					<a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="app-projects__tabs-item actual">
+					<a href="<?=MainConfig::PAGE_USER_VACANCIES_LIST?>" class="app-projects__tabs-item actual">
 						<span>Действующие</span>
 					</a>
 					<span class="app-projects__tabs-item archive enable">
@@ -38,7 +38,7 @@
 							<div class="app-projects__item-company"><?=$employer['name']?></div>
 							<div class="app-projects__item-title"><?=$vacancy['title']?></div>
 							<div class="app-projects__item-link">
-								<a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $vacancy['id']?>" class="prmu-btn prmu-btn_small">
+								<a href="<?=MainConfig::PAGE_USER_VACANCIES_LIST . DS . $vacancy['id']?>" class="prmu-btn prmu-btn_small">
 									<span>Просмотр</span>
 								</a>
 							</div>

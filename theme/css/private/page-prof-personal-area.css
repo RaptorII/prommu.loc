@@ -331,6 +331,7 @@ try google material design
     padding: 1px 6px 0 6px;
     height: auto;
     color: var(--color-dark);
+    cursor: default;
 }
 
 #DiContent span.group__info {
@@ -449,6 +450,7 @@ try google material design
 #DiContent .group__about {
     font-size: 12px;
     color: var(--color-grey);
+    cursor: default;
 }
 
 

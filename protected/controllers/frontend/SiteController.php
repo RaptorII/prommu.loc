@@ -465,11 +465,55 @@ class SiteController extends AppController
         //
         if(isset($id)) // страница конкретной вакансии
         {
-            $section = $rq->getParam('section');
-            $view = $this->ViewModel->pageVacancy;
-            $model = new Vacancy;
+          $section = $rq->getParam('section');
+          $view = '/user/vacancy/edit/index';//$this->ViewModel->pageVacancy;
+          $model = new Vacancy;
+          $viData = $model->getVacancy($id);
 
-            $isOwner = Vacancy::hasAccess($id,$id_user);
+
+          if($viData->is_owner)
+          {
+            if($rq->isAjaxRequest)
+            {
+              $module = $rq->getParam('module');
+              if(!in_array($module,[1]))
+              {
+                $viData->errors['access'] = true;
+              }
+              else
+              {
+                new VacancyEdit($viData);
+                $this->renderPartial(
+                  '../user/vacancy/edit/module_' . $module,
+                  ['viData'=>$viData]
+                );
+                if(!count($viData->errors)) // ошибок нет
+                {
+                  $model->setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
+                }
+                Yii::app()->end();
+              }
+            }
+            else
+            {
+              $this->setBreadcrumbsEx(
+                ["Мои вакансии", MainConfig::PAGE_USER_VACANCIES_LIST],
+                [$viData->data->title]
+              );
+              $this->render($view, ['viData'=>$viData], ['htmlTitle'=>$viData->data->title]);
+              Yii::app()->end();
+            }
+
+          }
+
+          //
+          //
+          // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          //
+          //
+          $view = $this->ViewModel->pageVacancy;
+          $isOwner = Vacancy::hasAccess($id,$id_user);
+
             if($isOwner){ Yii::app()->session['editVacId'] = $id; }
 
             if(in_array(

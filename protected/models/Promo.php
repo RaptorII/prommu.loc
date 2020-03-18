@@ -1267,7 +1267,7 @@ class Promo extends ARModel
       ->from('user_attr_dict')
       ->where(
         "name LIKE :search and id_par=:id_post",
-        [':search'=>$search.'%',':id_post'=>Vacancy::$ID_POSTS_ATTRIBUTE]
+        [':search'=>$search.'%',':id_post'=>Vacancy::ID_POSTS_ATTRIBUTE]
       )
       ->order('npp desc, name desc')
       ->queryAll();

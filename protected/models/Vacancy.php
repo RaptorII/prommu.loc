@@ -26,7 +26,6 @@ class Vacancy extends ARModel
         ];
     const WORK_TYPE = [0 => 'Временная', 1 => 'Постоянная'];
     const SELF_EMPLOYED = [0 => 'Физическое лицо', 1 => 'Самозанятый'];
-    const MIN_AGE_FROM = 14;
     const SALARY_TYPE = [
       0 => 'руб / час',
       1 => 'руб / неделя',
@@ -55,7 +54,7 @@ class Vacancy extends ARModel
     // кол-во вакансий на главной странице
     static private $VACANCIES_IN_MAIN_PAGE = 12;
     // ID атрибута - должности
-    static public $ID_POSTS_ATTRIBUTE = 110;
+    const ID_POSTS_ATTRIBUTE = 110;
     /** @var UserProfile */
     private $Profile;
     /**
@@ -1886,7 +1885,7 @@ class Vacancy extends ARModel
 
             $fields = array(
                 'status' => $isDeactivate ? 0 : 1,
-                'ismoder' => $isDeactivate ? 0 : 100,
+                'ismoder' => 0, // деактивировать модерацию
                 'bdate' => $isDeactivate ? '0000-00-00 00:00:00' : date('Y-m-d H:i:s')
             );
 
@@ -2130,76 +2129,40 @@ class Vacancy extends ARModel
         return "1307";
 
     }
-
-
-    private function saveVacPosts($inVacId)
+    /**
+     * @param $id - integer ID вакансии
+     * @param $arPostsId - array - массив ID должностей
+     * @return bool
+     */
+    private function saveVacancyPosts($id, $arPostsId)
     {
-        $id = Share::$UserProfile->exInfo->id;
+      if(!count($arPostsId))
+      {
+        return false;
+      }
 
-        $posts = Yii::app()->getRequest()->getParam('posts');
-        $postSelf = trim(filter_var(Yii::app()->getRequest()->getParam('post-self'), FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+      $arAllPostsId = array_keys(self::getPostsList());
+      Yii::app()->db->createCommand()
+        ->delete(
+          'empl_attribs',
+          ['and', 'id_vac=:id', ['in','id_attr',$arAllPostsId]],
+          [':id'=>$id]
+        );
 
-        $insData = array();
-        foreach ($posts as $key => $val)
+      $arInsert = [];
+      foreach ($arPostsId as $v)
+      {
+        if(!in_array($v,$arPostsId))
         {
-            // prepare posts
-            if( $val != 'aa' )
-            {
-                $insData[] = array('id_vac' => $inVacId, 'id_attr' => $val, 'key' => $val);
-
-
-            // prepare custom post
-            } 
-
-        } // end foreach
-
-        if($postSelf){
-                // search for same post
-                $res = Yii::app()->db->createCommand()
-                    ->select('MAX(m.id) max, d.id , d.name')
-                    ->from('user_attr_dict m')
-                    ->leftJoin('user_attr_dict d', "d.name LIKE :name", array(':name' => $postSelf));
-//                    ->where(array('and', 'grp = APPT', 'val = :post'), array(':post' => $cudo['name']))
-                $res = $res->queryRow();
-
-
-                if( $res['id'] ) $mId = $res['id'];
-                // ins new post
-                else
-                {
-                    //запись своего варианта должности
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('user_attr_dict', array(
-                            'id_par' => '110',
-                            'key' => $res['max'] + 1,
-                            'ptype' => 3,
-                            'name' => ucfirst($postSelf),
-                            'postself' => 1,
-                        ));
-
-                    if( $res )
-                    {
-                        $mId = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-                    }
-                    else { $mId = 0; } // endif
-                } // endif
-
-                if( $mId ) $insData[] = array('id_vac' => $inVacId, 'id_attr' => $mId, 'key' => $mId);
-            } // endif
-
-
-        $sql = "DELETE empl_attribs FROM empl_attribs 
-INNER JOIN user_attr_dict d ON d.id = 110
-INNER JOIN user_attr_dict d1 ON empl_attribs.id_attr = d1.id AND d1.id_par = d.id
-WHERE id_vac = {$inVacId}";
-        Yii::app()->db->createCommand($sql)->execute();
-        $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('empl_attribs', $insData);
-        $command->execute();
-        return $posts;
+          continue;
+        }
+        $arInsert[] = ['id_vac'=>$id, 'id_attr'=>$v, 'key'=>$v, 'crdate'=>date('Y-m-d H:i:s')];
+      }
+      if(count($arInsert))
+      {
+        Share::multipleInsert(['empl_attribs'=>$arInsert]);
+      }
     }
-
-
-
     /**
      * ПРоверка на возможность отклика
      * @param $inData
@@ -2652,7 +2615,7 @@ WHERE id_vac = {$inVacId}";
         ->from('user_attr_dict')
         ->where(
           "name LIKE :search and id_par=:id_post",
-          [':search'=>$search.'%',':id_post'=>self::$ID_POSTS_ATTRIBUTE]
+          [':search'=>$search.'%',':id_post'=>self::ID_POSTS_ATTRIBUTE]
         )
         ->order('npp desc, name desc')
         ->queryAll();
@@ -2988,7 +2951,7 @@ WHERE id_vac = {$inVacId}";
                 'uad.id_par=:id_posts',
                 ['in','ea.id_vac',$arId],
               ],
-              [':id_posts'=>self::$ID_POSTS_ATTRIBUTE]
+              [':id_posts'=>self::ID_POSTS_ATTRIBUTE]
             )
             ->queryAll();
 
@@ -5048,36 +5011,65 @@ WHERE id_vac = {$inVacId}";
    */
   public static function getPostsList()
   {
-    $query = Yii::app()->db->createCommand()
-      ->select('id, name')
-      ->from('user_attr_dict')
-      ->where('id_par=110')
-      ->order('npp, name')
-      ->queryAll();
-
-    $arRes = [];
-    foreach ($query as $v)
+    $arRes = Cache::getData('/Vacancy/associativePosts');
+    if($arRes['data']===false)
     {
-      $arRes[$v['id']] = $v['name'];
-    }
+      $query = Yii::app()->db->createCommand()
+        ->select('id, name')
+        ->from('user_attr_dict')
+        ->where('id_par=:id_par',[':id_par'=>self::ID_POSTS_ATTRIBUTE])
+        ->order('npp, name')
+        ->queryAll();
 
-    return $arRes;
+      $arRes['data'] = [];
+      foreach ($query as $v)
+      {
+        $arRes['data'][$v['id']] = $v['name'];
+      }
+      Cache::setData($arRes, 604800); // кеш на неделю
+    }
+    return $arRes['data'];
   }
   /**
    * @return array
    */
   public static function getPostsSortList()
   {
-    return Yii::app()->db->createCommand()
-      ->select('id, name')
-      ->from('user_attr_dict')
-      ->where('id_par=110')
-      ->order('npp, name')
-      ->queryAll();
+    $arRes = Cache::getData('/Vacancy/sortPosts');
+    if($arRes['data']===false)
+    {
+      $arRes['data'] = Yii::app()->db->createCommand()
+                        ->select('id, name')
+                        ->from('user_attr_dict')
+                        ->where('id_par=:id_par',[':id_par'=>self::ID_POSTS_ATTRIBUTE])
+                        ->order('npp, name')
+                        ->queryAll();
+      Cache::setData($arRes, 604800); // кеш на неделю
+    }
+    return $arRes['data'];
+  }
+
+  public static function getAllAttributes()
+  {
+    $arRes = Cache::getData('/Vacancy/attributes');
+    if($arRes['data']===false)
+    {
+      $query = Yii::app()->db->createCommand()
+                        ->from('user_attr_dict')
+                        ->queryAll();
+
+      foreach ($query as $v)
+      {
+        $arRes['data'][$v['key']] = $v;
+      }
+      Cache::setData($arRes, 604800); // кеш на неделю
+    }
+    return $arRes['data'];
   }
   /**
    * @param $objData
    * @param $objUser
+   * Создание вакансии
    */
   public function createVacancy($objData, $objUser)
   {
@@ -5140,51 +5132,28 @@ WHERE id_vac = {$inVacId}";
     }
     Share::multipleInsert(['empl_city'=>$arInsert]);
     // добавление атрибутов
+    self::saveVacancyPosts($vacancy, $objData->post); // должность
     $arInsert = [
-      [ // должность
-        'id_vac' => $vacancy,
-        'id_attr' => reset($objData->post),
-        'key' => reset($objData->post),
-        'crdate' => $date
-      ],
       [ // Сроки оплаты
         'id_vac' => $vacancy,
         'id_attr' => $objData->salary_time,
         'key' => $objData->salary_time,
         'crdate' => $date
-      ],
-      [ // Комментарии по оплате
+      ]
+    ];
+    if(!empty($objData->salary_comment)) // Комментарии по оплате
+    {
+      $arInsert[] = [
         'id_vac' => $vacancy,
         'id_attr' => 165,
         'key' => 'salary-comment',
         'val' => $objData->salary_comment,
         'crdate' => $date
-      ]
-    ];
+      ];
+    }
 
     Share::multipleInsert(['empl_attribs'=>$arInsert]);
-
-    Yii::app()->user
-      ->setFlash('prommu_flash',
-        "<div class='big-flash'>
-                        <p>Уважаемый «" . $objUser->name . "»!</p>
-                        <p>Вы только что добавили новую вакансию на сервис Prommu.
-                        На данном этапе она еще не опубликована на сервисе.</p>
-                        <p>После закрытия этого информационного окна, Вы можете посмотреть
-                        добавленную информацию, изменить, дополнить,
-                        <span style='color:#ff921d;'>продублировать</span> ее с указанием адресов
-                        работы и других необходимых данных.</p>
-                        <p>После этого необходимо нажать кнопку
-                        <span style='color:#ff921d;'>«ОПУБЛИКОВАТЬ ВАКАНСИЮ»</span>.</p>
-                        <p>По окончанию модерации (в рабочее время до 15 минут) Ваша вакансия
-                        будет размещена на сервисе.</p>
-                        <p>Просмотреть и отредактировать данную вакансию Вы можете в любой момент
-                        времени в личном кабинете - категория
-                        <span style='color:#ff921d;'>«МОИ ВАКАНСИИ»</span>.</p>
-                        <p>Быстрого и лёгкого поиска Вам персонала.</p>
-                        <i>С найлучшими пожеланиями команда Промму!</i>
-                    </div>");
-
+    // email ведомление юзеру
     Mailing::set(3,
       [
         'email_user' => $objUser->email,
@@ -5193,5 +5162,143 @@ WHERE id_vac = {$inVacId}";
       ]
     );
     return $vacancy;
+  }
+  /**
+   * @param $id - integer
+   * @param $id_user - integer
+   * @param $module - integer
+   * @param $data - object
+   * Редактирование вакансии
+   */
+  public function setVacancy($id, $id_user, $module, $data)
+  {
+    if($module==1)
+    {
+      $arUpdate = [
+        'title' => $data->title,
+        'exp' => $data->exp,
+        'agefrom' => $data->agefrom,
+        'ageto' => $data->ageto,
+        'isman' => $data->isman,
+        'iswoman' => $data->iswoman,
+        'istemp' => $data->istemp
+      ];
+      $result = Yii::app()->db->createCommand()->update(
+        self::tableName(),
+        $arUpdate,
+        'id=:id AND id_user=:id_user',
+        [':id'=>$id, ':id_user'=>$id_user]
+      );
+
+      self::saveVacancyPosts($id, $data->post);
+
+      return $result;
+    }
+
+
+  }
+  /**
+   * @param $id
+   * @return object
+   */
+  public function getVacancy($id)
+  {
+    $id = intval($id);
+
+    $result = (object)[
+      'errors' => [],
+      'data' => [],
+      'employer' => [],
+      'posts' => $this->getPostsSortList(),
+      'attributes' => $this->getAllAttributes(),
+      'is_owner' => false
+    ];
+
+    if(!$id)
+    {
+      $result->errors['system'] = true;
+      return $result;
+    }
+    // Вакансия
+    $query = Yii::app()->db->createCommand()
+                ->from(self::tableName())
+                ->where('id=:id',[':id'=>$id])
+                ->limit(1)
+                ->queryRow();
+
+    if(!$query)
+    {
+      $result->errors['system'] = true;
+      return $result;
+    }
+
+    $result->data = (object)$query;
+    $result->data->crdate_unix = strtotime($query['crdate']);
+    $result->data->mdate_unix = strtotime($query['mdate']);
+    $result->data->remdate_unix = strtotime($query['remdate']);
+    $result->data->ageto=0 && $result->data->ageto = '';
+    // Актуальная вакансия - активная и промодерированая
+    $result->data->is_actual =
+      ($query['status']==self::$STATUS_ACTIVE) && ($query['ismoder']==self::$ISMODER_APPROVED);
+    // Атрибуты
+    $query = Yii::app()->db->createCommand()
+      ->from('empl_attribs')
+      ->where('id_vac=:id',[':id'=>$id])
+      ->queryAll();
+    $result->data->post = [];
+    $result->data->properties = [];
+
+
+    if(count($query))
+    {
+      foreach ($query as $v)
+      {
+        if(!isset($result->attributes[$v['key']]))
+        {
+          continue;
+        }
+        $arProp = $result->attributes[$v['key']];
+        if($arProp['id_par']==self::ID_POSTS_ATTRIBUTE) // должность
+        {
+          $result->data->post[] = $v['key'];
+        }
+        else // прочие атрибуты
+        {
+          $arr = ['id' => $v['id_attr'], 'key' => $v['key']];
+          if(!empty($arProp['id_par']))
+          {
+            foreach ($result->attributes as $p)
+            {
+              if($p['id']==$arProp['id_par'])
+              {
+                $arr['name'] = $p['name'];
+                $arr['value'] = $arProp['name'];
+              }
+            }
+          }
+          else
+          {
+            $arr['name'] = $arProp['name'];
+            $arr['value'] = $v['val'];
+          }
+          $result->data->properties[$v['key']] = $arr;
+        }
+      }
+    }
+
+    // Работодатель
+    $arUser = Share::getUsers([$result->data->id_user]);
+    if(!count($arUser))
+    {
+      $result->errors['system'] = true;
+      return $result;
+    }
+    $result->employer = (object)$arUser[$result->data->id_user];
+    if(Share::$UserProfile->id==$result->data->id_user)
+    {
+      $result->is_owner = true;
+    }
+
+    return $result;
   }
 }

@@ -1,0 +1,14 @@
+.tooltipster-sidetip.tooltipster-right, .tooltipster-sidetip.tooltipster-left{ max-width: 350px }
+#DiContent .form__field-label{
+  font-size: 14px;
+}
+#DiContent input.form__field-input{
+  padding: 10px;
+}
+.module_form{
+  margin: 0 -10px 20px 10px;
+}
+#DiContent .form__checkbox-label{
+  font-size: 14px;
+}
+.module_form{ display: none }

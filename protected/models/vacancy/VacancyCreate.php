@@ -17,8 +17,7 @@ class VacancyCreate
   public $errors;
   public $id_vacancy;
   public $finish_link;
-  const VIEW_TEMPLATE = '/user/vacpub/step_';
-  const TITLE_LENGTH = 70;
+  const VIEW_TEMPLATE = '/user/vacancy/create/step_';
 
   function __construct($vacancy=false)
   {
@@ -114,27 +113,11 @@ class VacancyCreate
     if($step==1)
     {
       // Заголовок
-      $v = trim($rq->getParam('title'));
-      $v = preg_replace("/[^a-zA-zа-яА-Я0-9]/u", '', $v);
-      $v = substr($v,0,self::TITLE_LENGTH);
-      if(!strlen($v))
-      {
-        $this->errors['title'] = true;
-      }
-      else
-      {
-        $this->data->title = $v;
-      }
+      $value = VacancyCheckFields::checkTitle($rq->getParam('title'));
+      $value ? $this->data->title=$value : $this->errors['title']=true;
       // Должность
-      $v = $rq->getParam('post');
-      if(!(is_array($v) && count($v)))
-      {
-        $this->errors['post'] = true;
-      }
-      else
-      {
-        $this->data->post = $v;
-      }
+      $value = VacancyCheckFields::checkPost($rq->getParam('post'));
+      $value ? $this->data->post=$value : $this->errors['post']=true;
       // Город
       $v = $rq->getParam('city');
       if(!(is_array($v) && count($v)))
@@ -169,25 +152,11 @@ class VacancyCreate
     elseif($step==2)
     {
       // Тип работы
-      $v = $rq->getParam('istemp');
-      if(!in_array($v,array_keys(Vacancy::WORK_TYPE)))
-      {
-        $this->errors['istemp'] = true;
-      }
-      else
-      {
-        $this->data->istemp = $v;
-      }
+      $value = VacancyCheckFields::checkWorkType($rq->getParam('istemp'));
+      $value===false ? $this->errors['istemp']=true : $this->data->istemp=$value;
       // Опыт работы
-      $v = $rq->getParam('exp');
-      if(!in_array($v,array_keys(Vacancy::EXPERIENCE)))
-      {
-        $this->errors['exp'] = true;
-      }
-      else
-      {
-        $this->data->exp = $v;
-      }
+      $value = VacancyCheckFields::checkExperience($rq->getParam('exp'));
+      $value ? $this->data->exp=$value : $this->errors['exp']=true;
       // Налоговый статус
       $v = $rq->getParam('self_employed');
       if(!in_array($v,array_keys(Vacancy::SELF_EMPLOYED)))
@@ -199,31 +168,19 @@ class VacancyCreate
         $this->data->self_employed = $v;
       }
       // Возраст
-      $v1 = intval($rq->getParam('age_from'));
-      $v2 = intval($rq->getParam('age_to'));
-      if(!$v1 || $v1<Vacancy::MIN_AGE_FROM)
+      $value = VacancyCheckFields::checkAge($rq->getParam('age_from'), $rq->getParam('age_to'));
+      if($value)
       {
-        $this->errors['age'] = true;
-      }
-      elseif($v2 && ($v1>$v2))
-      {
-        $this->errors['age'] = true;
+        $this->data->age_from = $value[0];
+        $this->data->age_to = $value[1];
       }
       else
       {
-        $this->data->age_from = $v1;
-        $this->data->age_to = $v2;
+        $this->errors['age'] = true;
       }
       // Пол
-      $v = $rq->getParam('gender');
-      if(!in_array('man',$v) && !in_array('woman',$v))
-      {
-        $this->errors['gender'] = true;
-      }
-      else
-      {
-        $this->data->gender = $v;
-      }
+      $value = VacancyCheckFields::checkGender($rq->getParam('gender'));
+      $value ? $this->data->gender=$value : $this->errors['gender']=true;
     }
     elseif($step==3)
     {
