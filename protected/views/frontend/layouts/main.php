@@ -446,7 +446,8 @@
                             { $title = 'Поиск компаний'; }
                             if ( $route == "reviews" && Share::isEmployer() )
                             { $title = 'Оценка персонала'; }
-
+                            if ( $route == "rate" )
+                            { $title = 'Отзывы и рейтинги'; }
                         }
                         ?>
                         <?php

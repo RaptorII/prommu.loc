@@ -152,13 +152,16 @@
 }
 .upp__info i{
     opacity: 0.5;
+    transition: var(--main-trans);
 }
 .upp__info:hover {
-    color: var(--color-dark);
+    color: var(--color-green);
     cursor: pointer;
+    transition: var(--main-trans);
 }
 .upp__info:hover i{
     opacity: 0.7;
+    transition: var(--main-trans);
 }
 .upp__rating-affective .upp__info .icn-question-two {
     position: absolute;
@@ -402,19 +405,6 @@ try google material design
     visibility: visible;
 }
 
-
-/*
-.group__point:before {
-    content: '';
-    display: block;
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    left: 0;
-    top: 0;
-}
-*/
-
 .group__point.p0 {
     background: var(--color-grey);
 }
@@ -643,3 +633,160 @@ try google material design
 .personal__area--capacity-scroll {
     overflow-x: auto;
 }
+
+.personal__area .prmu-btn.prmu-btn_normal {
+    margin: 0;
+    width: 85%;
+}
+
+.ppp__self-employed-question .icn-question-two{
+    color: var(--color-green);
+    opacity: 0.5;
+    transition: var(--main-trans);
+}
+.ppp__self-employed-question .icn-question-two:hover {
+    color: var(--color-green);
+    opacity: 0.7;
+}
+
+.ppp__self-employed-question {
+    position: relative;
+}
+
+/* pop-up for selfemployer
+*/
+
+#self_employed_message {
+    display: none;
+    max-width: 280px;
+}
+
+@media screen and (min-width: 450px){
+    #self_employed_message {
+        max-width: 430px;
+    }
+}
+@media screen and (min-width: 767px){
+    #self_employed_message {
+        max-width: 600px;
+    }
+}
+
+#self_employed_message h3 {
+    font-size: 20px;
+}
+
+#self_employed_message p {
+    font-size: 16px;
+    text-align: justify;
+}
+
+#self_employed_message ul {
+    font-size: 16px;
+    text-align: left;
+}
+
+.question_popup.prmu-btn.prmu-btn_normal {
+    width: 35px;
+    height: 35px;
+    margin: 0;
+}
+.fancybox-is-open .popup__msg ul{
+    text-align: initial;
+}
+.fancybox-is-open .popup__msg p{
+    font-size: 16px;
+    text-align: justify;
+}
+
+.money-check-alt:before {
+    font-family: "PrommuFont";
+    content: "\e9d6";
+    font-size: 40px;
+}
+.home-heart:before {
+    font-family: "PrommuFont";
+    content: "\e9d5";
+    font-size: 40px;
+}
+.handshake:before {
+    font-family: "PrommuFont";
+    content: "\e9d4";
+    font-size: 40px;
+}
+.envelop-open-dollar:before {
+    font-family: "PrommuFont";
+    content: "\e9d3";
+    font-size: 40px;
+}
+.cut:before {
+    font-family: "PrommuFont";
+    content: "\e9d2";
+    font-size: 40px;
+}
+.credit-card:before {
+    font-family: "PrommuFont";
+    content: "\e9d1";
+    font-size: 40px;
+}
+.box-check:before {
+    font-family: "PrommuFont";
+    content: "\e9d0";
+    font-size: 40px;
+}
+.biking:before {
+    font-family: "PrommuFont";
+    content: "\e9cf";
+    font-size: 40px;
+}
+
+.ppp__self--inner-row {
+    display: flex;
+}
+
+.ppp__self--inner-row:hover .ppp__self--img{
+    color: var(--color-white);
+    transition: var(--main-trans);
+    cursor: default;
+}
+
+.ppp__self--img {
+    flex: 1 0 55px;
+    align-items: center;
+    display: flex;
+    color: var(--color-l2-grey);
+}
+
+@media screen and (min-width: 450px) {
+    .ppp__self--img {
+        flex: 1 0 70px;
+    }
+}
+
+.ppp__self--txt {
+    margin-bottom: 20px;
+    width: 100%;
+    cursor: default;
+}
+
+.ppp__self--txt-head {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    text-align: left;
+}
+.ppp__self--txt-about {
+    text-align: justify;
+    display: block;
+    border-left: 1px solid var(--color-white);
+    padding-left: 20px;
+}
+
+.fancybox-close-small:after {
+    /*color: var(--color-white)!important;*/
+}
+
+/* end popup
+*/

@@ -1078,7 +1078,7 @@ class ResponsesApplic extends Responses
                 case self::$STATUS_FULL_RATING: 
                     $result = 'Проект завершен'; 
                     break;
-                default: $result = 'Ожидение ответа'; break;
+                default: $result = 'Ожидание ответа'; break;
             }
         }
         elseif($isResponse==2) // приглашение

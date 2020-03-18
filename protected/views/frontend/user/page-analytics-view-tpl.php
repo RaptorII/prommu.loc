@@ -5,9 +5,11 @@
 ?>
 <div class="page-analytics">
 	<div id="analytics-veil"></div>
+    <?/*?>
 	<div class="btn-white-green-wr -left">
 		<a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>" class="photo-pages__btn-back">< вернуться к редактированию профиля</a>
 	</div>
+    <?*/?>
 	<div class="col-xs-12">
 		<div class="row">
 			<form action="POST" id="analytics-form" class="pa__filter">

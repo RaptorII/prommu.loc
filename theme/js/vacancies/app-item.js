@@ -14,7 +14,7 @@ $(function(){
           if(t.error!=1)
           {
             $(arBlocks[1]).fadeOut();
-            $(arBlocks[0]).html('<b>Ожидение ответа</b>');           
+            $(arBlocks[0]).html('<b>Ожидание ответа</b>');
           }
           $('body').append('<div class="prmu__popup"><p>'+t.message+'</p></div>'),
           $.fancybox.open({

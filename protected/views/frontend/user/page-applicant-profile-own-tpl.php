@@ -232,6 +232,7 @@ if (!share::isApplicant()):
     <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
       <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
     <?php endif; ?>
+
     <? if(!empty($info['self_employed'])): ?>
       <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
     <? endif; ?>
@@ -1190,10 +1191,154 @@ if (!share::isApplicant()):
                 </div>
             </div>
             <div class="personal__area--item">
+
                 <div class="upp__rating-block">
                     <? if(!empty($info['self_employed'])): ?>
                         <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
                     <? endif; ?>
+
+                    <? // ?>
+                    <? if(!$info['self_employed'] && $info['self_employed_region']): ?>
+                        <div class="upp__rating-block">
+                            <a href="<?=MainConfig::$VIEW_SELF_EMPLOYED?>" class="prmu-btn prmu-btn_normal">
+                                <span>Стать самозанятым</span>
+                            </a>
+                            <? if(!$info['self_employed']): ?>
+                                <span class="ppp__self-employed-question ">
+                                    <i class="icn-question-two"></i>
+                                </span>
+                            <? endif; ?>
+                            <div class="ppp__self-employed-message prmu__popup" id="self_employed_message">
+
+                                <h3>Причина регистрироваться на Prommu.com под статусом «Самозанятого»</h3>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="money-check-alt"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Налог всего 4-6%.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Подоходный налог 13% заменён на налог на професиональную деятельность (НПД)
+                                            всего 4-6%.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="handshake"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Никаких "Серых" схем.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Полная легализация отношений. Дополнительные возможности для личной защиты
+                                            перед законом. Минимизация налоговых рисков.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="credit-card"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Кредит в банке стало получить проще.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Можно предоставить официальную справку о доходах в банк. Справка формируется
+                                            в приложении или через веб-кабинет22.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="biking"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Удобно и никуда не надо ехать.
+                                        </span>
+                                            <span class="ppp__self--txt-about">
+                                            Не нужно посещать налоговую и подавать документы для регистрации самозанятым.
+                                            Регистрация осуществляется с мобильного телефона через приложение "Мой налог"
+                                            и занимает 20 минут.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="envelop-open-dollar"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Нет обязательных платежей.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Нет прибыли - нет налога. Ничего не теряеете.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="home-heart"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Доступная ипотека.
+                                        </span>
+                                            <span class="ppp__self--txt-about">
+                                            Подтверждение о доходах самозанятого позволяет банку рассчитать более
+                                            оптимальную ставку на ипотеку.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="cut"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Налоговый вычет 10 000 руб.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Возможность получения вычета со ставки 4% в размере 1% и со ставки :% величиной 2% в
+                                            пределах 10 тысяч рублей {п.2 ст.12 ФЗ №422}.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="ppp__self--inner-row">
+                                    <div class="ppp__self--img">
+                                        <div class="box-check"></div>
+                                    </div>
+                                    <div class="ppp__self--txt">
+                                        <span class="ppp__self--txt-head">
+                                            Это ничего не стоит, но очень полезно.
+                                        </span>
+                                        <span class="ppp__self--txt-about">
+                                            Это бесплатно и быстро. Регистрация в качестве самозанятого ни к чему не обязывает,
+                                            но может пригодиться в самый нужный момент.
+                                            Возможно, после того, как наберётся нужное количество самозанятых государство может
+                                            ограничить возможность такой простой регистрации или ввести новые требования.
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    <? endif; ?>
+                    <? // ?>
+
                 </div>
             </div>
 
@@ -1202,8 +1347,8 @@ if (!share::isApplicant()):
                     <div class="upp__subtitle">
                         <span class="upp__subtitle">Эффективность размещения:</span>
                         <span class="upp__info question_popup">
-                                        <i class="icn-question-two"></i>
-                                    </span>
+                            <i class="icn-question-two"></i>
+                        </span>
                     </div>
                     <div class="personal__area--affective">
                         <div class="personal__area--indicator" style="width: <?= $viData['profile_filling'] ?>%"></div>

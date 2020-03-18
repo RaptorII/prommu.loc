@@ -347,6 +347,11 @@
   }
 }
 
+#DiContent .epa__select .epa__input.metro-input {
+  width: 83%;
+  position: absolute;
+}
+
 #DiContent .edit-profile-applicant .epa__period-list .epa__input {
   position: absolute;
   top: 0;
