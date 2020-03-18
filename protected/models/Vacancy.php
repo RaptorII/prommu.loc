@@ -723,6 +723,10 @@ class Vacancy extends ARModel
             $data['card_prommu'] = (boolean)$val['cardPrommu'];
             $data['self_employed'] = (boolean)$val['self_employed'];
             
+            $data['repost_vk'] = false;
+            $data['repost_fb'] = false;
+            $data['repost_tl'] = false;
+                
             if($val['repost'] == '111'){
                 $data['repost_vk'] = true;
                 $data['repost_fb'] = true;
