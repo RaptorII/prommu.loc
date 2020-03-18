@@ -332,6 +332,7 @@ try google material design
     height: auto;
     color: var(--color-dark);
     cursor: default;
+    position: relative;
 }
 
 #DiContent span.group__info {
@@ -380,6 +381,27 @@ try google material design
 .group__about--14:before {content: "\e997";}
 .group__about--15:before {content: "\e99e";}
 .group__about--16:before {content: "\e99b";}
+
+.group__info--drop {
+    position: absolute;
+    border: 1px solid var(--color-grey);
+    padding: 5px;
+    font-weight: 600;
+    top: 50px;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--main-trans);
+    left: 0;
+}
+.group__info:hover .group__info--drop {
+    position: absolute;
+    background: white;
+    z-index: 2;
+    top: 0;
+    opacity: 1;
+    visibility: visible;
+}
+
 
 /*
 .group__point:before {

@@ -2,12 +2,15 @@
   auth form
  */
 .auth-form__header.row {
-  border-bottom: 1px solid #c8c8c8;
-  margin: 8px 0 48px;
+  /*border-bottom: 1px solid #c8c8c8;*/
+  /*margin: 8px 0 48px;*/
+  margin: 5px 0 5px;
   text-align: left;
-  padding: 0 0 32px 0;
+  /*padding: 0 0 32px 0;*/
+  padding: 0;
 }
 
+h2.auth-form__title,
 .auth-form__title {
   text-transform: uppercase;
   margin: 0;
@@ -15,6 +18,19 @@
   font-family: "RobotoCondensedBold", sans-serif, verdana;
   color: #444649;
   text-align: center;
+}
+
+.auth-form__content {
+  padding: 20px 0 0 0;
+}
+
+.user-profile-page__line {
+  border-bottom: 1px solid #c8c8c8;
+  margin-top: 0;
+}
+
+.auth-form__bottom {
+  margin: 0;
 }
 
 /*********/
@@ -25,15 +41,24 @@
 }
 
 #DiContent .auth-form__form {
-  padding: 0 54px 50px 70px;
+  padding: 0 54px 0px 70px;
+}
+
+#DiContent .content-block {
+  margin-top: 0;
 }
 
 .auth-form__form .auth-form__preview {
-  padding-bottom: 95px;
+  padding-bottom: 25px;
 }
 
 .auth-form__social .auth-form__preview {
+  padding-top: 20px;
   padding-bottom: 35px;
+}
+
+.auth-form__bottom .auth-form__preview {
+  padding-bottom: 0;
 }
 
 #DiContent.page-register .message.red {
@@ -175,6 +200,7 @@
 
 .auth-form__restore {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 #DiContent .auth-form__restore a {
@@ -197,7 +223,6 @@
 #DiContent .auth-form__social {
   padding: 0 45px;
   text-align: left;
-  border-left: 1px solid #c8c8c8;
 }
 
 .auth-form__social-link {
@@ -319,13 +344,21 @@
 }
 
 .auth-form__reg-link {
-  display: inline-block;
+  display: block;
   cursor: pointer;
-  /*color: #abb820;*/
+  /* color: #abb820; */
   position: relative;
-  text-decoration: underline;
+  margin: 20px auto;
+  width: 230px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
+#DiContent .auth-form__reg-link a:hover,
+#DiContent .auth-form__reg-link a:focus {
+  color: var(--color-white);
+  text-decoration: none;
+}
 .auth-form__reg-list {
   display: none;
   position: absolute;
@@ -620,4 +653,13 @@ media
 .auth-form__selection label:last-child:after {
   content: '\e976';
   font-size: 35px;
+}
+
+@media screen and (min-width: 767px) {
+  .auth-form__form {
+    border-right: 1px solid #c8c8c8;
+  }
+  .auth-form__bottom .auth-form__bottom-pad {
+    padding: 0 54px 0 50px;
+  }
 }

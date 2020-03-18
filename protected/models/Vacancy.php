@@ -655,6 +655,7 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
+                   e.repost,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -720,7 +721,29 @@ class Vacancy extends ARModel
             $data['card'] = (boolean)$val['card'];
             $data['card_prommu'] = (boolean)$val['cardPrommu'];
             $data['self_employed'] = (boolean)$val['self_employed'];
-          
+            
+            $data['repost_vk'] = false;
+            $data['repost_fb'] = false;
+            $data['repost_tl'] = false;
+                
+            if($val['repost'] == '111'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = true;
+                
+            } elseif($val['repost'] == '110'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = false;
+            }elseif($val['repost'] == '011'){
+                $data['repost_vk'] = false;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = true;
+            }elseif($val['repost'] == '101'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = false;
+                $data['repost_tl'] = true;
+            }
             
             
             $data['requirements'] = $val['requirements'];
@@ -762,6 +785,7 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
+                   e.repost,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -783,10 +807,39 @@ class Vacancy extends ARModel
        
         foreach ($res as $key => $val)
         {
+            $idvac = $val['id'];
+            $sql = "SELECT 
+                a.id_attr
+              , a.val
+              , d.name
+              , a.key
+            FROM empl_vacations e
+            LEFT JOIN empl_attribs a ON e.id = a.id_vac
+            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
+            WHERE e.id = {$idvac}";
+            $attribs = Yii::app()->db->createCommand($sql)->queryAll();
+
+            foreach ($attribs as $keys => $vals)
+            {   
+            
+                if($vals['val'] == null){
+                    $vals['val'] = $vals['name'];
+                }
+                unset($vals['name']);
+                
+                $data[$val['id']]['attribs'][] = $vals;
+            } 
+        
             if( !isset($data[$val['id']])) $data[$val['id']] = array('city' => array(), 'posts' => array()) ;
             
             
             ///attribs
+            $locat = $this->getLocations((int)$val['id']);
+            for($i = 0; $i < count($locat); $i++){
+                 $data[$val['id']]['locations'][] = $locat[$i];
+            }
+           
+            
             $data[$val['id']]['id'] = (int)$val['id'];
             $data[$val['id']]['title'] = $val['title'];
             
@@ -806,14 +859,33 @@ class Vacancy extends ARModel
             $data[$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
             
+            $data[$val['id']]['repost_vk'] = false;
+            $data[$val['id']]['repost_fb'] = false;
+            $data[$val['id']]['repost_tl'] = false;
+                
+            if($val['repost'] == '111'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = true;
+                
+            } elseif($val['repost'] == '110'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = false;
+            }elseif($val['repost'] == '011'){
+                $data[$val['id']]['repost_vk'] = false;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = true;
+            }elseif($val['repost'] == '101'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = false;
+                $data[$val['id']]['repost_tl'] = true;
+            }
+            
             $data[$val['id']]['created_at'] = $val['crdate'];
             $data[$val['id']]['removed_at'] = $val['remdate'];
-                
-           
             $data[$val['id']]['is_man'] = (boolean)$val['isman'];
             $data[$val['id']]['is_woman'] = (boolean)$val['iswoman'];
-            
-            
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data[$val['id']]['sort'] = (boolean)$val['sort'];
             $data[$val['id']]['is_active'] = true;
@@ -824,7 +896,6 @@ class Vacancy extends ARModel
             $data[$val['id']]['smart'] = (boolean)$val['smart'];
             $data[$val['id']]['card'] = (boolean)$val['card'];
             $data[$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
-            
             
             $data[$val['id']]['requirements'] = $val['requirements'];
             $data[$val['id']]['conditions'] = $val['conditions'];

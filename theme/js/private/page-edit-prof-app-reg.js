@@ -79,6 +79,10 @@ jQuery(function($){
       setTimeout(function(){ $(el).click() },10);
       return false;
     }
+    else
+    {
+      remErr('.epa__label.epa__posts');
+    }
     checkPosts();
   });
   //
