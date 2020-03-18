@@ -786,6 +786,7 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
+                   e.rrepost,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -858,6 +859,29 @@ class Vacancy extends ARModel
             $data[$val['id']]['posts'][0]['id'] = (int)$val['id_attr'];
             $data[$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
+            
+            $data[$val['id']]['repost_vk'] = false;
+            $data[$val['id']]['repost_fb'] = false;
+            $data[$val['id']]['repost_tl'] = false;
+                
+            if($val['repost'] == '111'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = true;
+                
+            } elseif($val['repost'] == '110'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = false;
+            }elseif($val['repost'] == '011'){
+                $data[$val['id']]['repost_vk'] = false;
+                $data[$val['id']]['repost_fb'] = true;
+                $data[$val['id']]['repost_tl'] = true;
+            }elseif($val['repost'] == '101'){
+                $data[$val['id']]['repost_vk'] = true;
+                $data[$val['id']]['repost_fb'] = false;
+                $data[$val['id']]['repost_tl'] = true;
+            }
             
             $data[$val['id']]['created_at'] = $val['crdate'];
             $data[$val['id']]['removed_at'] = $val['remdate'];
