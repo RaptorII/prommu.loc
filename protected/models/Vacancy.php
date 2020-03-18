@@ -786,7 +786,7 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
-                   e.rrepost,
+                   e.repost,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
