@@ -656,6 +656,7 @@ class Vacancy extends ARModel
                    e.ismed,
                    e.isavto,
                    e.iswoman,
+                   e.repost,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -721,7 +722,25 @@ class Vacancy extends ARModel
             $data['card'] = (boolean)$val['card'];
             $data['card_prommu'] = (boolean)$val['cardPrommu'];
             $data['self_employed'] = (boolean)$val['self_employed'];
-          
+            
+            if($val['repost'] == '111'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = true;
+                
+            } elseif($val['repost'] == '110'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = false;
+            }elseif($val['repost'] == '011'){
+                $data['repost_vk'] = false;
+                $data['repost_fb'] = true;
+                $data['repost_tl'] = true;
+            }elseif($val['repost'] == '101'){
+                $data['repost_vk'] = true;
+                $data['repost_fb'] = false;
+                $data['repost_tl'] = true;
+            }
             
             
             $data['requirements'] = $val['requirements'];
