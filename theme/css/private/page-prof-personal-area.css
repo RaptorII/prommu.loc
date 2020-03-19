@@ -336,6 +336,7 @@ try google material design
     color: var(--color-dark);
     cursor: default;
     position: relative;
+    display: block;
 }
 
 #DiContent span.group__info {
