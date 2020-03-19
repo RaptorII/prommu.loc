@@ -378,8 +378,10 @@ class ResponsesApplic extends Responses
           . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a>' : ''),
         'error_sex' => 'Вы не подходите на даную ваканию по параметру “Пол соискателя женский”',
         'error_age' => 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”',
-        'error_med_card' => 'Вы не подходите на даную вакансию причине отсутствия медкнижки',
-        'error_bank_card' => 'Вы не подходите на даную вакансию причине отсутствия банковской карты',
+        'error_med_card' => 'Вы не подходите на даную вакансию по причине отсутствия медкнижки',
+        'error_bank_card' => 'Вы не подходите на даную вакансию по причине отсутствия банковской карты',
+        'error_avto' => 'Вы не подходите на даную вакансию по причине отсутствия автомобиля',
+        'error_smart' => 'Вы не подходите на даную вакансию причине отсутствия смартфона',
         'error_self_employed' => 'Нам очень жаль, но на эту вакансию требуются соискатели '
           . 'со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="'
           . MainConfig::$VIEW_SELF_EMPLOYED . '">этой ссылке</a>',
@@ -406,6 +408,10 @@ class ResponsesApplic extends Responses
                       ageto, 
                       isman, 
                       iswoman, 
+                      ismed,
+                      isavto,
+                      smart,
+                      card,
                       status,
                       self_employed")
         ->from('empl_vacations')
@@ -518,6 +524,20 @@ class ResponsesApplic extends Responses
         if ( $arVacancy['card'] && $arApp['card'] )
         {
           $arRes['message'] = $arMess['error_bank_card'];
+          return $arRes;
+        }
+
+        // avto
+        if ( $arVacancy['isavto'] && $arApp['isavto'] )
+        {
+          $arRes['message'] = $arMess['error_avto'];
+          return $arRes;
+        }
+
+        // smartphone
+        if ( $arVacancy['smart'] && $arApp['smart'] )
+        {
+          $arRes['message'] = $arMess['error_smart'];
           return $arRes;
         }
 
