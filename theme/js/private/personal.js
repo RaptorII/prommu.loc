@@ -781,20 +781,21 @@ var InitNicEditor = (function () {
       console.log('error in NicEditor init');
     }
 
-    if(!$(arguments[0]).length)
+    if(!$(arguments[0]).length || $(arguments[0]).prev().find('.nicEdit-main').length)
     {
       return;
     }
     let id = $(arguments[0]).attr('id');
     self.item = $(arguments[0]);
     self.parent = $(arguments[0]).parent();
+
     self.object = new nicEditor(self.params).addInstance(id);
 
     if(!$(arguments[1]).length)
     {
       return;
     }
-    this.object.setPanel($(arguments[1]).attr('id'));
+    self.object.setPanel($(arguments[1]).attr('id'));
 
     $('.nicEdit-main').bind('paste',function() {
       let field = this;

@@ -222,29 +222,12 @@ class VacancyCreate
     elseif($step==4)
     {
       // Описание
-      $v = trim($rq->getParam('requirements'));
-      $v=="<br>" && $v="";
-
-      if(!strlen($v))
-      {
-        $this->errors['requirements'] = true;
-      }
-      else
-      {
-        $v = htmlspecialchars($v,ENT_QUOTES);
-        $this->data->requirements = $v;
-      }
-      $this->data->requirements = stripslashes($v);
+      $value = VacancyCheckFields::checkTextarea($rq->getParam('requirements'), true);
+      $value ? $this->data->requirements=$value : $this->errors['requirements']=true;
       // Обязанности
-      $v = trim($rq->getParam('duties'));
-      $v=="<br>" && $v="";
-      $v = htmlspecialchars($v,ENT_QUOTES);
-      $this->data->duties = stripslashes($v);
+      $this->data->duties = VacancyCheckFields::checkTextarea($rq->getParam('duties'));
       // Условия
-      $v = trim($rq->getParam('conditions'));
-      $v=="<br>" && $v="";
-      $v = htmlspecialchars($v,ENT_QUOTES);
-      $this->data->conditions = stripslashes($v);
+      $this->data->conditions = VacancyCheckFields::checkTextarea($rq->getParam('conditions'));
     }
     elseif ($step==5)
     {

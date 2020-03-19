@@ -476,21 +476,26 @@ class SiteController extends AppController
             if($rq->isAjaxRequest)
             {
               $module = $rq->getParam('module');
-              if(!in_array($module,[1]))
+              if(!in_array($module,[1,3,4]))
               {
                 $viData->errors['access'] = true;
               }
               else
               {
                 new VacancyEdit($viData);
-                $this->renderPartial(
-                  '../user/vacancy/edit/module_' . $module,
-                  ['viData'=>$viData]
-                );
                 if(!count($viData->errors)) // ошибок нет
                 {
                   $model->setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
                 }
+                else
+                {
+                  $viData->error_moodule = $module;
+                }
+                display($viData->data);
+                $this->renderPartial(
+                  '../user/vacancy/edit/module_' . $module,
+                  ['viData'=>$viData]
+                );
                 Yii::app()->end();
               }
             }

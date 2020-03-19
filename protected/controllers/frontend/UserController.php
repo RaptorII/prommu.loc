@@ -885,7 +885,7 @@ class UserController extends AppController
 
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('save') )
         {
-            $res = (new Vacancy())->saveVacpubData();
+           // $res = (new Vacancy())->saveVacpubData();
             if( $res['err'] ) {
             } else {
 //                $project = new ProjectConvertVacancy();

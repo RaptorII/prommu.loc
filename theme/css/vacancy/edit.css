@@ -12,3 +12,33 @@
   font-size: 14px;
 }
 .module_form{ display: none }
+#DiContent .group__info.group__info-normalize{ font-weight: inherit }
+@media (max-width: 991px) {
+  .form__field{
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .form__field-label{
+    width: 100%;
+    text-align: left;
+  }
+  .form__content-hint{
+    padding-right: 40px;
+  }
+  .form__content-mfull{ width:100%; }
+  .form__field-hint{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -6px;
+  }
+  .form__field-additional{
+    margin: 0 -6px;
+  }
+  .form__field-additional .form__content-2{
+    width: 100%;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+}
+.form__field-niceditor{ max-width: inherit }

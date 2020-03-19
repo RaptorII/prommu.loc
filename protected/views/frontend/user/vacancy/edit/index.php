@@ -6,12 +6,9 @@ $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'private/personal.css');
 $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'vacancy/edit.css');
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
 
-
-
-
-
-//display($viData->data);
+//display($viData->data->properties);
 
 ?>
 <div class="row">
@@ -32,9 +29,15 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScr
       <? $this->renderPartial(VacancyEdit::MODULE_1,['viData'=>$viData]) ?>
     </div>
     <? if($viData->data->is_actual): ?>
-    <div class="personal__area--capacity module">
-      <? $this->renderPartial(VacancyEdit::MODULE_2,['viData'=>$viData]) ?>
-    </div>
+      <div class="personal__area--capacity module">
+        <? $this->renderPartial(VacancyEdit::MODULE_2,['viData'=>$viData]) ?>
+      </div>
     <? endif; ?>
+    <div class="personal__area--capacity module">
+      <? $this->renderPartial(VacancyEdit::MODULE_3,['viData'=>$viData]) ?>
+    </div>
+    <div class="personal__area--capacity module">
+      <? $this->renderPartial(VacancyEdit::MODULE_4,['viData'=>$viData]) ?>
+    </div>
   </div>
 </div>

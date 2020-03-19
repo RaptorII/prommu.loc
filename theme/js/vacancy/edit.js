@@ -17,9 +17,10 @@ var EditVacancy = (function () {
     {
       let module = $(arguments[0]).closest('.module');
       $(module).html(arguments[1]);
-      Hinter.bind('.js-g-hashint.-js-g-hintright', { side: 'right' });
     }
-
+    Hinter.options.contentAsHTML = true;
+    Hinter.bind('.tooltip', {side:'right'});
+    // переключение на форму редактирования
     $('.module').on('click','.personal__area--capacity-edit',function(){
       let main = $(this).closest('.module'),
           info = $(main).find('.module_info'),
@@ -41,8 +42,24 @@ var EditVacancy = (function () {
     new InitSelect('#posts');
     new InitSelect('#experience');
     new InitSelect('#work_type');
+    new InitSelect('#posts2');
+    new InitSelect('#experience2');
+    new InitSelect('#work_type2');
+    new InitSelect('#hcolor');
+    new InitSelect('#hlen');
+    new InitSelect('#ycolor');
+    new InitSelect('#chest');
+    new InitSelect('#waist');
+    new InitSelect('#thigh');
+
+
+    new InitNicEditor('#requirements','#requirements_panel');
+    new InitNicEditor('#duties','#duties_panel');
+    new InitNicEditor('#conditions','#conditions_panel');
     // проверяем обязательные поля
     new CheckRequiredFields(self);
+
+
 /*
     if(step==='1')
     {

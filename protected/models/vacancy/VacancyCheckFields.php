@@ -114,5 +114,36 @@ class VacancyCheckFields
       return $value;
     }
   }
+  /**
+   * @param $value - string
+   * @param $isRequired - bool
+   * @return bool|string - допустимое значение, или false в случае ошибки
+   */
+  public static function checkTextarea($value, $isRequired=false) // Описание | Обязанности | Условия
+  {
+    $value = trim($value);
+    $value=="<br>" && $value="";
 
+    if(!strlen($value) && $isRequired)
+    {
+      return false;
+    }
+    $value = htmlspecialchars($value,ENT_QUOTES);
+    $value = stripslashes($value);
+    return $value;
+  }
+  /**
+   * @param $value - string
+   * @param $maxLimit - bool | integer
+   * @return string - допустимое значение
+   */
+  public static function checkNum($value, $maxLimit=false)
+  {
+    $value = intval($value);
+    if($maxLimit)
+    {
+      $value = substr($value,0, $maxLimit);
+    }
+    return $value==0 ? false : $value;
+  }
 }

@@ -30,6 +30,7 @@
 .form__field-first{ padding-top: 15px }
 .form__field-label{
   padding: 0 6px;
+  text-align: right;
 }
 .form__field-content{ width: 100%; }
 .form__content-indent{ margin: 0 6px; }
@@ -235,29 +236,6 @@
 .form__textarea-panel>div{
   box-sizing: border-box;
 }
-.form__textarea{
-
-}
-@media (max-width: 540px) {
-  .form__field{
-    flex-wrap: wrap;
-    position: relative;
-  }
-  .form__field-label{ width: 100% }
-  .form__content-hint{
-    padding-right: 40px;
-  }
-  .form__content-mfull{ width:100%; }
-}
-/*.form__field-input:focus{
-    border-color: #888;
-}*/
-.form__description{
-
-}
-
-
-
 .form__field-hint:after{
   content: "\e9db";
   font-family: "PrommuFont";
@@ -280,13 +258,6 @@
 .form__field-hint:hover{
   opacity: .7;
   color: var(--color-dark);
-}
-@media (max-width: 540px) {
-  .form__field-hint{
-    position: absolute;
-    right: 0;
-    bottom: 8px;
-  }
 }
 .custom-calendar.ui-widget.ui-widget-content{ font-size: 14px }
 /*

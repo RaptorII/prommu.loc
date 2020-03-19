@@ -1,8 +1,9 @@
+<? $module = 1; ?>
 <div class="personal__area--capacity-name">Общая информация</div>
 <?
 //
 ?>
-<div class="module_info<?=count($viData->errors)?' block__hide':''?>">
+<div class="module_info<?=$viData->error_moodule==$module?' block__hide':''?>">
   <a href="javascript:void(0)" class="personal__area--capacity-edit js-g-hashint" title="Редактировать"></a>
   <div class="group ppe__field">
     <div class="group__about">Заголовок</div>
@@ -10,7 +11,7 @@
   </div>
   <div class="group ppe__field">
     <div class="group__about">Должность</div>
-    <div class="group__info"><?=$viData->attributes[reset($viData->data->post)]['name']?></div>
+    <div class="group__info"><?=$viData->attributes->items[reset($viData->data->post)]['name']?></div>
   </div>
   <div class="group ppe__field">
     <div class="group__about">Опыт работы</div>
@@ -37,7 +38,7 @@
 <?
 //
 ?>
-<form class="module_form<?=count($viData->errors)?' block__visible':''?>" method="post" data-params='{"ajax":"true"}'>
+<form class="module_form<?=$viData->error_moodule==$module?' block__visible':''?>" method="post" data-params='{"ajax":"true"}'>
   <div class="form__container">
     <div class="form__field">
       <label class="form__field-label text__nowrap">Заголовок <span class="text__red">*</span></label>
@@ -53,7 +54,7 @@
           data-params='{"limit":"<?=VacancyCheckFields::TITLE_LENGTH?>","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}'
           autocomplete="off">
       </div>
-      <div class="form__field-hint js-g-hashint -js-g-hintright" title="Заголовок должен быть кратким и отражать суть вакансии. Например: Раздача листовок / Расклейка объявлений / Подработка промоутером / Аниматор на детский праздник"></div>
+      <div class="form__field-hint tooltip" title="Заголовок должен быть кратким и отражать суть вакансии. Например: Раздача листовок / Расклейка объявлений / Подработка промоутером / Аниматор на детский праздник"></div>
     </div>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Должность <span class="text__red">*</span></label>
@@ -69,7 +70,7 @@
           </select>
         </div>
       </div>
-      <div class="form__field-hint js-g-hashint -js-g-hintright" title="Выберите одну должность, которая необходима Вам для набора персонала. Если Вам необходимо подобрать несколько должностей Вы сможете дублировать размещенную вакансию и при этом изменить должность или другие параметры вакансии"></div>
+      <div class="form__field-hint tooltip" title="Выберите одну должность, которая необходима Вам для набора персонала. Если Вам необходимо подобрать несколько должностей Вы сможете дублировать размещенную вакансию и при этом изменить должность или другие параметры вакансии"></div>
     </div>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Опыт работы</label>
@@ -88,7 +89,7 @@
     </div>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Возраст <span class="text__red">*</span></label>
-      <div class="form__field-content form__content-indent" id="age">
+      <div class="form__field-content form__content-indent">
         <? if($viData->errors['age']): ?>
           <span class="prmu-error-mess">Значение "От" должно быть больше 14 и меньше значения "До"</span>
         <? endif; ?>
@@ -164,5 +165,5 @@
     </div>
     <button type="submit" class="btn__orange">Сохранить</button>
   </div>
-  <input type="hidden" name="module" value="1">
+  <input type="hidden" name="module" value="<?=$module?>">
 </form>
