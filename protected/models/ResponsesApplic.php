@@ -378,6 +378,8 @@ class ResponsesApplic extends Responses
           . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a>' : ''),
         'error_sex' => 'Вы не подходите на даную ваканию по параметру “Пол соискателя женский”',
         'error_age' => 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”',
+        'error_med_card' => 'Вы не подходите на даную вакансию причине отсутствия медкнижки',
+        'error_bank_card' => 'Вы не подходите на даную вакансию причине отсутствия банковской карты',
         'error_self_employed' => 'Нам очень жаль, но на эту вакансию требуются соискатели '
           . 'со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="'
           . MainConfig::$VIEW_SELF_EMPLOYED . '">этой ссылке</a>',
@@ -504,6 +506,21 @@ class ResponsesApplic extends Responses
           $arRes['message'] = $arMess['error_age'];
           return $arRes;
         }
+
+        // med card
+        if ( $arVacancy['ismed'] && $arApp['ismed'] )
+        {
+          $arRes['message'] = $arMess['error_med_card'];
+          return $arRes;
+        }
+
+        // bank card
+        if ( $arVacancy['card'] && $arApp['card'] )
+        {
+          $arRes['message'] = $arMess['error_bank_card'];
+          return $arRes;
+        }
+
         // Статус Самозанятый
         $self_employed = Share::$UserProfile->getUserAttribute(
           ['key'=>'self_employed'],
