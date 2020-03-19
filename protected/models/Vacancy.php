@@ -32,13 +32,6 @@ class Vacancy extends ARModel
       2 => 'руб / месяц',
       3 => 'руб / посещение'
     ];
-    const SALARY_TIME = [
-      130 => 'На следующий день',
-      132 => 'После окончания проекта',
-      133 => 'После окончания проекта в течении недели',
-      134 => 'В конце рабочего дня',
-      163 => 'Ежемесячно'
-    ];
     public $company_search;
     public $responses;
     // empl_vacations.status
@@ -1886,13 +1879,14 @@ class Vacancy extends ARModel
       {
         $arr = [
           'id_vac'=>$id,
-          'id_attr'=>$v['id'],
-          'key'=>$v['key'],
+          'id_attr'=>$v,
+          'key'=>$key,
           'crdate'=>date('Y-m-d H:i:s')
         ];
-        if(!in_array($key,$objAttr->lists_keys)) // свойство значение (НЕ список)
+        if(!in_array($key,array_keys($objAttr->lists))) // свойство НЕ список
         {
-          $arr['val'] = $v['value'];
+          $arr['id_attr'] = $objAttr->items[$key]['id'];
+          $arr['val'] = $v;
         }
         $arInsert[] = $arr;
       }
@@ -4792,7 +4786,11 @@ class Vacancy extends ARModel
     $arRes = Cache::getData('/Vacancy/attributes');
     if($arRes['data']===false)
     {
-      $arRes['data'] = (object)['items'=>[], 'lists'=>[], 'lists_keys'=>[]];
+      $arRes['data'] = (object)[
+        'items'=>[],
+        'lists'=>[],
+        'additional_lists'=>['manh','weig','hcolor','hlen','ycolor','chest','waist','thigh']
+      ];
       $query = Yii::app()->db->createCommand()->from('user_attr_dict')->queryAll();
 
       foreach ($query as $v1)
@@ -4810,7 +4808,6 @@ class Vacancy extends ARModel
           }
         }
       }
-      $arRes['data']->lists_keys = array_keys($arRes['data']->lists);
       Cache::setData($arRes, 604800); // кеш на неделю
     }
     return $arRes['data'];
@@ -4880,23 +4877,13 @@ class Vacancy extends ARModel
       ];
     }
     Share::multipleInsert(['empl_city'=>$arInsert]);
-    // добавление атрибутов
+    // Сохранение должностей
     self::saveVacancyPosts($vacancy, $objData->post); // должность
-    $objAttr = self::getAllAttributes();
-    $arInsert = [];
-    $arInsert['paylims'] = [
-      'id' => $objData->salary_time,
-      'key' => 'paylims',
-      'name' => $objAttr->items['paylims']['name'],
-    ];
+    // Сохранение атрибутов
+    $arInsert = ['paylims' => $objData->salary_time];
     if(!empty($objData->salary_comment)) // Комментарии по оплате
     {
-      $arInsert['salary-comment'] = [
-        'id' => $objAttr->items['salary-comment']['id'],
-        'key' => 'salary-comment',
-        'name' => $objAttr->items['salary-comment']['name'],
-        'value' => $objData->salary_comment
-      ];
+      $arInsert['salary-comment'] = $objData->salary_comment;
     }
     self::saveVacancyAttributes($vacancy, $arInsert);
     // email ведомление юзеру
@@ -4943,7 +4930,22 @@ class Vacancy extends ARModel
         'istemp' => $data->istemp
       ];
       self::saveVacancyPosts($id, $data->post);
-      self::saveVacancyAttributes($id, $data->properties);
+      $arAttr = [];
+      foreach ($data->properties as $key => $v)
+      {
+        if(in_array($key,self::getAllAttributes()->additional_lists))
+        {
+          if($key=='manh' || $key=='weig')
+          {
+            $arAttr[$key]=$v['value'];
+          }
+          else
+          {
+            $arAttr[$key]=$v['id'];
+          }
+        }
+      }
+      self::saveVacancyAttributes($id, $arAttr);
     }
     if($module==4)
     {
@@ -5021,10 +5023,6 @@ class Vacancy extends ARModel
     {
       foreach ($query as $v)
       {
-        if(!isset($result->attributes->items[$v['key']]))
-        {
-          continue;
-        }
         $arProp = $result->attributes->items[$v['key']];
         if($arProp['id_par']==self::ID_POSTS_ATTRIBUTE) // должность
         {
@@ -5033,19 +5031,22 @@ class Vacancy extends ARModel
         else // прочие атрибуты
         {
           $arr = ['id' => $v['id_attr'], 'key' => $v['key']];
-          if(in_array($v['key'],array_keys($result->attributes->items)))
+          if(in_array($v['key'],$result->attributes->additional_lists))
           {
             $result->data->add_props = true;
           }
-          foreach ($result->attributes->items as $p)
+          if(in_array($v['key'],array_keys($result->attributes->lists)))
           {
-            if($p['id_par']==$arProp['id'])
+            foreach ($result->attributes->items as $p)
             {
-              $arr['name'] = $p['name'];
-              $arr['value'] = $arProp['name'];
+              if($v['id_attr']==$p['id'])
+              {
+                $arr['name'] = $arProp['name'];
+                $arr['value'] = $p['name'];
+              }
             }
           }
-          if(!isset($arr['value']))
+          else
           {
             $arr['name'] = $arProp['name'];
             $arr['value'] = $v['val'];

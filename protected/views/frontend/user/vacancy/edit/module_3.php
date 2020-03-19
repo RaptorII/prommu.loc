@@ -229,7 +229,7 @@
           <select name="attributes[hcolor]">
             <option value="" <?=!isset($viData->data->properties['hcolor'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['hcolor'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['hcolor']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['hcolor']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>
@@ -242,7 +242,7 @@
           <select name="attributes[hlen]">
             <option value="" <?=!isset($viData->data->properties['hlen'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['hlen'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['hlen']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['hlen']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>
@@ -257,7 +257,7 @@
           <select name="attributes[ycolor]">
             <option value="" <?=!isset($viData->data->properties['ycolor'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['ycolor'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['ycolor']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['ycolor']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>
@@ -270,7 +270,7 @@
           <select name="attributes[chest]">
             <option value="" <?=!isset($viData->data->properties['chest'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['chest'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['chest']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['chest']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>
@@ -285,7 +285,7 @@
           <select name="attributes[waist]">
             <option value="" <?=!isset($viData->data->properties['waist'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['waist'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['waist']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['waist']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>
@@ -298,7 +298,7 @@
           <select name="attributes[thigh]">
             <option value="" <?=!isset($viData->data->properties['thigh'])?'selected="selected" disabled="disabled"':''?>></option>
             <? foreach ($viData->attributes->lists['thigh'] as $key => $v): ?>
-              <option value="<?=$key?>"<?=$viData->data->properties['thigh']['value']==$key?' selected':''?>><?=$v?></option>
+              <option value="<?=$key?>"<?=$viData->data->properties['thigh']['id']==$key?' selected':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>
         </div>

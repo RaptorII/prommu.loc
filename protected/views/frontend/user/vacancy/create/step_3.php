@@ -49,7 +49,7 @@
         <? endif; ?>
         <div class="form__field-input form__field-select prmu-required<?=($model->errors['salary_time']?' prmu-error':'')?>" id="salary_time">
           <select name="salary_time">
-            <? foreach (Vacancy::SALARY_TIME as $key => $v): ?>
+            <? foreach (Vacancy::getAllAttributes()->lists['paylims'] as $key => $v): ?>
               <option value="<?=$key?>"<?=$model->data->salary_time==$key?' selected="selected"':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>

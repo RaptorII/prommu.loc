@@ -491,7 +491,6 @@ class SiteController extends AppController
                 {
                   $viData->error_moodule = $module;
                 }
-                display($viData->data);
                 $this->renderPartial(
                   '../user/vacancy/edit/module_' . $module,
                   ['viData'=>$viData]
@@ -501,10 +500,10 @@ class SiteController extends AppController
             }
             else
             {
-              $this->setBreadcrumbsEx(
-                ["Мои вакансии", MainConfig::PAGE_USER_VACANCIES_LIST],
-                [$viData->data->title]
-              );
+              $this->breadcrumbs = [
+                "Мои вакансии" => MainConfig::PAGE_USER_VACANCIES_LIST,
+                $viData->data->title
+              ];
               $this->render($view, ['viData'=>$viData], ['htmlTitle'=>$viData->data->title]);
               Yii::app()->end();
             }

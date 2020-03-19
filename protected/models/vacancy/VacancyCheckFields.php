@@ -9,7 +9,7 @@
 class VacancyCheckFields
 {
   const TITLE_LENGTH = 70; // допустимая длинна заголовка
-  const MIN_AGE_FROM = 14;
+  const MIN_AGE_FROM = 14; // минимально допустимый возраст
   /**
    * @param $value - string
    * @return bool|string - допустимое значение, или false в случае ошибки

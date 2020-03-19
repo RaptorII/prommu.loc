@@ -205,7 +205,7 @@ class VacancyCreate
       }
       // Сроки оплаты
       $v = intval($rq->getParam('salary_time'));
-      if(!array_key_exists($v, Vacancy::SALARY_TIME))
+      if(!array_key_exists($v, Vacancy::getAllAttributes()->lists['paylims']))
       {
         $this->errors['salary_time'] = true;
       }
