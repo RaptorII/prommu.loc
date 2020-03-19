@@ -1459,11 +1459,11 @@ class UserProfileApplic extends UserProfile
               SELECT DISTINCT ra.id_userf
               FROM rating_details ra
               INNER JOIN employer e ON e.id_user = ra.id_userf
-              WHERE ra.id_user = {$this->id}
+              WHERE ra.id_user = {$id}
               LIMIT 0, 20
             ) t1 ON t1.id_userf = ra.id_userf
             INNER JOIN employer e ON e.id_user = ra.id_userf
-            WHERE ra.id_user = {$this->id} ";
+            WHERE ra.id_user = {$id} ";
         $resRate = Yii::app()->db->createCommand($sql)->queryAll();
 
         $data['rateByUser'] = [];
