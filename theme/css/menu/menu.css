@@ -1,5 +1,5 @@
 .small-menu__profile {
-
+    margin-top: -8px;
 }
 
 .small-menu__profile .user__info-logo {
@@ -93,7 +93,7 @@
     padding: 0 9px;
     top: 0;
 }
-.icn-telegram-icon:before {
+.small-menu__section .icn-telegram-icon:before {
     content: "\e834";
 }
 
@@ -127,7 +127,6 @@
 #DiLogoWrapp .pa__menu-link.active {
     color: var(--color-green);
 }
-
 
 .pa__menu-link i:before {
     font-family: "PrommuFont";
@@ -167,3 +166,9 @@
 .pa__menu-19.employer i:before{ content: ''; }
 .pa__menu-27.employer i:before{ content: '\e935'; }
 .pa__menu-81.employer i:before{ content: '\e950'; }
+
+.small-menu__section .icn-cogs-double-prommu {
+    font-size: 18px;
+    padding: 0 9px;
+    top: 0;
+}

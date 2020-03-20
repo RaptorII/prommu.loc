@@ -360,6 +360,16 @@
 
                                                     </ul>
 
+                                                    <ul class="small-menu__section">
+                                                        <li class="small-menu__section-item">
+                                                            <a href="<?=MainConfig::$PAGE_SETTINGS?>"
+                                                               class="small-menu__section-link to-green">
+                                                                <span class="icn-cogs-double-prommu"></span>
+                                                                Настройки профиля
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+
                                                     <?php
                                                     if ( City::getCityIdByUserId($iduser) == 1307
                                                         && !Share::isGuest()
@@ -389,7 +399,7 @@
                                                         <? endif; ?>
 
                                                         <? if (share::isEmployer()) : ?>
-                                                            <a href='/theme/pdf/Instruction-PROMMU-com-vac.pdf'
+                                                            <a href='/theme/pdf/Instruction-PROMMU-com-all.pdf'
                                                                target="_blank"
                                                                class="small-menu__section-link to-green"
                                                             >

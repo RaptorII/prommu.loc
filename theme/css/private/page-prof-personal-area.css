@@ -40,8 +40,10 @@
     }
 }
 
-.personal__area--item + .personal__area--item {
-    margin: 0 0 0 40px;
+@media screen and (min-width: 767px) {
+    .personal__area--item + .personal__area--item {
+        margin: 0 0 0 40px;
+    }
 }
 
 .personal__area--separator {
@@ -55,14 +57,22 @@
 }
 
 .personal__area .upp__img-block-main {
-    min-width: 75px;
-    max-width: 75px;
+    min-width: 150px;
+    max-width: 150px;
     text-align: center;
     position: relative;
-    /*margin: 0 auto;*/
+    margin: 0 auto;
     border-radius: 50%;
     border: 2px solid #CBD880;
     overflow: hidden;
+}
+
+@media screen and (min-width: 767px) {
+    .personal__area .upp__img-block-main {
+        min-width: 75px;
+        max-width: 75px;
+        margin: unset;
+    }
 }
 
 .personal__area--indicator {
@@ -127,8 +137,19 @@
 .upp__title {
     font-size: 20px;
     font-weight: 700;
-    position: absolute;
-    top: 0;
+    text-align: center;
+    display: block;
+    margin: 10px 0;
+}
+
+@media screen and (min-width: 767px) {
+    .upp__title {
+        font-size: 20px;
+        font-weight: 700;
+        position: absolute;
+        top: 0;
+        margin: 0;
+    }
 }
 
 .upp__star-block {
@@ -165,12 +186,12 @@
 }
 .upp__rating-affective .upp__info .icn-question-two {
     position: absolute;
-    right: -17px;
+    right: -50px;
 }
 
-.upp__rating-affective .upp__subtitle {
+.upp__rating-affective .upp__subtitle--eff {
     text-align: right;
-    padding-right: 15px;
+    /*padding-right: 15px;*/
 }
 
 .upp__info--hint {
@@ -226,8 +247,17 @@ capacity blocks
     border-radius: 4px;
 }
 
-.personal__area--capacity + .personal__area--capacity {
+.personal__area--capacity {
     margin-top: 20px;
+}
+
+@media screen and (min-width: 767px) {
+    .personal__area--capacity {
+        margin-top: 0;
+    }
+    .personal__area--capacity + .personal__area--capacity {
+        margin-top: 20px;
+    }
 }
 
 @media screen and (min-width: 768px) {
@@ -670,6 +700,9 @@ try google material design
 @media screen and (min-width: 767px){
     #self_employed_message {
         max-width: 600px;
+    }
+    #DiContent .row.mt20>div {
+        margin-top: 0;
     }
 }
 

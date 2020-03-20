@@ -656,16 +656,36 @@ $this->pageTitle = $title;
                             <div class="upp__subtitle">
 
                                 <span class="js-g-hashint" title="Всего оценок">
-                                <?
-                                     echo count($viData['rateByUser']);
+                                <?php
+                                    if ($viData['rateByUser']):
+                                        echo count($viData['rateByUser']);
+                                    else:
+                                        echo 'Оценок нет';
+                                    endif;
                                 ?>
                                 </span>
 
-                                <!--
+
                                 <span class="upp__info">
                                     <i class="icn-info-three"></i>
+                                    <span class="upp__info--hint">
+                                        <p>
+                                            Оценки выставляются пользователями, с которыми сотрудничает работодатель
+                                            согласно таких параметров.
+                                        </p>
+                                        <ul>
+                                            <li>Соблюдение сроков оплаты</li>
+                                            <li>Размер оплаты</li>
+                                            <li>Четкость постановки задач</li>
+                                            <li>Четкость требований</li>
+                                            <li>Контактность</li>
+                                        </ul>
+                                        <p>
+                                            Согласно оценок формируется "Рейтинг" работодателя.
+                                        </p>
+                                    </span>
                                 </span>
-                                -->
+
                             </div>
                         </div>
                     </div>
@@ -673,7 +693,7 @@ $this->pageTitle = $title;
                     <div class="personal__area--item">
                         <div class="upp__rating-affective">
                             <div class="upp__subtitle">
-                                <span class="upp__subtitle">Эффективность размещения:</span>
+                                <span class="upp__subtitle--eff">Эффективность размещения</span>
                                 <span class="upp__info question_popup">
                                     <i class="icn-question-two"></i>
                                 </span>
@@ -821,7 +841,10 @@ $this->pageTitle = $title;
                     <?php if($id>=0): ?>
                     <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
                         <div class="group__about">Тип компании</div>
-                        <div class="group__info"><?=$viData['userAllInfo']['cotype'][$id]['name']?></div>
+                        <? $strTE = mb_strtolower($viData['userAllInfo']['cotype'][$id]['name'], 'UTF-8'); ?>
+                        <div class="group__info">
+                            <?=mb_strtoupper(mb_substr($strTE, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($strTE, 1, null,'UTF-8'); ?>
+                        </div>
                     </div>
                     <?php endif; ?>
 
@@ -859,22 +882,25 @@ $this->pageTitle = $title;
                         Some Data
                     </div>-->
                     <div class="group">
-
-                        <?php foreach ($viData['rateByUser'] as $key => $val): ?>
-                            <? $arItem = reset($val); ?>
-                            <?= $arItem['fio']; ?>
-                            <div class="group__wrap">
-                                <?php foreach ($val as $k => $item): ?>
-                                    <span
-                                        class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
-                                        title="Оценка
-                                            <?= $viData['rating']['rateNames'][$k] ?>
-                                            <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
-                                    ">
-                                    </span>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endforeach; ?>
+                        <?if ($viData['rateByUser']):?>
+                            <?php foreach ($viData['rateByUser'] as $key => $val): ?>
+                                <? $arItem = reset($val); ?>
+                                <?= $arItem['fio']; ?>
+                                <div class="group__wrap">
+                                    <?php foreach ($val as $k => $item): ?>
+                                        <span
+                                            class="group__point <?= "p" . $item['point'] ?> js-g-hashint -js-g-hintleft"
+                                            title="Оценка
+                                                <?= $viData['rating']['rateNames'][$k] ?>
+                                                <?= (int)$item['point'] === 1 ? 'положительная' : ((int)$item['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>
+                                        ">
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            Оценки отсутствуют
+                        <?php endif;?>
 
                     </div>
                     <div class="personal__area--button">
