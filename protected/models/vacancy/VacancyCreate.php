@@ -152,21 +152,14 @@ class VacancyCreate
     elseif($step==2)
     {
       // Тип работы
-      $value = VacancyCheckFields::checkWorkType($rq->getParam('istemp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('istemp'),'work_type');
       $value===false ? $this->errors['istemp']=true : $this->data->istemp=$value;
       // Опыт работы
-      $value = VacancyCheckFields::checkExperience($rq->getParam('exp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('exp'),'experience');
       $value ? $this->data->exp=$value : $this->errors['exp']=true;
       // Налоговый статус
-      $v = $rq->getParam('self_employed');
-      if(!in_array($v,array_keys(Vacancy::SELF_EMPLOYED)))
-      {
-        $this->errors['self_employed'] = true;
-      }
-      else
-      {
-        $this->data->self_employed = $v;
-      }
+      $value = VacancyCheckFields::checkList($rq->getParam('self_employed'),'self_employed');
+      $value===false ? $this->errors['self_employed']=true : $this->data->self_employed=$value;
       // Возраст
       $value = VacancyCheckFields::checkAge($rq->getParam('age_from'), $rq->getParam('age_to'));
       if($value)
@@ -185,39 +178,16 @@ class VacancyCreate
     elseif($step==3)
     {
       // Заработная плата
-      $v = intval($rq->getParam('salary'));
-      if(!$v || $v>1000000)
-      {
-        $this->errors['salary'] = true;
-      }
-      else
-      {
-        $this->data->salary = $v;
-      }
-      $v = intval($rq->getParam('salary_type'));
-      if(!array_key_exists($v, Vacancy::SALARY_TYPE))
-      {
-        $this->errors['salary_type'] = true;
-      }
-      else
-      {
-        $this->data->salary_type = $v;
-      }
+      $value = VacancyCheckFields::checkSalary($rq->getParam('salary'));
+      $value ? $this->data->salary=$value : $this->errors['salary']=true;
+      // Тип оплаты
+      $value = VacancyCheckFields::checkList($rq->getParam('salary_type'), 'salary_type');
+      $value===false ? $this->errors['salary_type']=true : $this->data->salary_type=$value;
       // Сроки оплаты
-      $v = intval($rq->getParam('salary_time'));
-      if(!array_key_exists($v, Vacancy::getAllAttributes()->lists['paylims']))
-      {
-        $this->errors['salary_time'] = true;
-      }
-      else
-      {
-        $this->data->salary_time = $v;
-      }
+      $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
+      $value===false ? $this->errors['salary_time']=true : $this->data->salary_time=$value;
       // Комментарии по оплате
-      $v = trim($rq->getParam('salary_comment'));
-      $v = strip_tags($v);
-      $v = htmlspecialchars($v,ENT_QUOTES);
-      $this->data->salary_comment = stripslashes($v);
+      $this->data->salary_comment = VacancyCheckFields::checkTextarea($rq->getParam('salary_comment'));
     }
     elseif($step==4)
     {

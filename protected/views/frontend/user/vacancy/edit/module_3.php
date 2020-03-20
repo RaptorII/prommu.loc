@@ -33,49 +33,49 @@
       </div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['manh'])): ?>
+  <? if(!empty($viData->data->properties['manh']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Рост от (см)</div>
       <div class="group__info"><?=$viData->data->properties['manh']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['weig'])): ?>
+  <? if(!empty($viData->data->properties['weig']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Вес от (кг)</div>
       <div class="group__info"><?=$viData->data->properties['weig']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['hcolor'])): ?>
+  <? if(!empty($viData->data->properties['hcolor']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Цвет волос</div>
       <div class="group__info"><?=$viData->data->properties['hcolor']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['hlen'])): ?>
+  <? if(!empty($viData->data->properties['hlen']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Длина волос</div>
       <div class="group__info"><?=$viData->data->properties['hlen']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['ycolor'])): ?>
+  <? if(!empty($viData->data->properties['ycolor']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Цвет глаз</div>
       <div class="group__info"><?=$viData->data->properties['ycolor']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['chest'])): ?>
+  <? if(!empty($viData->data->properties['chest']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Объем груди</div>
       <div class="group__info"><?=$viData->data->properties['chest']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['waist'])): ?>
+  <? if(!empty($viData->data->properties['waist']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Объем талии</div>
       <div class="group__info"><?=$viData->data->properties['waist']['value']?></div>
     </div>
   <? endif; ?>
-  <? if(isset($viData->data->properties['thigh'])): ?>
+  <? if(!empty($viData->data->properties['thigh']['value'])): ?>
     <div class="group ppe__field">
       <div class="group__about">Объем бедер</div>
       <div class="group__info"><?=$viData->data->properties['thigh']['value']?></div>
@@ -87,6 +87,7 @@
 //
 ?>
 <form class="module_form<?=$viData->error_moodule==$module?' block__visible':''?>" method="post" data-params='{"ajax":"true"}'>
+  <a href="javascript:void(0)" class="personal__area--capacity-cancel js-g-hashint" title="Отмена"></a>
   <div class="form__field">
     <label class="form__field-label text__nowrap">Должность <span class="text__red">*</span></label>
     <div class="form__field-content form__content-indent form__content-hint">
@@ -305,9 +306,6 @@
       </div>
     </div>
   </div>
-
-
-
   <div class="form__container">
     <button type="submit" class="btn__orange">Сохранить</button>
   </div>

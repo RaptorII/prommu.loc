@@ -39,6 +39,7 @@
 //
 ?>
 <form class="module_form<?=$viData->error_moodule==$module?' block__visible':''?>" method="post" data-params='{"ajax":"true"}'>
+  <a href="javascript:void(0)" class="personal__area--capacity-cancel js-g-hashint" title="Отмена"></a>
   <div class="form__container">
     <div class="form__field">
       <label class="form__field-label text__nowrap">Заголовок <span class="text__red">*</span></label>

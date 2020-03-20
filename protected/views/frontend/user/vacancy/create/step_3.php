@@ -24,7 +24,7 @@
           </div>
           <div class="form__field-dash"> </div>
           <div class="form__content-2">
-            <? !isset($model->data->salary_type) && $model->data->salary_type=0; // По умолчанию 'руб/час' ?>
+            <? !isset($model->data->salary_type) && $model->data->salary_type=key(reset(Vacancy::SALARY_TYPE)); // По умолчанию 'руб/час' ?>
             <div class="form__field-input form__field-select prmu-required<?=($model->errors['salary_type']?' prmu-error':'')?>" id="salary">
               <select name="salary_type">
                 <? foreach (Vacancy::SALARY_TYPE as $key => $v): ?>
@@ -40,7 +40,10 @@
     <?
     //
     ?>
-    <? !isset($model->data->salary_time) && $model->data->salary_time=130; // По умолчанию 'На следующий день' ?>
+    <?
+    $arSalary = Vacancy::getAllAttributes()->lists['paylims'];
+    !isset($model->data->salary_time) && $model->data->salary_time=key(reset($arSalary)); // По умолчанию 'На следующий день'
+    ?>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Сроки оплаты</label>
       <div class="form__field-content form__content-indent">
@@ -49,7 +52,7 @@
         <? endif; ?>
         <div class="form__field-input form__field-select prmu-required<?=($model->errors['salary_time']?' prmu-error':'')?>" id="salary_time">
           <select name="salary_time">
-            <? foreach (Vacancy::getAllAttributes()->lists['paylims'] as $key => $v): ?>
+            <? foreach ($arSalary as $key => $v): ?>
               <option value="<?=$key?>"<?=$model->data->salary_time==$key?' selected="selected"':''?>><?=$v?></option>
             <? endforeach; ?>
           </select>

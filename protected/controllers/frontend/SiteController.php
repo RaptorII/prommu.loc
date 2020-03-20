@@ -470,13 +470,12 @@ class SiteController extends AppController
           $model = new Vacancy;
           $viData = $model->getVacancy($id);
 
-
           if($viData->is_owner)
           {
             if($rq->isAjaxRequest)
             {
               $module = $rq->getParam('module');
-              if(!in_array($module,[1,3,4]))
+              if(!in_array($module,[1,3,4,5,6,7]))
               {
                 $viData->errors['access'] = true;
               }

@@ -47,21 +47,6 @@ class VacancyCheckFields
     }
   }
   /**
-   * @param $value - string
-   * @return bool|string - допустимое значение, или false в случае ошибки
-   */
-  public static function checkExperience($value) // Опыт работы
-  {
-    if(!array_key_exists($value,Vacancy::EXPERIENCE))
-    {
-     return false;
-    }
-    else
-    {
-      return $value;
-    }
-  }
-  /**
    * @param $value1 - string
    * @param $value2 - string
    * @return bool|array(ageFrom, ageTo) - допустимое значение, или false в случае ошибки
@@ -101,21 +86,6 @@ class VacancyCheckFields
   }
   /**
    * @param $value - string
-   * @return bool|string - допустимое значение, или false в случае ошибки
-   */
-  public static function checkWorkType($value) // Тип работы
-  {
-    if(!array_key_exists($value,Vacancy::WORK_TYPE))
-    {
-      return false;
-    }
-    else
-    {
-      return $value;
-    }
-  }
-  /**
-   * @param $value - string
    * @param $isRequired - bool
    * @return bool|string - допустимое значение, или false в случае ошибки
    */
@@ -145,5 +115,33 @@ class VacancyCheckFields
       $value = substr($value,0, $maxLimit);
     }
     return $value==0 ? false : $value;
+  }
+  /**
+   * @param $value - integer
+   * @return bool|integer - допустимое значение, или false в случае ошибки
+   */
+  public static function checkSalary($value)
+  {
+    $value = intval($value);
+    return (!$value || $value>=1000000) ? false : $value;
+  }
+  /**
+   * @param $value - integer
+   * @param $type - string
+   * @return bool|integer - допустимое значение, или false в случае ошибки
+   */
+  public static function checkList($value, $type)
+  {
+    $value = intval($value);
+    $arCheck = [];
+    switch ($type)
+    {
+      case 'experience': $arCheck = Vacancy::EXPERIENCE; break;
+      case 'work_type': $arCheck = Vacancy::WORK_TYPE; break;
+      case 'self_employed': $arCheck = Vacancy::SELF_EMPLOYED; break;
+      case 'salary_type': $arCheck = Vacancy::SALARY_TYPE; break;
+      case 'salary_time': $arCheck = Vacancy::getAllAttributes()->lists['paylims']; break;
+    }
+    return (!array_key_exists($value, $arCheck) ? false : $value);
   }
 }

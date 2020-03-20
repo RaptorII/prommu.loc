@@ -36,4 +36,31 @@ class VacancyView
       return 'Женщины';
     }
   }
+
+  public static function getSalary($shour, $sweek, $smonth, $svisit)
+  {
+    $arRes = ['salary'=>'', 'salary_type'=>'', 'full'=>''];
+    if($shour>0)
+    {
+      $arRes['salary'] = $shour;
+      $arRes['salary_type'] = 0;
+    }
+    elseif($sweek>0)
+    {
+      $arRes['salary'] = $sweek;
+      $arRes['salary_type'] = 1;
+    }
+    elseif ($smonth>0)
+    {
+      $arRes['salary'] = $smonth;
+      $arRes['salary_type'] = 2;
+    }
+    elseif ($svisit>0)
+    {
+      $arRes['salary'] = $svisit;
+      $arRes['salary_type'] = 3;
+    }
+    $arRes['full'] = $arRes['salary'] . ' ' . Vacancy::SALARY_TYPE[$arRes['salary_type']];
+    return $arRes;
+  }
 }

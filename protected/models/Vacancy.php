@@ -4955,6 +4955,33 @@ class Vacancy extends ARModel
         'conditions' => $data->conditions
       ];
     }
+    if($module==5)
+    {
+      $arUpdate = ['self_employed' => $data->self_employed];
+    }
+    if($module==6)
+    {
+      $arUpdate = [
+        'shour' => $data->shour,
+        'sweek' => $data->sweek,
+        'smonth' => $data->smonth,
+        'svisit' => $data->svisit
+      ];
+      self::saveVacancyAttributes($id, [
+        'paylims' => $data->properties['paylims']['id'],
+        'salary-comment' => $data->properties['salary-comment']['value']
+      ]);
+    }
+    if($module==7)
+    {
+      $arUpdate = [
+        'ismed' => $data->ismed,
+        'isavto' => $data->isavto,
+        'smart' => $data->smart,
+        'cardPrommu' => $data->cardPrommu,
+        'card' => $data->card
+      ];
+    }
 
     if(count($arUpdate))
     {
@@ -5007,6 +5034,8 @@ class Vacancy extends ARModel
     $result->data->mdate_unix = strtotime($query['mdate']);
     $result->data->remdate_unix = strtotime($query['remdate']);
     $result->data->ageto=0 && $result->data->ageto = '';
+    ($query['duties']=="<br>" || $query['duties']=="&lt;br&gt;") && $result->data->duties = '';
+    ($query['conditions']=="<br>" || $query['conditions']=="&lt;br&gt;") && $result->data->conditions = '';
     // Актуальная вакансия - активная и промодерированая
     $result->data->is_actual =
       ($query['status']==self::$STATUS_ACTIVE) && ($query['ismoder']==self::$ISMODER_APPROVED);
@@ -5019,6 +5048,11 @@ class Vacancy extends ARModel
     $result->data->properties = [];
     // Собираем значения свойств
     $result->data->add_props = false;
+    $result->data->additional = $result->data->ismed
+      || $result->data->isavto
+      || $result->data->smart
+      || $result->data->card
+      || $result->data->cardPrommu;
     if(count($query))
     {
       foreach ($query as $v)

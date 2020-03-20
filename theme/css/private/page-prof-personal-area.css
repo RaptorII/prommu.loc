@@ -288,11 +288,13 @@ capacity blocks
     font-weight: 700;
 }
 
+.personal__area--capacity-cancel,
 .personal__area--capacity-edit {
     position: absolute;
     right: 25px;
     top: 35px;
 }
+.personal__area--capacity-cancel:before,
 .personal__area--capacity-edit:before {
     position: absolute;
     font-family: "PrommuFont";
@@ -300,6 +302,13 @@ capacity blocks
     font-size: 30px;
     top: -30px;
     right: -15px;
+}
+.personal__area--capacity-cancel:before {
+    content: '\e97d';
+    color: var(--color-red);
+    top: -35px;
+    right: -25px;
+    line-height: 28px;
 }
 
 .personal__area--capacity-edit:hover {
@@ -824,3 +833,307 @@ try google material design
 
 /* end popup
 */
+
+
+/*
+*   GENERAL
+ */
+.border__red{
+    border-color: var(--color-red);
+}
+.block__hide.block__hide{ display: none }
+.block__visible.block__visible{ display: block }
+/* text */
+.text__red{
+    color: var(--color-red);
+}
+.text__justify{
+    text-align: justify;
+}
+.text__center{
+    text-align: justify;
+}
+.text__nowrap{
+    white-space: nowrap;
+}
+/*
+* FORM
+ */
+.form__field{
+    display: flex;
+    margin: 0 -6px 15px;
+    align-items: center;
+}
+.form__field-first{ padding-top: 15px }
+.form__field-label{
+    padding: 0 6px;
+    text-align: right;
+}
+.form__field-content{ width: 100%; }
+.form__content-indent{ margin: 0 6px; }
+.form__content-pindent{ padding: 0 6px; }
+.form__content-flex{
+    width:100%;
+    display: flex;
+    align-items: flex-end;
+}
+.form__flex-wrap{ flex-wrap: wrap; }
+.form__flex-vmiddle{ align-items: center }
+.form__content-2{ width: 50%; }
+.form__content-3{ width: 33.33%; }
+.form__field-hint{
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    margin: 0 6px;
+}
+.form__field-input{
+    min-height: 42px;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    outline: 0;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 0.95em;
+    transition: var(--main-trans);
+    background: var(--color-white) !important;
+    border-color: #bbb;
+    color: #555;
+}
+.form__textarea{
+    min-height: 80px;
+    max-height: 120px;
+    resize: vertical;
+}
+.form__field-select select{ display: none }
+.form__field-select:after,
+.form__field-date:after{
+    content: '\e984';
+    font-family: "PrommuFont";
+    width: 30px;
+    position: absolute;
+    top: 50%;
+    margin-top: -20px;
+    right: 0;
+    bottom: 0;
+    line-height: 40px;
+    text-align: center;
+    font-weight: normal;
+    font-size: 18px;
+    z-index: 1;
+}
+.form__field-load:before{
+    content: '';
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    right: 0;
+    bottom: 0;
+    background: #ffffffd6 url(/theme/pic/loading1.gif) center no-repeat;
+    z-index:2;
+}
+.form__select-list{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    color: #fff;
+    background-color: rgba(52, 52, 52, 0.8);
+    max-height: 270px;
+    overflow: overlay;
+    z-index: 2;
+}
+.form__select-list::-webkit-scrollbar { width: 5px; height: 5px;}
+.form__select-list::-webkit-scrollbar-button {  background-color: var(--color-l2-grey); }
+.form__select-list::-webkit-scrollbar-track {  background-color: #999;}
+.form__select-list::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+.form__select-list::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 5px;}
+.form__select-list::-webkit-scrollbar-corner { background-color: #999;}
+.form__select-list::-webkit-resizer { background-color: #666;}
+.form__select-li{
+    padding: 1px;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    font-weight: normal;
+    font-size: 14px;
+    cursor: default;
+}
+.form__select-li:not([data-id='']),
+.form__select-li-empty{
+    padding: 5px 10px;
+}
+.form__select-li:hover:not([data-id='']){
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+.form__select-li-active{
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+.form__select-search{
+    border: none !important;
+    width: calc(100% - 12px);
+    padding: 6px !important;
+    background: #ffffff !important;
+    color: #212121;
+}
+.form__select-search:focus{ outline: none }
+.form__field-date{
+    position: relative;
+    display: block;
+}
+.form__field-select{
+    cursor: pointer;
+    padding: 0 30px 0 10px;
+}
+.form__select-selected{
+    padding: 10px 0;
+    line-height: 20px;
+    display: inline-block;
+}
+.form__select-selected-multi{
+    padding: 8px 20px 8px 5px;
+    background-color: rgba(52, 52, 52, 0.6);
+    color: #fff;
+    border-radius: 5px;
+    position: relative;
+    margin: 2px 5px 2px 0;
+}
+.form__select-selected-multi b{
+    width: 20px;
+    height: 20px;
+    display: block;
+    position: absolute;
+    top: 9px;
+    right: 0px;
+    text-align: center;
+    cursor: pointer;
+}
+.form__select-selected-multi b:after{
+    content: '\e97d';
+    font-family: "PrommuFont";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -2px;
+    font-weight: normal;
+    font-size: 24px;
+}
+.form__field-dash{
+    line-height: 42px;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0 6px;
+}
+.form__field-checkbox{
+    display: none !important;
+}
+.form__checkbox-label{
+    padding: 4px 10px 4px 25px;
+    font-size: 16px;
+    line-height: 20px;
+    display: inline-block;
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+.form__checkbox-label:before{
+    content: '\e98a';
+    font-family: "PrommuFont";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: #777777;
+    font-size: 20px;
+}
+.form__field-checkbox:checked + label:before{
+    content: '\e989';
+    font-family: "PrommuFont";
+}
+.form__textarea-panel{
+    width: 100%;
+    position: relative;
+}
+.form__textarea-panel>div{
+    box-sizing: border-box;
+}
+.form__field-hint:after{
+    content: "\e9db";
+    font-family: "PrommuFont";
+}
+.form__field-hint{
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    margin: 0 6px;
+    font-size: 30px;
+    color: #abb820;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 30px;
+    opacity: .5;
+    position: relative;
+    transition: var(--main-trans);
+}
+.form__field-hint:hover{
+    opacity: .7;
+    color: var(--color-dark);
+}
+.custom-calendar.ui-widget.ui-widget-content{ font-size: 14px }
+/*
+*   Errors
+*/
+.prmu-error-mess{
+    color: var(--color-red);
+    font-size: 12px;
+}
+.prmu-error{
+    border-color: var(--color-red);
+}
+.form__field-niceditor .prmu-error{
+    border: 1px solid var(--color-red) !important;
+}
+/*
+*		niceditor
+*/
+.nicEdit-button {
+    background-image: url(/jslib/nicedit/nicEditorIcons.gif) !important;
+}
+.nicEdit-main {
+    margin: 0 !important;
+    padding: 10px 15px;
+    width: 100% !important;
+    font-size: 14px;
+    height: 120px;
+    overflow-y: auto !important;
+    background: #ffffff;
+    box-sizing: border-box;
+}
+
+.nicEdit-main:focus {
+    outline: none;
+}
+.form__field-niceditor{ max-width: 75%; }
+.form__field-niceditor .form__textarea-panel+div{
+    width: initial !important;
+    max-height: initial !important;
+    border: 1px solid #cccccc;
+}

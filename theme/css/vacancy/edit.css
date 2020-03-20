@@ -13,6 +13,7 @@
 }
 .module_form{ display: none }
 #DiContent .group__info.group__info-normalize{ font-weight: inherit }
+.form__field-niceditor{ max-width: inherit }
 @media (max-width: 991px) {
   .form__field{
     flex-wrap: wrap;
@@ -41,4 +42,6 @@
     margin-bottom: 15px;
   }
 }
-.form__field-niceditor{ max-width: inherit }
+@media (max-width: 767px) {
+  .form__content-mfull.form__content-mfull{ width:100%; }
+}

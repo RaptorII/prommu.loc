@@ -8,11 +8,6 @@
 
 class VacancyEdit
 {
-  const MODULE_1 = '../user/vacancy/edit/module_1';
-  const MODULE_2 = '../user/vacancy/edit/module_2';
-  const MODULE_3 = '../user/vacancy/edit/module_3';
-  const MODULE_4 = '../user/vacancy/edit/module_4';
-
   function __construct(&$object)
   {
     $rq = Yii::app()->getRequest();
@@ -27,7 +22,7 @@ class VacancyEdit
       $value = VacancyCheckFields::checkPost($rq->getParam('post'));
       $value ? $object->data->post=$value : $object->errors['post']=true;
       // Опыт работы
-      $value = VacancyCheckFields::checkExperience($rq->getParam('exp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('exp'),'experience');
       $value ? $object->data->exp=$value : $object->errors['exp']=true;
       // Возраст
       $value = VacancyCheckFields::checkAge($rq->getParam('age_from'), $rq->getParam('age_to'));
@@ -53,7 +48,7 @@ class VacancyEdit
         $object->errors['gender'] = true;
       }
       // Тип работы
-      $value = VacancyCheckFields::checkWorkType($rq->getParam('istemp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('istemp'),'work_type');
       $value===false ? $object->errors['istemp']=true : $object->data->istemp=$value;
     }
     if($module==3)
@@ -62,7 +57,7 @@ class VacancyEdit
       $value = VacancyCheckFields::checkPost($rq->getParam('post'));
       $value ? $object->data->post=$value : $object->errors['post']=true;
       // Опыт работы
-      $value = VacancyCheckFields::checkExperience($rq->getParam('exp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('exp'),'experience');
       $value ? $object->data->exp=$value : $object->errors['exp']=true;
       // Возраст
       $value = VacancyCheckFields::checkAge($rq->getParam('age_from'), $rq->getParam('age_to'));
@@ -88,7 +83,7 @@ class VacancyEdit
         $object->errors['gender'] = true;
       }
       // Тип работы
-      $value = VacancyCheckFields::checkWorkType($rq->getParam('istemp'));
+      $value = VacancyCheckFields::checkList($rq->getParam('istemp'),'work_type');
       $value===false ? $object->errors['istemp']=true : $object->data->istemp=$value;
       // Дополнительные параметры
       $arAttr = $rq->getParam('attributes');
@@ -192,6 +187,72 @@ class VacancyEdit
       $object->data->duties = VacancyCheckFields::checkTextarea($rq->getParam('duties'));
       // Условия
       $object->data->conditions = VacancyCheckFields::checkTextarea($rq->getParam('conditions'));
+    }
+    if($module==5)
+    {
+      // Налоговый статус
+      $value = VacancyCheckFields::checkList($rq->getParam('self_employed'),'self_employed');
+      $value===false ? $object->errors['self_employed']=true : $object->data->self_employed=$value;
+    }
+    if($module==6)
+    {
+      // Тип оплаты и Заработная плата
+      $type = VacancyCheckFields::checkList($rq->getParam('salary_type'), 'salary_type');
+      $salary = VacancyCheckFields::checkSalary($rq->getParam('salary'));
+      if($type===false)
+      {
+        $object->errors['salary_type'] = true;
+      }
+      elseif ($salary===false)
+      {
+        $object->errors['salary'] = true;
+      }
+      else
+      {
+        $object->data->shour = $type==0 ? $salary : 0;
+        $object->data->sweek = $type==1 ? $salary : 0;
+        $object->data->smonth = $type==2 ? $salary : 0;
+        $object->data->svisit = $type==3 ? $salary : 0;
+      }
+      // Сроки оплаты
+      $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
+      if($value===false)
+      {
+        $object->errors['salary_time']=true;
+      }
+      else
+      {
+        $object->data->properties['paylims'] = [
+          'id' => $value,
+          'key' => 'paylims',
+          'name' => Vacancy::getAllAttributes()->items['paylims']['name'],
+          'value' => Vacancy::getAllAttributes()->lists['paylims'][$value]
+        ];
+      }
+      // Комментарии по оплате
+      $value = VacancyCheckFields::checkTextarea($rq->getParam('salary_comment'));
+      if(!empty($value)) // Комментарии по оплате
+      {
+        $object->data->properties['salary-comment'] = [
+          'id' => Vacancy::getAllAttributes()->items['salary-comment']['id'],
+          'key' => 'salary-comment',
+          'name' => Vacancy::getAllAttributes()->items['salary-comment']['name'],
+          'value' => $value
+        ];
+      }
+    }
+    if($module==7)
+    {
+      $object->data->ismed = $rq->getParam('medbook')==1;
+      $object->data->isavto = $rq->getParam('car')==1;
+      $object->data->smart = $rq->getParam('smart')==1;
+      $object->data->cardPrommu = $rq->getParam('card_prommu')==1;
+      $object->data->card = $rq->getParam('card')==1;
+      $object->data->additional = $object->data->ismed
+        || $object->data->isavto
+        || $object->data->smart
+        || $object->data->card
+        || $object->data->cardPrommu;
     }
   }
 }
