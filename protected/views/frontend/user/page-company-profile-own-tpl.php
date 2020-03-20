@@ -336,15 +336,17 @@ $this->pageTitle = $title;
                 ?>
                 <?php
 
-                //display($viData);
+
 
                 $allInfo = $viData['userAllInfo']['emplInfo'];
                 $allAttr = $viData['userAllInfo']['userAttribs'];
                 $isBlocked = Share::$UserProfile->exInfo->isblocked==3;
 
+//                display($viData['userAllInfo']['emplInfo']);
+
                 ?>
                 <br>
-                <div class="ppe__module-title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ</h2></div>
+                <div class="ppe__module-title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ </h2></div>
                 <div class="ppe__module">
                     <div class="ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
                         <span class="ppe__field-name">Название компании:</span>
@@ -822,6 +824,10 @@ $this->pageTitle = $title;
 
                 $id = $this->ViewModel->isInArray($viData['userAllInfo']['cotype'], 'id', $allInfo['type']);
 
+                display($viData);
+                display($allInfo);
+                display($allAttr);
+
                 ?>
                 <div class="personal__area--capacity">
                     <div class="personal__area--capacity-name">
@@ -990,19 +996,17 @@ $this->pageTitle = $title;
                         </div>
                         <?php endif; ?>
 
-                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'inn'); ?>
-                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <?php if (($viData['userAllInfo']['userAttribs']['176']['val'])) :  ?>
                         <div class="group">
                             <div class="group__about">ИНН</div>
-                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                            <div class="group__info"><?=$viData['userAllInfo']['userAttribs']['176']['val']?></div>
                         </div>
                         <? endif; ?>
 
-                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'legalindex'); ?>
-                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <?php if (!empty($viData['userAllInfo']['userAttribs']['177']['val'])) : ?>
                         <div class="group">
                             <div class="group__about">Юридический адрес</div>
-                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                            <div class="group__info"><?=$viData['userAllInfo']['userAttribs']['177']['val']?></div>
                         </div>
                         <? endif; ?>
 

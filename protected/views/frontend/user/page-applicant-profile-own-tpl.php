@@ -1746,6 +1746,11 @@ if (!share::isApplicant()):
 
                 <?php if(!$cntComments): ?>
                     <span class="ppp__subtitle">Отзывы отсутствуют</span><br>
+                    <div class="personal__area--button">
+                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
+                            Подробнее...
+                        </a>
+                    </div>
                 <?php endif;?>
                 <?php if($cntComments): ?>
                     <div class="ppp__comments">
