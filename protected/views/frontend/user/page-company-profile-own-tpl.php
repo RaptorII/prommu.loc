@@ -783,11 +783,11 @@ $this->pageTitle = $title;
                                                 if (empty($viData['userAllInfo']['userAttribs']['175']['val'])) { ?>
                                                     <li> Городской телефон - 5% </li>
                                                 <? }
-                                                if (!empty($viData['userAllInfo']['userAttribs']['157']['val']) ||
-                                                    !empty($viData['userAllInfo']['userAttribs']['4']['val']) ||
-                                                    !empty($viData['userAllInfo']['userAttribs']['5']['val']) ||
-                                                    !empty($viData['userAllInfo']['userAttribs']['156']['val']) ||
-                                                    !empty($viData['userAllInfo']['userAttribs']['158']['val'])) {
+                                                if (!empty($viData['userAllInfo']['userAttribs']['157']['val']) || //telegram
+                                                    !empty($viData['userAllInfo']['userAttribs']['4']['val'])   || //skype
+                                                    !empty($viData['userAllInfo']['userAttribs']['5']['val'])   || //viber
+                                                    !empty($viData['userAllInfo']['userAttribs']['156']['val']) || //whatsapp
+                                                    !empty($viData['userAllInfo']['userAttribs']['158']['val'])) { //googleallo
                                                 } else {
                                                     echo '<li> Мессенджеры (хотя бы один) - 5% </li>';
                                                 }
@@ -824,9 +824,9 @@ $this->pageTitle = $title;
 
                 $id = $this->ViewModel->isInArray($viData['userAllInfo']['cotype'], 'id', $allInfo['type']);
 
-                display($viData);
-                display($allInfo);
-                display($allAttr);
+//                display($viData);
+//                display($allInfo);
+//                display($allAttr);
 
                 ?>
                 <div class="personal__area--capacity">
@@ -1009,7 +1009,32 @@ $this->pageTitle = $title;
                             <div class="group__info"><?=$viData['userAllInfo']['userAttribs']['177']['val']?></div>
                         </div>
                         <? endif; ?>
-
+<?/*
+    if (empty($viData['userAllInfo']['emplInfo']['email'])) { ?>
+        <li> Е-меил - 5% </li>
+    <? }
+    if (empty($viData['userAllInfo']['userAttribs']['1']['val'])) { ?>
+        <li> Телефон - 5% </li>
+    <? }
+    if (empty($viData['userAllInfo']['userAttribs']['175']['val'])) { ?>
+        <li> Городской телефон - 5% </li>
+    <? }
+    if (!empty($viData['userAllInfo']['userAttribs']['157']['val']) || //telegram
+        !empty($viData['userAllInfo']['userAttribs']['4']['val'])   || //skype
+        !empty($viData['userAllInfo']['userAttribs']['5']['val'])   || //viber
+        !empty($viData['userAllInfo']['userAttribs']['156']['val']) || //whatsapp
+        !empty($viData['userAllInfo']['userAttribs']['158']['val'])) { //googleallo
+    } else {
+        echo '<li> Мессенджеры (хотя бы один) - 5% </li>';
+    }
+    if (empty($viData['userAllInfo']['userAttribs']['100']['val'])) { ?>
+        <li> Должность - 5% </li>
+    <? }
+    if (empty($viData['userAllInfo']['emplInfo']['aboutme'])) { ?>
+        <h4>О компании - 10% </h4>
+    <? } ?>
+*/
+?>
                         <div class="group ppe__field<?=($isBlocked && !$allInfo['email'] ?' error':'')?>">
                             <div class="group__about">E-mail</div>
                             <div class="group__info"><?=$allInfo['email']?></div>
@@ -1020,47 +1045,46 @@ $this->pageTitle = $title;
                             <div class="group__info"><?=$allAttr[1]['val']?></div>
                         </div>
 
-                        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'stationaryphone'); ?>
-                        <?php if(isset($allAttr[$attrVal]['val']) && $allAttr[$attrVal]['val'] !== '') : ?>
+                        <?php if(!empty($viData['userAllInfo']['userAttribs']['175']['val'])) : ?>
                         <div class="group">
                             <div class="group__about">Городской телефон</div>
-                            <div class="group__info"><?=$allAttr[$attrVal]['val']?></div>
+                            <div class="group__info"><?=$viData['userAllInfo']['userAttribs']['175']['val']?></div>
                         </div>
                         <? endif; ?>
 
                         <?php
                         //messangers
-                        $idViber = $this->ViewModel->isInArray($allAttr, 'key', 'viber');
-                        $idWhatsApp = $this->ViewModel->isInArray($allAttr, 'key', 'whatsapp');
-                        $idTelegram = $this->ViewModel->isInArray($allAttr, 'key', 'telegram');
-                        $idGoogleAllo = $this->ViewModel->isInArray($allAttr, 'key', 'googleallo');
+                        $idViber = $viData['userAllInfo']['userAttribs']['5']['val'];
+                        $idWhatsApp = $viData['userAllInfo']['userAttribs']['156']['val'];
+                        $idTelegram = $viData['userAllInfo']['userAttribs']['157']['val'];
+                        $idGoogleAllo = $viData['userAllInfo']['userAttribs']['158']['val'];
                         ?>
 
-                        <?php if(isset($allAttr[$idViber]['val']) && $allAttr[$idViber]['val'] !== '') : ?>
+                        <?php if(isset($idViber)) : ?>
                         <div class="group">
                             <div class="group__about">Viber</div>
-                            <div class="group__info"><?=$allAttr[$idViber]['val']?></div>
+                            <div class="group__info"><?=$idViber?></div>
                         </div>
                         <?php endif; ?>
 
-                        <?php if(isset($allAttr[$idWhatsApp]['val']) && $allAttr[$idWhatsApp]['val'] !== '') : ?>
+                        <?php if(isset($idWhatsApp)) : ?>
                         <div class="group">
                             <div class="group__about">Whatsapp</div>
-                            <div class="group__info"><?=$allAttr[$idWhatsApp]['val']?></div>
+                            <div class="group__info"><?=$idWhatsApp?></div>
                         </div>
                         <?php endif; ?>
 
-                        <?php if(isset($allAttr[$idTelegram]['val']) && $allAttr[$idTelegram]['val'] !== '') : ?>
+                        <?php if(isset($idTelegram)) : ?>
                         <div class="group">
                             <div class="group__about">Telegram</div>
-                            <div class="group__info"><?=$allAttr[$idTelegram]['val']?></div>
+                            <div class="group__info"><?=$idTelegram?></div>
                         </div>
                         <?php endif; ?>
 
-                        <?php if(isset($allAttr[$idGoogleAllo]['val']) && $allAttr[$idGoogleAllo]['val'] !== '') : ?>
+                        <?php if(!empty($idGoogleAllo)) : ?>
                         <div class="group">
                             <div class="group__about">Google Allo</div>
-                            <div class="group__info"><?=$allAttr[$idGoogleAllo]['val']?></div>
+                            <div class="group__info"><?=$idGoogleAllo?></div>
                         </div>
                         <?php endif; ?>
 
