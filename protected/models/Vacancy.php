@@ -1652,6 +1652,55 @@ class Vacancy extends ARModel
             $command->execute();
         } // endif
     }
+    
+        private function saveLocationsApi($inVacId, $inIdCity)
+    {
+        $name = filter_var(Yii::app()->getRequest()->getParam('loname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $addr = filter_var(Yii::app()->getRequest()->getParam('loaddr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $lobdate = Yii::app()->getRequest()->getParam('lobdate');
+        $loedate = Yii::app()->getRequest()->getParam('loedate');
+        $lobtime = Yii::app()->getRequest()->getParam('lobtime');
+        $loetime = Yii::app()->getRequest()->getParam('loetime');
+
+        if( $lobdate )
+        {
+            // сохраняем локацию
+            $res = Yii::app()->db->createCommand()
+                ->insert('empl_locations', array('id_vac' => $inVacId,
+                        'id_city' => $inIdCity,
+                        'npp' => 1,
+                        'name' => $name,
+                        'addr' => $addr,
+                    ));
+            $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+
+
+            $i = 1;
+            $insData = array();
+            foreach ($lobtime as $key => $val)
+            {
+                $btime = $val;
+                $etime = $loetime[$key];
+
+                if( $btime || $etime )
+                {
+                    $arr = explode(':', $btime);
+                    $btime = $arr[0] * 60 + $arr[1];
+                    $arr = explode(':', $etime);
+                    $etime = $arr[0] * 60 + $arr[1];
+
+                } // endif
+
+
+                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($lobdate[$key])), 'edate' => date("Y-m-d", strtotime($loedate[$key])), 'btime' => $btime, 'etime' => $etime);
+
+                $i++;
+            } // end foreach
+            // сохранение периодов локации
+            $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
+            $command->execute();
+        } // endif
+    }
 
 
 
