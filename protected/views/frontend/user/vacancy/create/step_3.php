@@ -24,10 +24,11 @@
           </div>
           <div class="form__field-dash"> </div>
           <div class="form__content-2">
-            <? !isset($model->data->salary_type) && $model->data->salary_type=key(reset(Vacancy::SALARY_TYPE)); // По умолчанию 'руб/час' ?>
+            <? $arTypes = Vacancy::SALARY_TYPE; ?>
+            <? !isset($model->data->salary_type) && $model->data->salary_type=key($arTypes); // По умолчанию 'руб/час' ?>
             <div class="form__field-input form__field-select prmu-required<?=($model->errors['salary_type']?' prmu-error':'')?>" id="salary">
               <select name="salary_type">
-                <? foreach (Vacancy::SALARY_TYPE as $key => $v): ?>
+                <? foreach ($arTypes as $key => $v): ?>
                   <option value="<?=$key?>"<?=$model->data->salary_type==$key?' selected="selected"':''?>><?=$v?></option>
                 <? endforeach; ?>
               </select>
@@ -42,7 +43,7 @@
     ?>
     <?
     $arSalary = Vacancy::getAllAttributes()->lists['paylims'];
-    !isset($model->data->salary_time) && $model->data->salary_time=key(reset($arSalary)); // По умолчанию 'На следующий день'
+    !isset($model->data->salary_time) && $model->data->salary_time=key($arSalary); // По умолчанию 'На следующий день'
     ?>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Сроки оплаты</label>

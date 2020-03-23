@@ -236,7 +236,7 @@ class VacancyCreate
 
     if(!count($this->errors)) // ошибок нет
     {
-      $this->step<5 && $this->step++;
+      $this->step<5 && $this->step=$step+1;
       $this->setData();
       if($step==5)
       {

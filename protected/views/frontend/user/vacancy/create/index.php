@@ -17,7 +17,7 @@
   $gcs = Yii::app()->getClientScript();
   $gcs->registerCoreScript('jquery');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'form/style.css');
-  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'private/personal.css');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'private/page-prof-personal-area.css');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClientScript::POS_HEAD);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/create.js', CClientScript::POS_HEAD);
