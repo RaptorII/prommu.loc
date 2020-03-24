@@ -1399,7 +1399,7 @@ class Vacancy extends ARModel
 //             // сохраняем города
             $idcity = $this->saveCitiesApi($idvac, $inProps);
 //             // сохраняем локации
-            $this->saveLocationsApi($idvac, $inProps['locations']);
+            // $this->saveLocationsApi($idvac, $inProps['locations']);
 
 
 //             if(checkdate($arRemdate[1], $arRemdate[0], $arRemdate[2]))
