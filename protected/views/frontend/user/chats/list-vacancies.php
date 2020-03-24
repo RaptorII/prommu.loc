@@ -5,7 +5,7 @@
 	$s = Yii::app()->getRequest()->getParam('s');
 ?>
 <div class="chat-list vacancies">
-	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
+	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link mobile-none"><span><</span> Назад</a>
 	<? if(count($viData['items'])): ?>
 		<h2>Сообщения по вакансиям 
 			<? if($viData['cnt-chat']>0): ?>

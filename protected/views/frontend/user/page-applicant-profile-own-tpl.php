@@ -190,7 +190,7 @@ if (!share::isApplicant()):
       </div>
       <?php if($cntComments): ?>
         <div class="ppp__logo-comm">
-          <span class="ppp__subtitle">Отзывы:</span>
+          <span class="ppp__subtitle">Отзывы: </span>
           <span class="upp__review upp__review-red js-g-hashint" title="Отрицательные отзывы">
             <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link"><?=$viData['lastComments']['count'][1]?></a>
           </span>
@@ -1097,6 +1097,8 @@ if (!share::isApplicant()):
     $bigSrc = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);
     $src = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);
 
+//    echo date("d.m.Y", strtotime($viData['userInfo']['userAttribs'][1]['mdate']));
+//    display($viData);
 //    display($cookieView);
 //    display($bigSrc);
 //    display($src);
@@ -1147,7 +1149,12 @@ if (!share::isApplicant()):
             </div>
 
             <div class="personal__area--item">
-                <span class="upp__title"><?=$attr['firstname']?> <?=$attr['lastname']?></span>
+                <span class="upp__title">
+                    <?=$attr['firstname']?> <?=$attr['lastname']?>
+                    <span class="upp__title--date js-g-hashint" title="Дата регистрации">
+                        <?= date("d.m.Y", strtotime($viData['userInfo']['userAttribs'][1]['mdate'])); ?>
+                    </span>
+                </span>
                 <div class="upp__rating-block">
                     <span class="upp__subtitle">Общий рейтинг:</span>
                     <div class="upp__subtitle">
@@ -1183,15 +1190,15 @@ if (!share::isApplicant()):
             </div>
 
 
-            <div class="personal__area--item">
+            <div class="personal__area--item personal__area--item-index">
                 <div class="upp__rating-block">
                     <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
                         <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
                     <?php endif; ?>
                 </div>
             </div>
-            <div class="personal__area--item">
-
+            <div class="personal__area--item personal__area--item-index">
+                <? if ($flagOwnProfile): ?>
                 <div class="upp__rating-block">
                     <? if(!empty($info['self_employed'])): ?>
                         <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
@@ -1340,9 +1347,11 @@ if (!share::isApplicant()):
                     <? // ?>
 
                 </div>
+                <? endif; ?>
             </div>
 
-            <div class="personal__area--item">
+            <div class="personal__area--item personal__area--item-index">
+                <? if ($flagOwnProfile): ?>
                 <div class="upp__rating-affective">
                     <div class="upp__subtitle">
                         <span class="upp__subtitle">Эффективность размещения:</span>
@@ -1592,6 +1601,7 @@ if (!share::isApplicant()):
                     <?//end efficiency popup?>
 
                 </div>
+                <? endif; ?>
             </div>
 
         </div>
@@ -1603,16 +1613,18 @@ if (!share::isApplicant()):
 <div class="row personal__area personal__area-flex">
     <?//1th column?>
     <?php $isBlocked = Share::$UserProfile->exInfo->isblocked==3; ?>
-    <div class="col-xs-12 col-xs-4 personal__area--flex-column" >
+    <div class="col-xs-12 col-sm-4 personal__area--flex-column" >
         <div class="personal__area--capacity">
             <div class="personal__area--capacity-name">
                 Основная информация
             </div>
 
-            <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-               class="personal__area--capacity-edit js-g-hashint"
-               title="Редактировать профиль">
-            </a>
+            <?php if ($flagOwnProfile) :?>
+                <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                   class="personal__area--capacity-edit js-g-hashint"
+                   title="Редактировать профиль">
+                </a>
+            <? endif; ?>
 
             <div class="group">
                 <div class="group__about">Имя</div>
@@ -1667,7 +1679,6 @@ if (!share::isApplicant()):
                 </div>
             <? endif; ?>
 
-            <br>
         </div>
 
         <div class="personal__area--capacity">
@@ -1745,13 +1756,14 @@ if (!share::isApplicant()):
                 </div>
 
                 <?php if(!$cntComments): ?>
-                    <span class="ppp__subtitle">Отзывы отсутствуют</span><br>
+                    <span class="ppp__subtitle">Отзывы отсутствуют</span>
                     <div class="personal__area--button">
                         <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
                             Подробнее...
                         </a>
                     </div>
                 <?php endif;?>
+
                 <?php if($cntComments): ?>
                     <div class="ppp__comments">
                         <?php for($i=0; $n=$cntComments, $i<$n, $i<2; $i++):
@@ -1767,30 +1779,42 @@ if (!share::isApplicant()):
                         endfor; ?>
                     </div>
                     <hr class="upp__line">
-                    <?php if($cntComments>0): ?>
-                        <div class="personal__area--button">
-                            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
-                                Подробнее...
-                            </a>
-                        </div>
-                    <?php endif; ?>
+                    <div class="personal__area--button">
+                        <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
+                            Подробнее...
+                        </a>
+                    </div>
                 <?php endif; ?>
+
+            <? else: ?>
+                <div class="group">
+                    <span class="upp__subtitle">
+                        Отзывы отсутствуют
+                    </span>
+                </div>
+                <div class="personal__area--button">
+                    <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
+                        Подробнее...
+                    </a>
+                </div>
             <?php endif; ?>
 
         </div>
     </div>
 
     <?//2th column?>
-    <div class="col-xs-12 col-xs-4 personal__area--flex-column" >
+    <div class="col-xs-12 col-sm-4 personal__area--flex-column" >
         <div class="personal__area--capacity">
             <div class="personal__area--capacity-name">
                 Удобное место и время работы
             </div>
 
-            <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-               class="personal__area--capacity-edit js-g-hashint"
-               title="Редактировать профиль">
-            </a>
+            <?php if ($flagOwnProfile) :?>
+                <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                   class="personal__area--capacity-edit js-g-hashint"
+                   title="Редактировать профиль">
+                </a>
+            <? endif; ?>
 
             <?php foreach($info['userCities'][0] as $city): ?>
                 <? if ($city['name']): ?>
@@ -1806,33 +1830,32 @@ if (!share::isApplicant()):
                             if($metro['idcity']==$city['id'])
                                 $arMetroes[] = $metro['name'];
                     }
-                    ?>
-                    <div class="group">
-                        <div class="group__about">Метро</div>
-
-                        <?
-                        if (count($arMetroes)<=2): ?>
-                            <div class="group__info"><?=implode(', ', $arMetroes)?></div>
-                        <?
-                        endif;
+                    if ($arMetroes):
                         ?>
+                        <div class="group">
+                            <div class="group__about">Метро</div>
 
-                        <?
-                        if (count($arMetroes)>2): ?>
-                            <div class="group__info">
-                                <?=$arMetroes[1].', '?>
-                                <?=$arMetroes[2].'... '?>
-                                <div class="group__info--drop">
-                                    <?=implode(', ', $arMetroes)?>
+                            <?
+                            if (count($arMetroes)<=2): ?>
+                                <div class="group__info"><?=implode(', ', $arMetroes)?></div>
+                            <?
+                            endif;
+                            ?>
+
+                            <?
+                            if (count($arMetroes)>2): ?>
+                                <div class="group__info">
+                                    <?=$arMetroes[1].', '?>
+                                    <?=$arMetroes[2].'... '?>
+                                    <div class="group__info--drop">
+                                        <?=implode(', ', $arMetroes)?>
+                                    </div>
                                 </div>
-                            </div>
-                        <?
-                        endif;
-                        ?>
-
-
-
-                    </div>
+                            <?
+                            endif;
+                            ?>
+                        </div>
+                    <? endif; ?>
                 <? endif; ?>
             <?
             if(sizeof($info['userWdays'][$city['id']])):
@@ -1856,17 +1879,19 @@ if (!share::isApplicant()):
                 Внешние данные
             </div>
 
-            <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-               class="personal__area--capacity-edit js-g-hashint"
-               title="Редактировать профиль">
-            </a>
+            <?php if ($flagOwnProfile) :?>
+                <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                   class="personal__area--capacity-edit js-g-hashint"
+                   title="Редактировать профиль">
+                </a>
+            <? endif; ?>
 
             <? $empty = true; ?>
             <? if(!empty($info['userAttribs'][9]['val'])): ?>
                 <div class="group">
                     <span class="group__about--<?=$info['userAttribs'][9]['id_attr']?>"></span>
                     <span class="group__about">Рост:</span>
-                    <span class="group__info"><?=$info['userAttribs'][9]['val']?></span>
+                    <span class="group__info--view"><?=$info['userAttribs'][9]['val']?></span>
                 </div>
                 <? $empty = false; ?>
             <? endif; ?>
@@ -1874,7 +1899,7 @@ if (!share::isApplicant()):
                 <div class="group">
                     <span class="group__about--<?=$info['userAttribs'][10]['id_attr']?>"></span>
                     <span class="group__about">Вес:</span>
-                    <span class="group__info"><?=$info['userAttribs'][10]['val']?></span>
+                    <span class="group__info--view"><?=$info['userAttribs'][10]['val']?></span>
                 </div>
                 <? $empty = false; ?>
             <? endif; ?>
@@ -1885,7 +1910,7 @@ if (!share::isApplicant()):
                     <div class="group">
                         <span class="group__about--<?=$id?>"></span>
                         <span class="group__about"><?=$name?>:</span>
-                        <span class="group__info"><?=$data?></span>
+                        <span class="group__info--view"><?=$data?></span>
                     </div>
                     <? $empty = false; ?>
                 <? endif; ?>
@@ -1894,7 +1919,6 @@ if (!share::isApplicant()):
                 <div class="ppp__subtitle">Не заполнено</div>
             <? endif; ?>
 
-            <br>
         </div>
 
         <div class="personal__area--capacity">
@@ -1902,10 +1926,12 @@ if (!share::isApplicant()):
                 Дополнительная информация
             </div>
 
-            <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-               class="personal__area--capacity-edit js-g-hashint"
-               title="Редактировать профиль">
-            </a>
+            <?php if ($flagOwnProfile) :?>
+                <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                   class="personal__area--capacity-edit js-g-hashint"
+                   title="Редактировать профиль">
+                </a>
+            <? endif; ?>
 
             <?php
             $empty = true;
@@ -1967,12 +1993,11 @@ if (!share::isApplicant()):
                 <div class="ppp__subtitle">Не заполнено</div>
             <? endif; ?>
 
-            <br>
         </div>
     </div>
 
     <?//3th xolumn?>
-    <div class="col-xs-12 col-xs-4" >
+    <div class="col-xs-12 col-sm-4" >
         <div class="personal__area--capacity personal__area--capacity-height">
             <div class="personal__area--capacity-name">
                 Целевая вакансия
@@ -2018,7 +2043,7 @@ if (!share::isApplicant()):
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div>Пока нет вакансий</div><br>
+                <div>Пока нет вакансий</div>
             <? endif; ?>
             </div>
 

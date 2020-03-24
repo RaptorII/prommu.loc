@@ -6,7 +6,7 @@
   $status = Feedback::getAdminStatus();
 ?>
 <div class="chat-list feedback">
-	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
+	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link mobile-none"><span><</span> Назад</a>
 	<? if(sizeof($viData['items'])): ?>
 		<h2>Сообщения Prommu 
 			<? if($viData['cnt-chat']>0): ?>

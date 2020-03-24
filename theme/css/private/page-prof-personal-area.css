@@ -20,16 +20,38 @@
     flex-direction: column;
     align-content: flex-end;
     justify-content: flex-end;
+    position: relative;
+    z-index: 1;
+}
+
+.upp__rating-block {
+    text-align: center;
 }
 
 @media screen and (min-width: 768px) {
     .personal__area--item {
         flex: 1 0 auto;
+        height: 100px;
     }
+    .upp__rating-block {
+        text-align: unset;
+    }
+}
+
+.personal__area--item + .personal__area--item {
+    margin: 20px 0;
 }
 
 .personal__area--item:first-child {
     flex: 1 0 0;
+}
+
+.personal__area--item-index {
+    z-index: 0;
+}
+
+.personal__area--item-index-top {
+    z-index: 2;
 }
 
 @media screen and (max-width: 989px) {
@@ -100,7 +122,7 @@
 }
 
 .personal__area--button {
-    margin: 25px 0;
+    margin: 25px 0 0 0;
     text-align: right;
 }
 
@@ -132,6 +154,7 @@
     max-width: 75px;
     display: block;
     text-align: center;
+    margin: 0 auto;
 }
 
 .upp__title {
@@ -142,6 +165,13 @@
     margin: 10px 0;
 }
 
+.upp__title--date {
+    display: block;
+    font-weight: 400;
+    font-size: 14px;
+    text-align: center;
+}
+
 @media screen and (min-width: 767px) {
     .upp__title {
         font-size: 20px;
@@ -149,6 +179,12 @@
         position: absolute;
         top: 0;
         margin: 0;
+        text-align: left;
+        width: 320px;
+    }
+
+    .upp__title--date {
+        text-align: left;
     }
 }
 
@@ -170,6 +206,7 @@
     width: 30px;
     height: 30px;
     color: var(--color-green);
+    text-align: left;
 }
 .upp__info i{
     opacity: 0.5;
@@ -205,7 +242,7 @@
     border-radius: 4px;
     border: 1px solid var(--color-green);
     top: calc( 100% + 20px );
-    left: -130px;
+    left: -175px;
     -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
     box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
@@ -218,6 +255,11 @@
     top: calc( 100% + 10px );
 }
 
+@media screen and (min-width: 767px) {
+    .upp__info--hint {
+        left: -130px;
+    }
+}
 
 .icn-question-two,
 .icn-info-three{
@@ -249,6 +291,7 @@ capacity blocks
 
 .personal__area--capacity {
     margin-top: 20px;
+    padding-bottom: 20px;
 }
 
 @media screen and (min-width: 767px) {
@@ -445,6 +488,10 @@ try google material design
     visibility: visible;
 }
 
+.group__info--view {
+    font-weight: 600;
+}
+
 .group__point.p0 {
     background: var(--color-grey);
 }
@@ -569,6 +616,7 @@ try google material design
 .upp__table-name {
     position: relative;
     padding-bottom: 10px;
+    text-align: left;
 }
 
 .upp__table-name:after {
@@ -948,7 +996,7 @@ try google material design
     color: #fff;
     background-color: rgba(52, 52, 52, 0.8);
     max-height: 270px;
-    overflow: overlay;
+    overflow: auto;
     z-index: 2;
 }
 .form__select-list::-webkit-scrollbar { width: 5px; height: 5px;}

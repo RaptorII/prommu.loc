@@ -12,7 +12,7 @@
 <div class="row applicant_project">
 	<div class="col-xs-12">
 		<div class="app_project__head">
-			<a href="<?=$link?>">Назад</a>
+			<a class="mobile-none" href="<?=$link?>">Назад</a>
 			<div class="app_project__head-title">
 				<h1><?=$vacancy['title']?></h1>
 			</div>

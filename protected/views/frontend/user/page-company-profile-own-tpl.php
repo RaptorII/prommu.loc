@@ -567,7 +567,7 @@ $this->pageTitle = $title;
                         </div>
                     </div>
 
-                    <div class="personal__area--item">
+                    <div class="personal__area--item personal__area--item-index-top">
                         <span class="upp__title"><?=$viData['userInfo']['name']?></span>
                         <div class="upp__rating-block">
                             <span class="upp__subtitle">Общий рейтинг:</span>
@@ -692,7 +692,8 @@ $this->pageTitle = $title;
                         </div>
                     </div>
 
-                    <div class="personal__area--item">
+                    <div class="personal__area--item personal__area--item-index">
+                        <?php if ($flagOwnProfile) :?>
                         <div class="upp__rating-affective">
                             <div class="upp__subtitle">
                                 <span class="upp__subtitle--eff">Эффективность размещения</span>
@@ -806,6 +807,7 @@ $this->pageTitle = $title;
                             <?//end efficiency popup?>
 
                         </div>
+                        <? endif; ?>
                     </div>
                 </div>
             </div>
@@ -834,10 +836,12 @@ $this->pageTitle = $title;
                         Основная информация
                     </div>
 
-                    <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-                       class="personal__area--capacity-edit js-g-hashint"
-                       title="Редактировать профиль">
-                    </a>
+                    <?php if ($flagOwnProfile) :?>
+                        <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                           class="personal__area--capacity-edit js-g-hashint"
+                           title="Редактировать профиль">
+                        </a>
+                    <? endif; ?>
 
                     <div class="group ppe__field<?=($isBlocked && !$allInfo['name'] ?' error':'')?>">
                         <div class="group__about">Название компании</div>
@@ -880,7 +884,7 @@ $this->pageTitle = $title;
                 <?
                 // grades
                 ?>
-                <div class="personal__area--capacity">
+                <div class="personal__area--capacity ">
                     <div class="personal__area--capacity-name">
                         Оценки
                     </div>
@@ -967,11 +971,12 @@ $this->pageTitle = $title;
                         Контактная информация
                     </div>
 
-                    <a
-                       href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
-                       class="personal__area--capacity-edit js-g-hashint"
-                       title="Редактировать профиль">
-                    </a>
+                    <?php if ($flagOwnProfile) :?>
+                        <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                           class="personal__area--capacity-edit js-g-hashint"
+                           title="Редактировать профиль">
+                        </a>
+                    <? endif; ?>
 
                     <?php if($flagOwnProfile): // инфа для владельца ?>
 
@@ -1164,7 +1169,3 @@ $this->pageTitle = $title;
     endif;
     ?>
 
-<!--    </div>-->
-<!--</div>-->
-
-<!--<div class="form__field-hint tooltip tooltipstered"></div>-->

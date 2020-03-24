@@ -25,7 +25,7 @@
         <div class='pse__filter-block filter-surname'>
           <div class='pse__filter-name opened'>Название компании</div>
           <div class='pse__filter-content opened'>
-            <input name='qs' type='text' title="Введите фамилию" value="<?=$_GET['qs']?>" class="pse__input">
+            <input name='qs' type='text' title="Введите название компании" value="<?=$_GET['qs']?>" class="pse__input pse__input--width">
             <div class="pse__filter-btn btn__orange">ОК</div>
             <div class="clearfix"></div>
           </div>
