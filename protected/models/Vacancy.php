@@ -1678,8 +1678,9 @@ class Vacancy extends ARModel
         //     $lobtime = $location[$i]['periods'];
         //     $i = 1;
         //     $insData = array();
-        //     foreach ($lobtime as $key => $val)
-        //     {
+            foreach ($location[$i]['periods'] as $key => $val)
+            {
+                var_dump($val);
         //         $btime = $val['btime'];
         //         $etime = $val['etime'];
 
@@ -1696,7 +1697,7 @@ class Vacancy extends ARModel
         //         $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
 
         //         $i++;
-        //     } // end foreach
+            } // end foreach
         //     // сохранение периодов локации
         //     $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
         //     $command->execute();
