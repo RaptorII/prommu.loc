@@ -1660,7 +1660,7 @@ class Vacancy extends ARModel
     
     private function saveLocationsApi($inVacId, $location)
     {
-        // Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
+        Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
         
         for($i = 0; $i < count($location); $i ++){
         
@@ -1677,32 +1677,32 @@ class Vacancy extends ARModel
                     ));
             $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 
-        //     $lobtime = $location[$i]['periods'];
-        //     $i = 1;
-        //     $insData = array();
+            $lobtime = $location[$i]['periods'];
+            $i = 1;
+            $insData = array();
             foreach ($location[$i]['periods'] as $key => $val)
             {
-                var_dump($val);
-        //         $btime = $val['btime'];
-        //         $etime = $val['etime'];
+               
+                $btime = $val['btime'];
+                $etime = $val['etime'];
 
-        //         if( $btime || $etime )
-        //         {
-        //             $arr = explode(':', $btime);
-        //             $btime = $arr[0] * 60 + $arr[1];
-        //             $arr = explode(':', $etime);
-        //             $etime = $arr[0] * 60 + $arr[1];
+                if( $btime || $etime )
+                {
+                    $arr = explode(':', $btime);
+                    $btime = $arr[0] * 60 + $arr[1];
+                    $arr = explode(':', $etime);
+                    $etime = $arr[0] * 60 + $arr[1];
 
-        //         } // endif
+                } // endif
 
 
-        //         $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
+                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
 
-        //         $i++;
+                $i++;
             } // end foreach
-        //     // сохранение периодов локации
-        //     $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
-        //     $command->execute();
+            // сохранение периодов локации
+            $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
+            $command->execute();
             } // endif
         }
     }
