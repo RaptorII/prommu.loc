@@ -1349,7 +1349,7 @@ class Vacancy extends ARModel
             ));
             
             $fields['istemp'] = $inProps['is_temp'];
-     
+            
      
             $vk = $inProps['repost_vk'];
             $fb = $inProps['repost_fb'];
@@ -1399,7 +1399,7 @@ class Vacancy extends ARModel
 //             // сохраняем города
             $idcity = $this->saveCitiesApi($idvac, $inProps);
 //             // сохраняем локации
-//             $this->saveLocations($idvac, $idcity);
+            $this->saveLocationsApi($idvac, $inProps['locations']);
 
 
 //             if(checkdate($arRemdate[1], $arRemdate[0], $arRemdate[2]))
