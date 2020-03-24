@@ -1678,7 +1678,7 @@ class Vacancy extends ARModel
             $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 
             $lobtime = $location[$i]['periods'];
-            $i = 1;
+            $j = 1;
             $insData = array();
             foreach ($location[$i]['periods'] as $key => $val)
             {
@@ -1696,9 +1696,9 @@ class Vacancy extends ARModel
                 } // endif
 
 
-                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", $val['bdate']), 'edate' => date("Y-m-d", $val['edate']), 'btime' => $btime, 'etime' => $etime);
+                $insData[] = array('id_loc' => $idloc, 'npp' => $j, 'bdate' => date("Y-m-d", $val['bdate']), 'edate' => date("Y-m-d", $val['edate']), 'btime' => $btime, 'etime' => $etime);
 
-                $i++;
+                $j++;
             } // end foreach
             // сохранение периодов локации
             $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
