@@ -1696,7 +1696,7 @@ class Vacancy extends ARModel
                 } // endif
 
 
-                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
+                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", $val['bdate']), 'edate' => date("Y-m-d", $val['edate']), 'btime' => $btime, 'etime' => $etime);
 
                 $i++;
             } // end foreach
