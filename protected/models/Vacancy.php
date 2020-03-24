@@ -1660,19 +1660,20 @@ class Vacancy extends ARModel
     
     private function saveLocationsApi($inVacId, $location)
     {
-        //Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
+        Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
+        
         for($i = 0; $i < count($location); $i ++){
-        var_dump($location);
-        // if( $location[$i] )
-        // {
+        
+        if( $location[$i] )
+        {
         //     // сохраняем локацию
-        //     $res = Yii::app()->db->createCommand()
-        //         ->insert('empl_locations', array('id_vac' => $inVacId,
-        //                 'id_city' => $location[$i]['id_city'],
-        //                 'npp' => 1,
-        //                 'name' => $location[$i]['name'],
-        //                 'addr' => $location[$i]['addr'],
-        //             ));
+            $res = Yii::app()->db->createCommand()
+                ->insert('empl_locations', array('id_vac' => $inVacId,
+                        'id_city' => $location[$i]['id_city'],
+                        'npp' => 1,
+                        'name' => $location[$i]['name'],
+                        'addr' => $location[$i]['addr'],
+                    ));
         //     $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 
         //     $lobtime = $location[$i]['periods'];
@@ -1701,7 +1702,7 @@ class Vacancy extends ARModel
         //     // сохранение периодов локации
         //     $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
         //     $command->execute();
-        //     } // endif
+            } // endif
         }
     }
 
