@@ -1660,49 +1660,47 @@ class Vacancy extends ARModel
     
     private function saveLocationsApi($inVacId, $location)
     {
-        
+        //Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
         for($i = 0; $i < count($location); $i ++){
-            
-        
-        
-        if( $location[$i] )
-        {
-            // сохраняем локацию
-            $res = Yii::app()->db->createCommand()
-                ->insert('empl_locations', array('id_vac' => $inVacId,
-                        'id_city' => $location[$i]['id_city'],
-                        'npp' => 1,
-                        'name' => $location[$i]['name'],
-                        'addr' => $location[$i]['addr'],
-                    ));
-            $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+        var_dump($location);
+        // if( $location[$i] )
+        // {
+        //     // сохраняем локацию
+        //     $res = Yii::app()->db->createCommand()
+        //         ->insert('empl_locations', array('id_vac' => $inVacId,
+        //                 'id_city' => $location[$i]['id_city'],
+        //                 'npp' => 1,
+        //                 'name' => $location[$i]['name'],
+        //                 'addr' => $location[$i]['addr'],
+        //             ));
+        //     $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 
-            $lobtime = $location[$i]['periods'];
-            $i = 1;
-            $insData = array();
-            foreach ($lobtime as $key => $val)
-            {
-                $btime = $val['btime'];
-                $etime = $val['etime'];
+        //     $lobtime = $location[$i]['periods'];
+        //     $i = 1;
+        //     $insData = array();
+        //     foreach ($lobtime as $key => $val)
+        //     {
+        //         $btime = $val['btime'];
+        //         $etime = $val['etime'];
 
-                if( $btime || $etime )
-                {
-                    $arr = explode(':', $btime);
-                    $btime = $arr[0] * 60 + $arr[1];
-                    $arr = explode(':', $etime);
-                    $etime = $arr[0] * 60 + $arr[1];
+        //         if( $btime || $etime )
+        //         {
+        //             $arr = explode(':', $btime);
+        //             $btime = $arr[0] * 60 + $arr[1];
+        //             $arr = explode(':', $etime);
+        //             $etime = $arr[0] * 60 + $arr[1];
 
-                } // endif
+        //         } // endif
 
 
-                $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
+        //         $insData[] = array('id_loc' => $idloc, 'npp' => $i, 'bdate' => date("Y-m-d", strtotime($val['bdate'])), 'edate' => date("Y-m-d", strtotime($val['edate'])), 'btime' => $btime, 'etime' => $etime);
 
-                $i++;
-            } // end foreach
-            // сохранение периодов локации
-            $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
-            $command->execute();
-            } // endif
+        //         $i++;
+        //     } // end foreach
+        //     // сохранение периодов локации
+        //     $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('emplv_loc_times', $insData);
+        //     $command->execute();
+        //     } // endif
         }
     }
 
