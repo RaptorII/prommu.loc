@@ -1668,13 +1668,14 @@ class Vacancy extends ARModel
         {
         //     // сохраняем локацию
             $res = Yii::app()->db->createCommand()
-                ->insert('empl_locations', array('id_vac' => $inVacId,
+                ->insert('empl_locations', array(
+                        'id_vac' => $inVacId,
                         'id_city' => $location[$i]['id_city'],
                         'npp' => 1,
                         'name' => $location[$i]['name'],
                         'addr' => $location[$i]['addr'],
                     ));
-        //     $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+            $idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 
         //     $lobtime = $location[$i]['periods'];
         //     $i = 1;
