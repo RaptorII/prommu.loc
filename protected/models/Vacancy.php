@@ -1660,7 +1660,7 @@ class Vacancy extends ARModel
     
     private function saveLocationsApi($inVacId, $location)
     {
-        Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
+        // Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac = :idvac', array(':idvac' => $inVacId));
         
         for($i = 0; $i < count($location); $i ++){
         
