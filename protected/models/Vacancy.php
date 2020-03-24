@@ -1384,14 +1384,18 @@ class Vacancy extends ARModel
                 $res = Yii::app()->db->createCommand()
                 ->update('empl_vacations', $fields
                     ,'id = :id', array(':id' => $inProps['id']) );
+                    
+                $idvac = $inProps['id'];
             } else {
                 $res = Yii::app()->db->createCommand()
                 ->insert('empl_vacations', $fields);
+                
+                $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
             }
             
 
             $flagNew = 1;
-            $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+            
 //             // сохраняем должности
             $postt = $this->saveVacPostsApi($idvac,$inProps);
 //             // сохраняем атрибуты вакансии
