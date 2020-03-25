@@ -803,24 +803,27 @@ class Vacancy extends ARModel
             $idvac = $val['id'];
             $sql = "SELECT 
                 a.id_attr
+              , d.name
               , a.val
               , a.key
             FROM empl_vacations e
             LEFT JOIN empl_attribs a ON e.id = a.id_vac
-            WHERE e.id = {$idvac}";
+            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
+            WHERE e.id = {$idvac}
+            ORDER BY a.id_attr";
             $attribs = Yii::app()->db->createCommand($sql)->queryAll();
             
-            var_dump($attribs);
-            // foreach ($attribs as $keys => $vals)
-            // {   
+           
+            foreach ($attribs as $keys => $vals)
+            {   
             
-            //     if($vals['val'] == null){
-            //         $vals['val'] = $vals['name'];
-            //     }
-            //     unset($vals['name']);
+                if($vals['val'] == null){
+                    $vals['val'] = $vals['name'];
+                }
+                unset($vals['name']);
                 
-            //     $data[$val['id']]['attribs'][] = $vals;
-            // } 
+                $data[$val['id']]['attribs'][] = $vals;
+            } 
         
             if( !isset($data[$val['id']])) $data[$val['id']] = array('city' => array(), 'posts' => array()) ;
             
