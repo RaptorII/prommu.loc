@@ -798,7 +798,7 @@ class Vacancy extends ARModel
             $res = $res->queryAll();
             
              // AND (d.id_par = 110)
-        var_dump($res);
+       
         foreach ($res as $key => $val)
         {
             $idvac = $val['id'];
