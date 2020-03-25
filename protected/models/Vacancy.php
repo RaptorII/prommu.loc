@@ -2244,16 +2244,10 @@ class Vacancy extends ARModel
             } // endif
         } // end foreach
 
-            $keys = join(',', $keys);
-            $sql = "DELETE empl_attribs FROM empl_attribs 
-                INNER JOIN user_attr_dict d ON empl_attribs.id_attr = d.id AND d.key IN({$keys})
-                WHERE id_vac = {$id}";
+           
+            $sql = "DELETE empl_attribs FROM empl_attribs WHERE id_vac = {$id}";
             Yii::app()->db->createCommand($sql)->execute();
-            $sql = "DELETE empl_attribs FROM empl_attribs 
-                INNER JOIN user_attr_dict d ON d.key IN({$keys})
-                INNER JOIN user_attr_dict d1 ON empl_attribs.id_attr = d1.id AND d1.id_par = d.id
-                WHERE id_vac = {$id}";
-            Yii::app()->db->createCommand($sql)->execute();
+            
 
         if( count($insData) )
         {
