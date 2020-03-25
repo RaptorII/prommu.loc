@@ -808,7 +808,6 @@ class Vacancy extends ARModel
               , a.key
             FROM empl_vacations e
             LEFT JOIN empl_attribs a ON e.id = a.id_vac
-            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
             WHERE e.id = {$idvac}
             ORDER BY a.id_attr";
             $attribs = Yii::app()->db->createCommand($sql)->queryAll();
@@ -2220,8 +2219,7 @@ class Vacancy extends ARModel
 
         foreach ($data as $key => $val)
         {
-            var_dump($key);
-            var_dump($val['key']);
+          
             $keys[] = "'" . $val['key'] . "'";
             $res = Yii::app()->db->createCommand()
                 ->select('d.id , d.type, d.key, d.postself')
