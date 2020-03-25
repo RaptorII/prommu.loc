@@ -2231,7 +2231,7 @@ class Vacancy extends ARModel
             // свой вариант оплаты надо писать и значение
             if( $val['key'] == 'paylims' && $val == 164 )
             {
-                $insData[] = array('id_vac' => $id, 'id_attr' => $val, 'key' => $res['key'], 'val' => trim(Yii::app()->getRequest()->getParam('paylimit')), 'crdate' => date('Y-m-d H:i:s'));
+                $insData[] = array('id_vac' => $id, 'id_attr' => $val['id_attr'], 'key' => $res['key'], 'val' => trim(Yii::app()->getRequest()->getParam('paylimit')), 'crdate' => date('Y-m-d H:i:s'));
 
             // атрибут с id
             } elseif ($res['type'] == 3 )
