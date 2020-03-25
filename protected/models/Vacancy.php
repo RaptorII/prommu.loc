@@ -2218,6 +2218,8 @@ class Vacancy extends ARModel
 
         foreach ($data as $key => $val)
         {
+            var_dump($key);
+            var_dump($val['key']);
             $keys[] = "'" . $val['key'] . "'";
             $res = Yii::app()->db->createCommand()
                 ->select('d.id , d.type, d.key, d.postself')
