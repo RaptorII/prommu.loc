@@ -1681,6 +1681,96 @@ if (!share::isApplicant()):
 
         </div>
 
+    <?if (!empty($viData['userInfo']['userAttribs']['6']['val'])   || // vk
+          !empty($viData['userInfo']['userAttribs']['160']['val']) || // ok
+          !empty($viData['userInfo']['userAttribs']['161']['val']) || // mail_ru
+          !empty($viData['userInfo']['userAttribs']['162']['val']) || // google
+          !empty($viData['userInfo']['userAttribs']['7']['val'])   || // fb
+          !empty($viData['userInfo']['userAttribs']['39']['val']))    // any another social network
+    { ?>
+
+        <div class="personal__area--capacity">
+            <div class="personal__area--capacity-name">
+                Социальные сети
+            </div>
+
+            <?php if ($flagOwnProfile) :?>
+                <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>"
+                   class="personal__area--capacity-edit js-g-hashint"
+                   title="Редактировать профиль">
+                </a>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['6']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    ВКонтакте
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['6']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['7']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    Facebook
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['7']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['160']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    Одноклассники
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['160']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['161']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    Meil.ru(Мой Мир)
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['161']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['162']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    Google+
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['162']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+            <? if (!empty($viData['userInfo']['userAttribs']['39']['val'])) :?>
+            <div class="group">
+                <div class="group__about">
+                    Другая социальная сеть
+                </div>
+                <div class="group__info">
+                    <?=$viData['userInfo']['userAttribs']['39']['val']?>
+                </div>
+            </div>
+            <? endif; ?>
+
+        </div>
+
+    <? } ?>
+
         <div class="personal__area--capacity">
             <div class="personal__area--capacity-name">
                 Оценки
@@ -1873,6 +1963,60 @@ if (!share::isApplicant()):
 
             <?endforeach;?>
         </div>
+<?
+/*
+  <?php if($viData['lastJobs']['count']>0): ?>
+      <hr class="ppp__line">
+      <span class="ppp__subtitle">Кол-во отработанных проектов <b class="-green"><?=$viData['lastJobs']['count']?></b></span>
+      <hr class="ppp__line">
+        <?php for($i=0; $n=$cntComments, $i<$n, $i<3; $i++):
+          $work = $viData['lastJobs']['jobs'][$i];
+          if(isset($work)): ?>
+            <div class="ppp__work-item">
+              <div class="ppp-work-item__logo">
+                <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $work['idus']?>">
+                  <img src="<?=Share::getPhoto($work['idus'], 3, $work['logo'])?>" alt="Работодатель <?=$work['name']?> prommu.com" class="js-g-hashint" title="<?=$work['name']?>">
+                </a>
+              </div>
+              <div class="ppp-work-item__data">
+                <a href="<?=MainConfig::$PAGE_VACANCY . DS . $work['id']?>"><?=$work['title']?></a>
+                <span class="ppp-work-item__date"><?=$work['remdate']?></span>
+              </div>
+            </div>
+          <?php endif;
+        endfor; ?>
+    <?php endif; ?>
+*/
+?>
+        <?php if($viData['lastJobs']['count']>0): ?>
+        <div class="personal__area--capacity">
+            <div class="personal__area--capacity-name">
+                Кол-во отработанных проектов
+            </div>
+
+            <div class="personal__area--capacity-data">
+                <b class="-green"><?=$viData['lastJobs']['count']?></b>
+            </div>
+
+            <!--<div class="group">
+                <span class="group__about">Вес:</span>
+                <span class="group__info--view"><?/*=$info['userAttribs'][10]['val']*/?></span>
+            </div>-->
+
+            <?php for($i=0; $n=$cntComments, $i<$n, $i<3; $i++):
+              $work = $viData['lastJobs']['jobs'][$i];
+              if(isset($work)): ?>
+                <div class="group">
+                  <div class="ppp-work-item__data">
+                    <a href="<?=MainConfig::$PAGE_VACANCY . DS . $work['id']?>"><?=$work['title']?></a>
+                    <span class="ppp-work-item__date"><?=$work['remdate']?></span>
+                  </div>
+                </div>
+              <?php endif;
+            endfor; ?>
+
+        </div>
+        <?endif;?>
 
         <div class="personal__area--capacity">
             <div class="personal__area--capacity-name">
@@ -1942,7 +2086,7 @@ if (!share::isApplicant()):
 
             <? if(strlen($name)): ?>
                 <div class="group">
-                    <div class="group__about">Образование:</div>
+                    <div class="group__about">Образование: </div>
                     <div class="group__info"><?=$name?></div>
                 </div>
             <? $empty = false; ?>
