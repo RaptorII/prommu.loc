@@ -804,7 +804,6 @@ class Vacancy extends ARModel
             $sql = "SELECT 
                 a.id_attr
               , a.val
-              , d.name
               , a.key
             FROM empl_vacations e
             LEFT JOIN empl_attribs a ON e.id = a.id_vac
