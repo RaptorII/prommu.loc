@@ -807,8 +807,7 @@ class Vacancy extends ARModel
               , a.key
             FROM empl_vacations e
             LEFT JOIN empl_attribs a ON e.id = a.id_vac
-            WHERE e.id = {$idvac}
-            ORDER BY a.id_attr";
+            WHERE e.id = {$idvac}";
             $attribs = Yii::app()->db->createCommand($sql)->queryAll();
             
             var_dump($attribs);
