@@ -19,7 +19,7 @@
 <div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
 <div class="chat-item">
 	<? if(!$viData['error']): ?>
-		<a href="<?=$sectionList?>" class="chat-item__btn-link"><span><</span> Назад</a>
+		<a href="<?=$sectionList?>" class="chat-item__btn-link mobile-none"><span><</span> Назад</a>
 		<? if( $isNew ): ?>
 			<div class="theme-input">
 				<? if( $viData['themes'] ): ?>

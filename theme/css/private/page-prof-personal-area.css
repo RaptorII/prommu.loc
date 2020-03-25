@@ -93,7 +93,7 @@
     .personal__area .upp__img-block-main {
         min-width: 75px;
         max-width: 75px;
-        margin: unset;
+        margin: 0 auto;
     }
 }
 

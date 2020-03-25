@@ -98,7 +98,7 @@ if(!$rq->getParam('vacancy')):?>
 	<div class="row">
 		<div class="col-xs-12">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
-				<h1 class="smss-result__title">РАСЧЕТ УСЛУГИ</h1>
+				<h1 class="smss-result__title">РАСЧЕТ УСЛУГИ </h1>
 				<table class="smss-result__table">
 					<tr>
 						<td>Количество получателей</td>
