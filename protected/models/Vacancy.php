@@ -2235,11 +2235,11 @@ class Vacancy extends ARModel
             // атрибут с id
             } elseif ($res['type'] == 3 )
             {
-                $insData[] = array('id_vac' => $id, 'id_attr' => $val, 'key' => $res['key'], 'crdate' => date('Y-m-d H:i:s'));
+                $insData[] = array('id_vac' => $id, 'id_attr' => $val['val'], 'key' => $res['key'], 'crdate' => date('Y-m-d H:i:s'));
 
             // атрибут со значением
             } else {
-                $insData[] = array('id_vac' => $id, 'id_attr' => $res['id'], 'key' => $res['key'], 'val' => trim($val), 'crdate' => date('Y-m-d H:i:s'));
+                $insData[] = array('id_vac' => $id, 'id_attr' => $res['id'], 'key' => $res['key'], 'val' => trim($val['val']), 'crdate' => date('Y-m-d H:i:s'));
             } // endif
         } // end foreach
 
