@@ -2236,7 +2236,7 @@ class Vacancy extends ARModel
             // атрибут с id
             } elseif ($res['type'] == 3 )
             {
-                $insData[] = array('id_vac' => $id, 'id_attr' => $val['val'], 'key' => $res['key'], 'crdate' => date('Y-m-d H:i:s'));
+                $insData[] = array('id_vac' => $id, 'id_attr' => $val['id_attr'], 'key' => $res['key'], 'crdate' => date('Y-m-d H:i:s'));
 
             // атрибут со значением
             } else {
