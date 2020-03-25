@@ -2218,15 +2218,15 @@ class Vacancy extends ARModel
 
         foreach ($data as $key => $val)
         {
-            $keys[] = "'" . $key . "'";
+            $keys[] = "'" . $val['key'] . "'";
             $res = Yii::app()->db->createCommand()
                 ->select('d.id , d.type, d.key, d.postself')
                 ->from('user_attr_dict d')
-                ->where('d.key = :key', array(':key' => $key))
+                ->where('d.key = :key', array(':key' => $val['key']))
                 ->queryRow();
 
             // свой вариант оплаты надо писать и значение
-            if( $key == 'paylims' && $val == 164 )
+            if( $val['key'] == 'paylims' && $val == 164 )
             {
                 $insData[] = array('id_vac' => $id, 'id_attr' => $val, 'key' => $res['key'], 'val' => trim(Yii::app()->getRequest()->getParam('paylimit')), 'crdate' => date('Y-m-d H:i:s'));
 
