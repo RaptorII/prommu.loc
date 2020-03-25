@@ -1399,7 +1399,7 @@ class Vacancy extends ARModel
 //             // сохраняем должности
             $postt = $this->saveVacPostsApi($idvac,$inProps);
 //             // сохраняем атрибуты вакансии
-//             $this->saveVacAttribs($idvac);
+            $this->saveVacAttribs($idvac, $inProps['attribs']);
 //             // сохраняем города
             $idcity = $this->saveCitiesApi($idvac, $inProps);
 //             // сохраняем локации
@@ -2210,15 +2210,13 @@ class Vacancy extends ARModel
     }
 
     // сохраняем атрибуты соискателя вакансии
-    private function saveVacAttribs($inId)
+    private function saveVacAttribs($inId, $data)
     {
         $id = $inId;
 
-        $attrs = Yii::app()->getRequest()->getParam('user-attribs');
-
         $insData = array();
 
-        foreach ($attrs as $key => $val)
+        foreach ($data as $key => $val)
         {
             $keys[] = "'" . $key . "'";
             $res = Yii::app()->db->createCommand()
