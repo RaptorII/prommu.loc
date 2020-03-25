@@ -812,17 +812,18 @@ class Vacancy extends ARModel
             WHERE e.id = {$idvac}
             ORDER BY a.id_attr";
             $attribs = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach ($attribs as $keys => $vals)
-            {   
             
-                if($vals['val'] == null){
-                    $vals['val'] = $vals['name'];
-                }
-                unset($vals['name']);
+            var_dump($attribs);
+            // foreach ($attribs as $keys => $vals)
+            // {   
+            
+            //     if($vals['val'] == null){
+            //         $vals['val'] = $vals['name'];
+            //     }
+            //     unset($vals['name']);
                 
-                $data[$val['id']]['attribs'][] = $vals;
-            } 
+            //     $data[$val['id']]['attribs'][] = $vals;
+            // } 
         
             if( !isset($data[$val['id']])) $data[$val['id']] = array('city' => array(), 'posts' => array()) ;
             
