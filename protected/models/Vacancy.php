@@ -779,6 +779,8 @@ class Vacancy extends ARModel
                    e.isavto,
                    e.iswoman,
                    e.repost,
+                   e.agefrom,
+                   e.ageto,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -855,6 +857,9 @@ class Vacancy extends ARModel
             $data[$val['id']]['posts'][0]['id'] = (int)$val['id_attr'];
             $data[$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
+            $data[$val['id']]['ageto'] = (int)$val['ageto'];
+            $data[$val['id']]['agefrom'] = (int)$val['agefrom'];
+           
             
             $data[$val['id']]['repost_vk'] = false;
             $data[$val['id']]['repost_fb'] = false;
