@@ -814,6 +814,8 @@ class UserController extends AppController
             //$data['viData']['projects'] = $model->findRelatedProjects($data['viData']['active']);
             $title = 'Мои вакансии';
             $this->setBreadcrumbs($title, MainConfig::$PAGE_VACANCIES);
+//            display( $data['viData'] );
+//            die('1');
         }
         elseif(Share::isApplicant())
         {

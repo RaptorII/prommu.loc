@@ -79,12 +79,12 @@
 							<div class="evl-vacancies__item-info">
 								<div class="vac-item__info-item">
 									<span>Отклики: <b><?=$v[MainConfig::$VACANCY_RESPONDED]?></b></span>
-                  <span>Утвержденные:
-										<a
-                      class="js-g-hashint"
-                      title="Утвержденные детально"
-                      href="<?=MainConfig::$PAGE_VACANCY . DS . $v['id'] . DS . MainConfig::$VACANCY_APPROVED?>"
-                    ><?=$v[MainConfig::$VACANCY_APPROVED]?></a>
+                                    <span>Утвержденные:
+                                        <a
+                                          class="js-g-hashint"
+                                          title="Утвержденные детально"
+                                          href="<?=MainConfig::$PAGE_VACANCY . DS . $v['id'] . DS . MainConfig::$VACANCY_APPROVED?>"
+                                        ><?=$v[MainConfig::$VACANCY_APPROVED]?></a>
 									</span>
 									<span>Просмотры:
 										<a 
@@ -93,6 +93,13 @@
 											href="<?=MainConfig::$PAGE_ANALYTICS?>"
 											><?=$viData['termostat'][$v['id']]['count']?></a>
 									</span>
+                                    <span>
+                                        <? if ($v['ismoder']): ?>
+                                        Промодерировано
+                                        <? else: ?>
+                                        На модерации
+                                        <? endif; ?>
+                                    </span>
 								</div>
 								<? if($isActiveVacs): ?>
 									<div class="vac-item__info-item">Состояние: <b><?=$v['vacancy_state']?></b></div>

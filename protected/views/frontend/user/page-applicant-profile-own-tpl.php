@@ -1370,9 +1370,11 @@ if (!share::isApplicant()):
                              if ($viData['profile_filling'] != 100) {
                                  ?>
                                  <div class="prmu__popup popup__msg" >
-                                    <h3>Уважаемый соискатель!</h3>
-                                    <p>Для эффективного размещения профиля необходимо заполнить его в полном объёме.</p>
-                                    <p>Информация по незаполнению данных в личном профиле для 100% эффективности.</p>
+                                    <h3>Уважаемый(ая) <?=$attr['firstname']?> <?=$attr['lastname']?>!</h3>
+                                    <p>Сейчас Ваш профиль заполнен на <?= $viData['profile_filling'] ?>%. Чтобы Ваш профиль
+                                       быстро и легко находили Работодатели, рекомендуем заполнить его на 100%.</p>
+                                    <p>Что бы это сделать сейчас - нажмите редактировать профиль, и заполните
+                                        недостающие поля: </p>
                                     <ul>
                                         <? if (empty($viData['userInfo']['userAttribs']['1']['photo']) ||
                                               (count($info['userPhotos']) <= 1)) { ?>
@@ -1846,7 +1848,7 @@ if (!share::isApplicant()):
                 </div>
 
                 <?php if(!$cntComments): ?>
-                    <span class="ppp__subtitle">Отзывы отсутствуют</span>
+                    <span class="upp__subtitle">Отзывы отсутствуют</span>
                     <div class="personal__area--button">
                         <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="btn__orange">
                             Подробнее...

@@ -93,8 +93,13 @@
     .personal__area .upp__img-block-main {
         min-width: 75px;
         max-width: 75px;
+        min-height: 75px;
         margin: 0 auto;
     }
+}
+
+.disable {
+    text-align: center;
 }
 
 .personal__area--indicator {
@@ -185,6 +190,7 @@
 
     .upp__title--date {
         text-align: left;
+        display: table;
     }
 }
 

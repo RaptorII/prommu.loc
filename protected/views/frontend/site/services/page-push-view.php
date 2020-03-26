@@ -2,6 +2,9 @@
   Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/page-push.css');
   Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/page-push.js', CClientScript::POS_END);
   $rq = Yii::app()->getRequest();
+
+  //display($viData['lala']);
+
   if(!$rq->getParam('vacancy')):
   //
   //  Выбор вакансии
