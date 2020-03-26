@@ -475,7 +475,7 @@ class SiteController extends AppController
             if($rq->isAjaxRequest)
             {
               $module = $rq->getParam('module');
-              if(!in_array($module,[1,3,4,5,6,7]))
+              if(!in_array($module,[1,3,4,5,6,7,8]))
               {
                 $viData->errors['access'] = true;
               }

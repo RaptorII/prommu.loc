@@ -1892,16 +1892,23 @@ class Vacancy extends ARModel
         );
 
       $arInsert = [];
-      foreach ($arPostsId as $v)
+      $objAttr = self::getAllAttributes()->items;
+      foreach ($arPostsId as $v1)
       {
-        if(!in_array($v,$arAllPostsId))
+        $key = false;
+        foreach ($objAttr as $v2)
+        {
+          $v2['id']==$v1 && $key=$v2['key'];
+        }
+
+        if(!in_array($v1,$arAllPostsId) || !$key)
         {
           continue;
         }
         $arInsert[] = [
           'id_vac'=>$id,
-          'id_attr'=>$v,
-          'key'=>$v,
+          'id_attr'=>$v1,
+          'key'=>$key,
           'crdate'=>date('Y-m-d H:i:s')
         ];
       }
@@ -5139,6 +5146,13 @@ class Vacancy extends ARModel
         }
       }
     }
+    // Города, локации, периоды
+    $result->data->cities = $this->getCities($id);
+    $result->data->locations = $this->getLocations($id);
+    $result->data->dates = $this->getRealDates(
+      $result->data->cities,
+      $result->data->locations
+    );
     // Работодатель
     $arUser = Share::getUsers([$result->data->id_user]);
     if(!count($arUser))

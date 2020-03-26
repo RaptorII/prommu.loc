@@ -7,7 +7,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
 
-//display($viData->data);
+display($viData->data);
 
 ?>
 <div class="row">
@@ -48,6 +48,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
     </div>
     <div class="personal__area--capacity module">
       <? $this->renderPartial('../user/vacancy/edit/module_7',['viData'=>$viData]) ?>
+    </div>
+    <div class="personal__area--capacity module">
+      <? $this->renderPartial('../user/vacancy/edit/module_8',['viData'=>$viData]) ?>
     </div>
   </div>
 </div>
