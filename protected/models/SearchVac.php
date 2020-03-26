@@ -60,9 +60,6 @@ class SearchVac extends Model
         $data = $this->searchVacations($filter, $props['profile']);
         $data = array_merge($data, $this->getFilterData());
 
-//        display($data);
-//        die();
-
         return $data;
     }
     

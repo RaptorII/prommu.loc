@@ -7,7 +7,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
 
-display($viData->data);
+//display($viData->data);
 
 ?>
 <div class="row">

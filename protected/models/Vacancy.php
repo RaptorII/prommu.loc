@@ -3291,30 +3291,6 @@ class Vacancy extends ARModel
             ->order('ev.id desc')
             ->queryAll();
 
-        //display($arVacs);
-
-        // sql testing
-        /*$sql = "
-            SELECT
-                v.id,
-                v.title,
-                v.repost,
-                v.remdate,
-                ec.id_city
-            FROM
-                empl_vacations v
-            LEFT JOIN empl_city ec ON ec.id_vac = v.id
-            WHERE
-                v.id_user = {$idus}
-                AND (v.status=1)
-                AND (v.ismoder=100)
-                AND v.in_archive=0
-            ORDER BY
-                v.id
-            DESC
-                {$limit}
-        ";*/
-
         return array('vacs'=>$arVacs);
     }
 

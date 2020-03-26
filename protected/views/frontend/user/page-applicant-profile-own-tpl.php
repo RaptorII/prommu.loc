@@ -1097,13 +1097,6 @@ if (!share::isApplicant()):
     $bigSrc = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);
     $src = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);
 
-//    echo date("d.m.Y", strtotime($viData['userInfo']['userAttribs'][1]['mdate']));
-//    display($viData);
-//    display($cookieView);
-//    display($bigSrc);
-//    display($src);
-//    display($viData['userInfo']);
-//    display($viData['userInfo']['rateByUser']);
 ?>
 
 <div class="row">

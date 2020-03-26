@@ -2,8 +2,6 @@
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-premium-page.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-premium-page.js', CClientScript::POS_END);
 
-	//display($viData);
-
 ?>
 <div class="row">
 	<div class="col-xs-12 premium-service">

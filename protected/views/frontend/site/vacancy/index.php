@@ -31,8 +31,6 @@ $this->setBreadcrumbsEx([$viData['vacancy']['title'], $link]);
 $this->setBreadcrumbsEx([$title, $link . DS . $section]);
 $model = new ResponsesEmpl();
 
-//    display($viData); //v
-
 ?>
 <a href="<?=$link?>" class="vacancy_info__back-link"><span><</span> Назад</a>
 <div class="tabs-block">

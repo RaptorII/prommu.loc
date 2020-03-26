@@ -342,8 +342,6 @@ $this->pageTitle = $title;
                 $allAttr = $viData['userAllInfo']['userAttribs'];
                 $isBlocked = Share::$UserProfile->exInfo->isblocked==3;
 
-//                display($viData['userAllInfo']['emplInfo']);
-
                 ?>
                 <br>
                 <div class="ppe__module-title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ </h2></div>
@@ -825,10 +823,6 @@ $this->pageTitle = $title;
                 $isBlocked = Share::$UserProfile->exInfo->isblocked==3;
 
                 $id = $this->ViewModel->isInArray($viData['userAllInfo']['cotype'], 'id', $allInfo['type']);
-
-//                display($viData);
-//                display($allInfo);
-//                display($allAttr);
 
                 ?>
                 <div class="personal__area--capacity">
