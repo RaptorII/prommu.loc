@@ -857,8 +857,8 @@ class Vacancy extends ARModel
             $data[$val['id']]['posts'][0]['id'] = (int)$val['id_attr'];
             $data[$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
-            $data[$val['id']]['ageto'] = (int)$val['ageto'];
-            $data[$val['id']]['agefrom'] = (int)$val['agefrom'];
+            $data[$val['id']]['age_to'] = (int)$val['ageto'];
+            $data[$val['id']]['age_from'] = (int)$val['agefrom'];
            
             
             $data[$val['id']]['repost_vk'] = false;
