@@ -154,6 +154,14 @@ class PrommuOrder {
 
     if ($serviceType == 'email')
     {
+        $logo = Yii::app()->db->createCommand()
+            ->select('photo')
+            ->from('user_photos')
+            ->where('id_user=:id',[':id'=>$id_user])
+            ->queryColumn();
+        $bigSrc = Share::getPhoto($id_user, 3, $logo, 'big');
+        $imgCmpLogo = $_SERVER['SERVER_NAME'].$bigSrc;
+
       // собираем емейлы С
       $arEmails = Yii::app()->db->createCommand()
         ->select('email')
@@ -161,12 +169,40 @@ class PrommuOrder {
         ->where(['in','id_user',$arIdUsers])
         ->queryColumn();
 
-      // для письма нужен заголовок вакансии
+      // для письма нужен заголовок вакансии и оплата
       $vacancyTitle = Yii::app()->db->createCommand()
-        ->select('title')
+        ->select('title, shour, sweek, smonth, svisit')
         ->from('empl_vacations')
         ->where('id=:id',[':id'=>$id_vacancy])
         ->queryScalar();
+
+      if( $vacancyTitle['shour'] > 0 )
+          $payForVacancy = $vacancyTitle['shour'] . ' руб/час';
+      if( $vacancyTitle['sweek'] > 0 )
+          $payForVacancy = $vacancyTitle['sweek'] . ' руб/неделю';
+      if( $vacancyTitle['smonth'] > 0 )
+          $payForVacancy = $vacancyTitle['smonth']. ' руб/месяц';
+      if( $vacancyTitle['svisit'] > 0 )
+          $payForVacancy = $vacancyTitle['svisit']. ' руб/посещение';
+
+      //для письма от Р название должности
+      $sql = "SELECT
+            id_attr, d1.name
+        FROM
+            empl_attribs
+        INNER JOIN
+            user_attr_dict d
+        ON
+            d.id = 110
+        INNER JOIN
+            user_attr_dict d1
+        ON
+            empl_attribs.id_attr = d1.id AND d1.id_par = d.id
+        WHERE
+            id_vac =".$id_vacancy;
+      $positionVacancy = Yii::app()->db->createCommand($sql)->execute();
+
+
       // для письма инфа о Р
       $arEmployer = Yii::app()->db->createCommand()
         ->select('e.name, e.firstname, e.lastname, u.email')
@@ -175,14 +211,18 @@ class PrommuOrder {
         ->where('e.id_user=:id',[':id'=>$id_user])
         ->queryRow();
       // Письмо для С о том, что его приглашают на работу
-      $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
-      Mailing::set(21,
+      //   $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
+      $arEmails[] = 'mikekarpenko@gmail.com'; // Добавляем в рассылку Мих
+      Mailing::set(34,
         [
-          'id_user' => $id_user,
-          'name_user' => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],
-          'company_user' => $arEmployer['name'],
-          'id_vacancy' => $id_vacancy,
-          'title_vacancy' => $vacancyTitle
+          'id_user'          => $id_user,
+          'name_user'        => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],
+          'id_vacancy'       => $id_vacancy,
+          'company_user'     => $arEmployer['name'],
+          'img_company_logo' => $imgCmpLogo,         //add
+          'title_vacancy'    => $vacancyTitle,
+          'position_vacancy' => $positionVacancy,    //add
+          'pay_for_vacancy'  => $payForVacancy,      //add
         ],
         UserProfile::$APPLICANT,
         $arEmails

@@ -78,7 +78,7 @@ if(!$rq->getParam('vacancy')):?>
 //		Выбор соискателей
 ?>
 <?php else: ?>
-	<?php 
+	<?php
 		$appCount = $rq->getParam('users-cnt');
 		$vacancy = $rq->getParam('vacancy');
 		?>
@@ -87,20 +87,15 @@ if(!$rq->getParam('vacancy')):?>
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
 				<h1 class="smss-result__title">ТЕКСТ РАССЫЛКИ</h1>
 				<div class="smss-result__text">
-					Добрый день, <ФИО><br>
+
 					Работодатель <span><?=$viData['user']['name']?>
 					<a href="<?=Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['user']['id']?>">
 						<img src="<?=$viData['user']['src']?>">
-					</a></span><br> приглашает Вас на вакансию <a href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">&laquo;<?=$viData['vac']['title']?>&raquo;</a>
+					</a></span><br> Приглашает на вакансию <a href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">&laquo;<?=$viData['vac']['title']?>&raquo;</a>
 					<? if(sizeof($viData['vac']['posts'])==1): ?>
 						на должность:<br><?=reset($viData['vac']['posts'])['name']?><br>
-					<? else: ?>
-						на должности:<br> <?
-						foreach ($viData['vac']['posts'] as $k => $v)
-								echo  ($k+1) . ') ' . $v['name'] . ($k<(sizeof($viData['vac']['posts'])-1)?';<br>':'');
-						?>
-					<? endif; ?>
-						Заработная плата:<br> 
+                    <? endif; ?>
+						Заработная плата:<br>
 						<? if( $viData['vac']['salary_hour'] > 0 )
 							echo '- ' . $viData['vac']['salary_hour'] . ' руб/час<br/>';
 						if( $viData['vac']['salary_week'] > 0 )
@@ -110,7 +105,7 @@ if(!$rq->getParam('vacancy')):?>
 						if( $viData['vac']['salary_visit'] > 0 )
 							echo '- ' . $viData['vac']['salary_visit'] . ' руб/посещение<br/>';
 						?><br>
-						Если интересно - за более детальной информацией переходи по <a class="smss-result__text-link" href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">ссылке</a>
+						За более детальной информацией переходи по <a class="smss-result__text-link" href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">ссылке</a>
 				</div>
 				</br></br>
 				<h1 class="smss-result__title">Стоимость услуги</h1>

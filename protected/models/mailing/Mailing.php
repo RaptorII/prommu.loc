@@ -52,116 +52,117 @@ class Mailing extends CActiveRecord
 	public static function mainParams()
 	{
 		return array(
-							0 => array(
-										'name' => "#SITE#",
-										'pattern' => "/#SITE#/",
-										'value' => Subdomain::site(),
-										'description' => "Корень сайта"
-									),
-							1 => array(
-										'name' => "#PAGE_PROFILE_COMMON#",
-										'pattern' => "/#PAGE_PROFILE_COMMON#/",
-										'value' => MainConfig::$PAGE_PROFILE_COMMON,
-										'description' => "Раздел 'Анкеты'"
-									),
-							2 => array(
-										'name' => "#PAGE_USER_CHATS_LIST#",
-										'pattern' => "/#PAGE_USER_CHATS_LIST#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_CHATS_LIST,
-										'description' => "Раздел профиля пользователя 'Чаты'"
-									),
-							3 => array(
-										'name' => "#PAGE_USER_VACANCY#",
-										'pattern' => "/#PAGE_USER_VACANCY#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY,
-										'description' => "Страница вакансии в публичной части"
-									),
-							4 => array(
-										'name' => "#PAGE_FEEDBACK#",
-										'pattern' => "/#PAGE_FEEDBACK#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_FEEDBACK,
-										'description' => "Страница обратной связи в публичной части"
-									),
-							5 => array(
-										'name' => "#PAGE_ADMIN_USER_VACANCY#",
-										'pattern' => "/#PAGE_ADMIN_USER_VACANCY#/",
-										'value' => Subdomain::site() . '/admin/site/VacancyEdit',
-										'description' => "Страница вакансии в административной части"
-									),
-							6 => array(
-										'name' => "#PAGE_USER_RESPONCES#",
-										'pattern' => "/#PAGE_USER_RESPONCES#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_RESPONSES,
-										'description' => "Страница отзывов пользователя"
-									),
-							7 => array(
-										'name' => "#PAGE_USER_VACANCY_EDIT#",
-										'pattern' => "/#PAGE_USER_VACANCY_EDIT#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY_EDIT,
-										'description' => "Страница редактирования вакансии в публичной части"
-									),
-							8 => array(
-										'name' => "#PAGE_SERVICES_PREMIUM#",
-										'pattern' => "/#PAGE_SERVICES_PREMIUM#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_PREMIUM,
-										'description' => "Страница услуги 'Премиум'"
-									),
-							9 => array(
-										'name' => "#PAGE_SERVICES_GEO#",
-										'pattern' => "/#PAGE_SERVICES_GEO#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_GEO,
-										'description' => "Страница услуги 'ГЕО'"
-									),
-							10 => array(
-										'name' => "#PAGE_SERVICES_MEDICAL#",
-										'pattern' => "/#PAGE_SERVICES_MEDICAL#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_MEDICAL,
-										'description' => "Страница услуги 'Медкнига'"
-									),
-							11 => array(
-										'name' => "#PAGE_SERVICES_OUTSTAFFING#",
-										'pattern' => "/#PAGE_SERVICES_OUTSTAFFING#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_OUTSTAFFING,
-										'description' => "Страница услуги 'Аутстаф'"
-									),
-							12 => array(
-										'name' => "#PAGE_SETRATE#",
-										'pattern' => "/#PAGE_SETRATE#/",
-										'value' => Subdomain::site() . MainConfig::$PAGE_SETRATE,
-										'description' => "Страница выставления рейтинга"
-									),
-							13 => array(
-										'name' => "#PAGE_RATE#",
-										'pattern' => "/#PAGE_RATE#/",
-										'value' => Subdomain::site() . DS . MainConfig::$PAGE_RATE,
-										'description' => "Страница просмотра рейтинга"
-									),
-              14 => array(
-                  'name' => "#PAGE_ADMIN_EDIT_PROFILE_APP#",
-                  'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_APP#/",
-                  'value' => Subdomain::site() . '/admin/PromoEdit',
-                  'description' => "Страница редактирования профиля соискателя(без ID)"
-              ),
-              15 => array(
+            0 => array(
+                'name' => "#SITE#",
+                'pattern' => "/#SITE#/",
+                'value' => Subdomain::site(),
+                'description' => "Корень сайта"
+            ),
+            1 => array(
+                'name' => "#PAGE_PROFILE_COMMON#",
+                'pattern' => "/#PAGE_PROFILE_COMMON#/",
+                'value' => MainConfig::$PAGE_PROFILE_COMMON,
+                'description' => "Раздел 'Анкеты'"
+            ),
+            2 => array(
+                'name' => "#PAGE_USER_CHATS_LIST#",
+                'pattern' => "/#PAGE_USER_CHATS_LIST#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_CHATS_LIST,
+                'description' => "Раздел профиля пользователя 'Чаты'"
+            ),
+            3 => array(
+                'name' => "#PAGE_USER_VACANCY#",
+                'pattern' => "/#PAGE_USER_VACANCY#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY,
+                'description' => "Страница вакансии в публичной части"
+            ),
+            4 => array(
+                'name' => "#PAGE_FEEDBACK#",
+                'pattern' => "/#PAGE_FEEDBACK#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_FEEDBACK,
+                'description' => "Страница обратной связи в публичной части"
+            ),
+            5 => array(
+                'name' => "#PAGE_ADMIN_USER_VACANCY#",
+                'pattern' => "/#PAGE_ADMIN_USER_VACANCY#/",
+                'value' => Subdomain::site() . '/admin/site/VacancyEdit',
+                'description' => "Страница вакансии в административной части"
+            ),
+            6 => array(
+                'name' => "#PAGE_USER_RESPONCES#",
+                'pattern' => "/#PAGE_USER_RESPONCES#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_RESPONSES,
+                'description' => "Страница отзывов пользователя"
+            ),
+            7 => array(
+                'name' => "#PAGE_USER_VACANCY_EDIT#",
+                'pattern' => "/#PAGE_USER_VACANCY_EDIT#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY_EDIT,
+                'description' => "Страница редактирования вакансии в публичной части"
+            ),
+            8 => array(
+                'name' => "#PAGE_SERVICES_PREMIUM#",
+                'pattern' => "/#PAGE_SERVICES_PREMIUM#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_PREMIUM,
+                'description' => "Страница услуги 'Премиум'"
+            ),
+            9 => array(
+                'name' => "#PAGE_SERVICES_GEO#",
+                'pattern' => "/#PAGE_SERVICES_GEO#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_GEO,
+                'description' => "Страница услуги 'ГЕО'"
+            ),
+            10 => array(
+                'name' => "#PAGE_SERVICES_MEDICAL#",
+                'pattern' => "/#PAGE_SERVICES_MEDICAL#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_MEDICAL,
+                'description' => "Страница услуги 'Медкнига'"
+            ),
+            11 => array(
+                'name' => "#PAGE_SERVICES_OUTSTAFFING#",
+                'pattern' => "/#PAGE_SERVICES_OUTSTAFFING#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_OUTSTAFFING,
+                'description' => "Страница услуги 'Аутстаф'"
+            ),
+            12 => array(
+                'name' => "#PAGE_SETRATE#",
+                'pattern' => "/#PAGE_SETRATE#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_SETRATE,
+                'description' => "Страница выставления рейтинга"
+            ),
+            13 => array(
+                'name' => "#PAGE_RATE#",
+                'pattern' => "/#PAGE_RATE#/",
+                'value' => Subdomain::site() . DS . MainConfig::$PAGE_RATE,
+                'description' => "Страница просмотра рейтинга"
+            ),
+            14 => array(
+                'name' => "#PAGE_ADMIN_EDIT_PROFILE_APP#",
+                'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_APP#/",
+                'value' => Subdomain::site() . '/admin/PromoEdit',
+                'description' => "Страница редактирования профиля соискателя(без ID)"
+            ),
+            15 => array(
                 'name' => "#PAGE_ADMIN_EDIT_PROFILE_EMP#",
                 'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_EMP#/",
                 'value' => Subdomain::site() . '/admin/EmplEdit',
                 'description' => "Страница редактирования профиля работодателя(без ID)"
-              ),
-              16 => array(
+            ),
+            16 => array(
                 'name' => "#PAGE_USER_VACANCY_REFUSED#",
                 'pattern' => "/#PAGE_USER_VACANCY_REFUSED#/",
                 'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY . '#ID_VACANCY#' . DS . MainConfig::$VACANCY_REFUSED,
                 'breplace' => true,
                 'description' => "Информационная страница вакансии 'Отклоненные'"
-              ),
-              17 => array(
+            ),
+            17 => array(
                 'name' => "#PAGE_USER_PROFILE#",
                 'pattern' => "/#PAGE_USER_PROFILE#/",
                 'value' => Subdomain::site() . MainConfig::$PAGE_PROFILE,
                 'description' => "Страница личного профиля"
-              )
-				);
+            ),
+
+        );
 	}
 	/**
 	 * @param $status - bool
@@ -391,10 +392,10 @@ class Mailing extends CActiveRecord
 				if($v['breplace']==true)
 				{
 					$arEventParams[$k]['value'] = preg_replace(
-																					$arPatterns, 
-																					$arValues, 
-																					$arEventParams[$k]['value']
-																				);
+                        $arPatterns,
+                        $arValues,
+                        $arEventParams[$k]['value']
+                    );
 					$arPatterns[] = $v['pattern'];
 					$arValues[] = $arEventParams[$k]['value'];
 				}
@@ -431,7 +432,6 @@ class Mailing extends CActiveRecord
 		$arRes = Cache::getData(self::$cacheID);
 		if($arRes['data']===false)
 			$arRes = self::setCacheData();
-		
 		return $arRes['data'];
 	}
 	/**

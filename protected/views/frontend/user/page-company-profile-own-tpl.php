@@ -46,7 +46,6 @@ $id = $viData['userInfo']['id_user'];
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
 
 
-
 if(!in_array(Share::$UserProfile->type, [2,3])): ?>
 <?
 $title = 'Профиль работодателя - ' . $viData['userInfo']['name'];
