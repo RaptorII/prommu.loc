@@ -175,7 +175,7 @@ class PrommuOrder {
         ->from('empl_vacations')
         ->where('id=:id',[':id'=>$id_vacancy])
         ->queryScalar();
-die('111');
+
       if( $vacancyTitle['shour'] > 0 )
           $payForVacancy = $vacancyTitle['shour'] . ' руб/час';
       if( $vacancyTitle['sweek'] > 0 )
