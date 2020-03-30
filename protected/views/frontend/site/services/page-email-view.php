@@ -133,6 +133,7 @@ if(!$rq->getParam('vacancy')):?>
 				<input type="hidden" name="users" value="<?=$rq->getParam('users')?>">
 				<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
 				<input type="hidden" name="service" value="email-invitation">
+				<input type="hidden" name="price" value="<?=$viData['price']?>">
 			</form>
 		</div>
 	</div>

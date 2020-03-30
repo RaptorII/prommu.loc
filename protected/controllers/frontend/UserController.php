@@ -1150,7 +1150,9 @@ class UserController extends AppController
 
             case 'email-invitation':
                 if($price > 0)
-                { // оплата услуги
+                {
+                  // оплата услуги
+                  $price = $rq->getParam('price');
                   $data = $model->orderEmail($vac, $price, $emp);
                   if($rq->getParam('personal')==='individual') // физ лица
                   {
