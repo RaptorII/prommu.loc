@@ -4699,7 +4699,11 @@ class Vacancy extends ARModel
         {
             $h = floor($time / 60);
             $m = $time - $h * 60;
-            $result = sprintf('%d:%02d', $h, $m);
+            $result = sprintf('%02d:%02d', $h, $m);
+        }
+        else
+        {
+          $result = '00:00';
         }
         return $result;
     }
@@ -4941,7 +4945,7 @@ class Vacancy extends ARModel
    * @param $data - object
    * Редактирование вакансии
    */
-  public function setVacancy($id, $id_user, $module, $data)
+  public function setVacancy($id, $id_user, $module, $data=false)
   {
     $arUpdate = [];
     if($module==1)
@@ -5019,6 +5023,11 @@ class Vacancy extends ARModel
         'cardPrommu' => $data->cardPrommu,
         'card' => $data->card
       ];
+    }
+    if($module==8)
+    {
+      $model = new City();
+      $model->changeVacancyLocations($id, $id_user);
     }
 
     if(count($arUpdate))

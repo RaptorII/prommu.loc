@@ -16,7 +16,7 @@ class VacancyEdit
     if($module==1)
     {
       // Заголовок
-      $value = VacancyCheckFields::checkTitle($rq->getParam('title'));
+      $value = VacancyCheckFields::checkTextField($rq->getParam('title'));
       $value ? $object->data->title=$value : $object->errors['title']=true;
       // Должность
       $value = VacancyCheckFields::checkPost($rq->getParam('post'));

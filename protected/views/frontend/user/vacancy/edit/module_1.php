@@ -63,7 +63,7 @@
         <? if($viData->errors['post']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
         <? endif; ?>
-        <div class="form__field-input form__field-select prmu-required" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' data-search="true" id="posts">
+        <div class="form__field-input form__field-select prmu-required" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' id="posts">
           <select name="post[]">
             <? foreach ($viData->posts as $v): ?>
               <option value="<?=$v['id']?>"<?=(in_array($v['id'],$viData->data->post)?' selected':'')?>><?=$v['name']?></option>

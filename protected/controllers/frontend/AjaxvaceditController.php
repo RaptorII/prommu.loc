@@ -70,19 +70,6 @@ class AjaxVacEditController extends AppController
 
 
     /**
-     * Сохраняем данные локации
-     */
-    public function actionLocationdatasave()
-    {
-        $data = (new City)->saveLocationInfo();
-
-        echo CJSON::encode($data);
-        Yii::app()->end();
-    }
-
-
-
-    /**
      * Получаем данные города определенной вакансии
      */
     public function actionGetvecityblockdata()

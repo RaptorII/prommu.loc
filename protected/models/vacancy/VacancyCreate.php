@@ -113,7 +113,7 @@ class VacancyCreate
     if($step==1)
     {
       // Заголовок
-      $value = VacancyCheckFields::checkTitle($rq->getParam('title'));
+      $value = VacancyCheckFields::checkTextField($rq->getParam('title'));
       $value ? $this->data->title=$value : $this->errors['title']=true;
       // Должность
       $value = VacancyCheckFields::checkPost($rq->getParam('post'));

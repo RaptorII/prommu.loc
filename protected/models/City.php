@@ -427,167 +427,229 @@ class City extends CActiveRecord
     }
 
 
-
-    /**
-     * Сохраняем данные локации
-     */
-    public function saveLocationInfo()
+  /**
+   * @param $id_vacancy
+   * @param $id_user
+   * @return bool
+   * Сохраняем данные локации
+   */
+    public function changeVacancyLocations($id_vacancy, $id_user)
     {
-        $idvac = Yii::app()->session['editVacId'];
-        $idloc = filter_var(Yii::app()->getRequest()->getParam('idloc'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $idcity = filter_var(Yii::app()->getRequest()->getParam('idcity'), FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $addr = filter_var(Yii::app()->getRequest()->getParam('addr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $metro = Yii::app()->getRequest()->getParam('metro');
-        $bdate = Yii::app()->getRequest()->getParam('bdate');
-        $edate = Yii::app()->getRequest()->getParam('edate');
-        $btime = Yii::app()->getRequest()->getParam('btime');
-        $etime = Yii::app()->getRequest()->getParam('etime');
-
-
-        // проверка владения вакансией
-        $id = $idloc == 'new' ? 0 : $idloc;
-        $iduser = Share::$UserProfile->exInfo->id;
-        $sql = "SELECT v.id FROM empl_vacations v
-                INNER JOIN empl_locations l ON l.id_vac = v.id AND l.id = {$id} OR 0 = {$id} 
-                WHERE v.id_user = {$iduser} AND v.id = {$idvac}";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryRow();
-
-        // вакансия редактируется
-        $message = 'Ошибка сохранения локации';
-        $error = -100;
-
-        try
+      $access = Vacancy::hasAccess($id_vacancy, $id_user);
+      if(!$access)
+      {
+        return false; // нет доступа
+      }
+      $rq = Yii::app()->getRequest();
+      $event = $rq->getParam('event');
+      $name = VacancyCheckFields::checkTextField($rq->getParam('name'));
+      $index = VacancyCheckFields::checkTextField($rq->getParam('index'));
+      if($event=='create_loc') // создание
+      {
+        if(!$name || !$index)
         {
-            // вакансия не пренадлежит пользователю
-            if( !$res['id'] ) throw new Exception($message, -100);
-//            throw new Exception($message, -100);
-
-
-            // если такой город уже есть
-            if( empty($name) || empty($addr) )
-            {
-                throw new Exception("Неправильно заполнены поля локации", -101);
-            }
-            else
-            {
-
-                // новый блок города
-                if( $idloc == 'new' )
-                {
-                    /** @var $Q1 CDbCommand */
-                    $Q1 = Yii::app()->db->createCommand()
-                        ->select('IFNULL(MAX(l.npp), 0) npp ')
-                        ->from('empl_locations l')
-                        ->where('l.id_vac = :idvac AND l.id_city = :idcity', array(':idvac'=>"{$idvac}", ':idcity'=>$idcity));
-                    $res = $Q1->queryScalar();
-
-                    $fields = array(
-                        'id_vac' => $idvac,
-                        'id_city' => $idcity,
-                        'npp' => $res+1,
-                        'name' => $name,
-                        'addr' => $addr,
-                    );
-                    if(!empty($metro)){
-                        $arMetros = explode(',', $metro);
-                        $fields['id_metro'] = $arMetros[0]; // записываем первую станцию
-                        if(sizeof($arMetros)>1){
-                            $fields['id_metros'] = substr($metro, (strlen($arMetros[0]) + 1)); // остальные записываем в одно поле через запятую
-                        }
-                        else{
-                            $fields['id_metros'] = '';
-                        }
-                    }
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('empl_locations', $fields);
-
-                    $id = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-
-
-                // редактируем локацию
-                } else {
-                    $fields = array(
-                        'name' => $name,
-                        'addr' => $addr,
-                    );
-                    if(!empty($metro)){
-                        $arMetros = explode(',', $metro);
-                        $fields['id_metro'] = $arMetros[0]; // записываем первую станцию
-                        if(sizeof($arMetros)>1){
-                            $fields['id_metros'] = substr($metro, (strlen($arMetros[0]) + 1)); // остальные записываем в одно поле через запятую
-                        }
-                        else{
-                            $fields['id_metros'] = '';
-                        }
-                    }
-                    else{
-                        $fields['id_metro'] = 0;
-                        $fields['id_metros'] = '';
-                    }
-                    $res = Yii::app()->db->createCommand()
-                        ->update('empl_locations', $fields, 'id = :id', array(':id' => $idloc));
-                } // endif
-
-
-                // удаляем периоды локации
-                $this->savePeriods(array($idloc == 'new' ? $id : $idloc, $bdate, $edate, $btime, $etime));
-
-                $error = 0;
-            } // endif
+          return false; // нет такого города
         }
-        catch (Exception $e) {
-            $error = $e->getCode();
-            $message = $e->getMessage();
-        } // endtry
+        $arCity = Yii::app()->db->createCommand()
+          ->from('empl_city')
+          ->where(
+            'id_vac=:id_vac AND id=:id',
+            [
+              ':id'=>$rq->getParam('city_id'),
+              ':id_vac'=>$id_vacancy
+            ]
+          )
+          ->limit(1)
+          ->queryRow();
 
-
-        if( $error )
+        if(
+          (!$arCity) // не найден город
+          ||
+          (
+            (strtotime($arCity['bdate'])>strtotime($rq->getParam('bdate')))
+            ||
+            (strtotime($arCity['edate'])<strtotime($rq->getParam('edate')))
+          ) // период не соответствует
+        )
         {
-            return array('error' => $error, 'message' => $message);
+          return false;
         }
-        else
+
+        $sort = Yii::app()->db->createCommand()
+          ->select('IFNULL(MAX(npp), 0) npp')
+          ->from('empl_locations')
+          ->where(
+            'id_vac=:idvac AND id_city=:idcity',
+            [':idvac'=>$id_vacancy,':idcity'=>$arCity['id']]
+          )
+          ->queryScalar();
+
+        Yii::app()->db->createCommand()
+          ->insert('empl_locations',[
+            'id_vac' => $id_vacancy,
+            'id_city' => $arCity['id'],
+            'id_metro' => 0,
+            'id_metros' => '',
+            'npp' => $sort+1,
+            'name' => $name,
+            'addr' => $index
+          ]);
+        $id_loc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+
+        $this->savePeriods([
+          'id_loc' => $id_loc,
+          'bdate' => $rq->getParam('bdate'),
+          'edate' => $rq->getParam('edate'),
+          'btime' => $rq->getParam('btime'),
+          'etime' => $rq->getParam('etime')
+        ]);
+        return true;
+      }
+      if($event=='edit_loc') // редактирование
+      {
+        $id_loc = intval($rq->getParam('location'));
+        if(!$name || !$index)
         {
-            return array('error' => 100, 'message' => 'Данные успешно сохранены', 'id' => $id);
-        } // endif
+          return false; // нет такого города
+        }
+        $arCity = Yii::app()->db->createCommand()
+          ->from('empl_city')
+          ->where(
+            'id_vac=:id_vac AND id=:id',
+            [
+              ':id'=>$rq->getParam('city_id'),
+              ':id_vac'=>$id_vacancy
+            ]
+          )
+          ->limit(1)
+          ->queryRow();
+
+        if(
+          (!$arCity) // не найден город
+          ||
+          (
+            (strtotime($arCity['bdate'])>strtotime($rq->getParam('bdate')))
+            ||
+            (strtotime($arCity['edate'])<strtotime($rq->getParam('edate')))
+          ) // период не соответствует
+        )
+        {
+          return false;
+        }
+
+        Yii::app()->db->createCommand()
+          ->update('empl_locations', ['name'=>$name, 'addr'=>$index], 'id=:id', [':id'=>$id_loc]);
+
+        $this->savePeriods([
+          'id_loc' => $id_loc,
+          'bdate' => $rq->getParam('bdate'),
+          'edate' => $rq->getParam('edate'),
+          'btime' => $rq->getParam('btime'),
+          'etime' => $rq->getParam('etime')
+        ],true);
+        return true;
+      }
+      if($event=='delete_loc') // удаление
+      {
+        $location = intval($rq->getParam('location'));
+        $result = Yii::app()->db->createCommand()->delete(
+          'empl_locations',
+          'id=:id AND id_vac=:id_vac',
+          [':id'=>$location, ':id_vac'=>$id_vacancy]
+        );
+        if(!$result)
+        {
+          return false;
+        }
+        Yii::app()->db->createCommand()->delete(
+          'emplv_loc_times',
+          'id_loc=:id_loc',
+          [':id_loc'=>$location]
+        );
+        return true;
+      }
+      if($event=='create_city') // добавление города
+      {
+        $city = intval($rq->getParam('id_city'));
+        $arCity = Yii::app()->db->createCommand()
+          ->from('empl_city')
+          ->where('id_vac=:id_vac', [':id_vac'=>$id_vacancy])
+          ->limit(1)
+          ->queryRow();
+
+        if(!$arCity || !$city) // не найден ни один город у вакансии, чего быть не должно. Либо новый код города некорректный
+        {
+          return false;
+        }
+        unset($arCity['id']);
+        $arCity['id_city'] = $city;
+        Yii::app()->db->createCommand()->insert('empl_city',$arCity);
+        return true;
+      }
+      if($event=='delete_city') // удаление города
+      {
+        $cityCnt = Yii::app()->db->createCommand()
+          ->select('COUNT(id)')
+          ->from('empl_city')
+          ->where('id_vac=:id_vac', [':id_vac'=>$id_vacancy])
+          ->queryScalar();
+
+        if($cityCnt==1) // удаляем только если есть еще один город
+        {
+          return false;
+        }
+
+        $city = intval($rq->getParam('id_city'));
+        Yii::app()->db->createCommand()->delete(
+          'empl_city',
+          'id_vac=:id_vac AND id_city=:id_city',
+          [':id_vac'=>$id_vacancy, ':id_city'=>$city]
+        );
+        return true;
+      }
+      if($event=='change_city') // изменение города
+      {
+        $oldCity = intval($rq->getParam('old_id_city'));
+        $newCity = intval($rq->getParam('new_id_city'));
+        $sql = "UPDATE `empl_city` SET `id_city`={$newCity} WHERE `id_vac`={$id_vacancy} AND `id_city`={$oldCity}";
+        Yii::app()->db->createCommand($sql)->execute();
+        return true;
+      }
+      return false;
     }
 
 
     /**
      * Сохраняем периоды
      */
-     private function savePeriods($inPer)
+     private function savePeriods($arr, $isEdit=false)
      {
-         // удаляем периоды
-         $res = Yii::app()->db->createCommand()->delete('emplv_loc_times', '`id_loc`=:idloc', array(':idloc' => $inPer[0]));
+       if($isEdit) // изменение
+       {
+         Yii::app()->db->createCommand()
+           ->delete('emplv_loc_times', 'id_loc=:id', [':id'=>$arr['id_loc']]);
+       }
 
-         $npp = 1;
-         foreach ($inPer[1] ?: array() as $key => $val)
-         {
-             if( empty($inPer[4][$key]) || empty($inPer[1][$key]) || empty($inPer[2][$key]) || empty($inPer[3][$key]) )
-                 throw new Exception("Неправильное заполнения периодов локации", -100);
+       $sort = Yii::app()->db->createCommand()
+         ->select('IFNULL(MAX(npp), 0) npp')
+         ->from('emplv_loc_times')
+         ->where('id_loc=:id_loc', [':id_loc'=>$arr[0]['id_loc']])
+         ->queryScalar();
 
-             // сохраняем новые
-             $arr = explode(':', $inPer[3][$key]);
-             $btime = $arr[0] * 60 + $arr[1];
-             $arr = explode(':', $inPer[4][$key]);
-             $etime = $arr[0] * 60 + $arr[1];
+       $arInsert = [];
+       $sort++;
+       $arBTime = explode(':', $arr['btime']);
+       $arETime = explode(':', $arr['etime']);
+       $arInsert[] = [
+         'id_loc' => $arr['id_loc'],
+         'npp' => $sort,
+         'bdate' => date("Y-m-d 00:00:00", strtotime($arr['bdate'])),
+         'edate' => date("Y-m-d 00:00:00", strtotime($arr['edate'])),
+         'btime' => $arBTime[0] * 60 + $arBTime[1],
+         'etime' => $arETime[0] * 60 + $arETime[1]
+       ];
 
-
-             $res = Yii::app()->db->createCommand()
-                 ->insert('emplv_loc_times', array(
-                     'id_loc' => $inPer[0],
-                     'npp' => $npp,
-                     'bdate' => date("Y-m-d H:i:s", strtotime($inPer[1][$key])),
-                     'edate' => date("Y-m-d H:i:s", strtotime($inPer[2][$key])),
-                     'btime' => $btime,
-                     'etime' => $etime,
-                 ));
-
-             $npp++;
-         } // end foreach
+       Share::multipleInsert(['emplv_loc_times'=>$arInsert]);
      }
 
 

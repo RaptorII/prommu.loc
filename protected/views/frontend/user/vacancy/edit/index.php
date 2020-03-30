@@ -3,12 +3,10 @@ $bUrl = Yii::app()->baseUrl;
 $gcs = Yii::app()->getClientScript();
 $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'private/page-prof-personal-area.css');
 $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'vacancy/edit.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
-
-//display($viData->data);
-
 ?>
 <div class="row">
   <div class="col-xs-12 col-sm-6">

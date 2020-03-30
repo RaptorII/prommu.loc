@@ -466,15 +466,19 @@ class SiteController extends AppController
         if(isset($id)) // страница конкретной вакансии
         {
           $section = $rq->getParam('section');
+          $module = $rq->getParam('module');
           $view = '/user/vacancy/edit/index';//$this->ViewModel->pageVacancy;
           $model = new Vacancy;
+          if($rq->isAjaxRequest && $module==8) // локации редактируем не так, как остальные модули
+          {
+            $model->setVacancy($id, Share::$UserProfile->id, $module);
+          }
           $viData = $model->getVacancy($id);
 
           if($viData->is_owner)
           {
             if($rq->isAjaxRequest)
             {
-              $module = $rq->getParam('module');
               if(!in_array($module,[1,3,4,5,6,7,8]))
               {
                 $viData->errors['access'] = true;
@@ -482,7 +486,7 @@ class SiteController extends AppController
               else
               {
                 new VacancyEdit($viData);
-                if(!count($viData->errors)) // ошибок нет
+                if(!count($viData->errors) && $module!=8) // ошибок нет
                 {
                   $model->setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
                 }

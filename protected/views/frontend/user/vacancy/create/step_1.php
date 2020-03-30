@@ -28,7 +28,7 @@
         <? if($model->errors['post']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
         <? endif; ?>
-        <div class="form__field-input form__field-select prmu-required<?=($model->errors['post']?' prmu-error':'')?>" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' data-search="true" id="posts">
+        <div class="form__field-input form__field-select prmu-required<?=($model->errors['post']?' prmu-error':'')?>" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' id="posts">
           <select name="post[]">
             <option value="" selected="selected" disabled="disabled"></option>
             <? foreach ($model->dataOther->posts as $v): ?>
@@ -48,7 +48,7 @@
         <? if($model->errors['city']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
         <? endif; ?>
-        <div class="form__field-input form__field-select prmu-required<?=($model->errors['city']?' prmu-error':'')?>" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' data-ajax="<?=MainConfig::$AJAX_GET_CITIES?>" id="cities">
+        <div class="form__field-input form__field-select prmu-required<?=($model->errors['city']?' prmu-error':'')?>" data-params='{"parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}' id="cities">
           <select name="city[]" multiple>
             <? if($model->dataOther->arSelectCity): ?>
               <? foreach ($model->dataOther->arSelectCity as $id => $v): ?>
@@ -65,7 +65,7 @@
     ?>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Дата <span class="text__red">*</span></label>
-      <div class="form__field-content form__content-flex form__content-hint" data-params='{"minDate":"0","maxDate":"+2M"}' id="period">
+      <div class="form__field-content form__content-flex form__content-hint" id="period">
         <div class="form__content-2 form__content-indent">
           <? if($model->errors['bdate']): ?>
             <span class="prmu-error-mess">Поле обязательно к заполнению</span>

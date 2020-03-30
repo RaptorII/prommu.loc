@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /*
 *
 * Проверка обязательных полей
@@ -408,9 +408,10 @@ var InitSelect = (function () {
   //
   InitSelect.prototype.init = function ()
   {
-    var self = this;
+    var self = this,
+        params = arguments[0];
 
-    self.main = $(arguments[0])[0];
+    self.main = (typeof params.selector=='object' ? params.selector : $(params.selector)[0]);
     self.select = $(self.main).find('select')[0];
 
     if(!$(self.main).is('*') || !$(self.select).is('*'))
@@ -419,7 +420,22 @@ var InitSelect = (function () {
       return;
     }
 
-    self.data = self.main.dataset;
+    $(self.select).hide();
+
+    self.data = typeof self.main.dataset=='object' ? self.main.dataset : {};
+
+    self.data.search = (params.search!=undefined ? true : false);
+    if(params.ajax!=undefined)
+    {
+      self.data.ajax = params.ajax;
+      self.data.search = true;
+      self.ajaxTimer = false;
+    }
+    self.bAjax = false;
+    self.data.selectedValsInOtherSelect = params.selectedValsInOtherSelect!=undefined
+      ? params.selectedValsInOtherSelect
+      : [];
+
     self.selected = [];
     $.each($(self.select).find('option:selected'), function(){
       if($(this).is(':selected'))
@@ -427,17 +443,6 @@ var InitSelect = (function () {
         self.setSelected($(this).val(),$(this).text());
       }
     });
-
-    if(self.data.search!=undefined)
-    {
-      self.data.search = true;
-    }
-    if(self.data.ajax!=undefined)
-    {
-      self.data.search = true;
-      self.ajaxTimer = false;
-    }
-    self.bAjax = false;
 
     $(document).on('click',function(e){
       if($(e.target).is(self.main)) // по блоку селекта
@@ -512,7 +517,10 @@ var InitSelect = (function () {
                 $.each(
                   result,
                   function(){
-                    arL.push({id:this.id, name:this.name})
+                    if(!self.data.selectedValsInOtherSelect.includes(this.id))
+                    {
+                      arL.push({id:this.id, name:this.name});
+                    }
                   }
                 );
                 self.buildList(arL);
@@ -540,7 +548,10 @@ var InitSelect = (function () {
                 $.each(
                   result,
                   function(){
-                    arL.push({id:this.id, name:this.name})
+                    if(!self.data.selectedValsInOtherSelect.includes(this.id))
+                    {
+                      arL.push({id:this.id, name:this.name});
+                    }
                   }
                 );
                 self.buildList(arL);
@@ -673,7 +684,7 @@ var InitSelect = (function () {
 
     if(!self.select.multiple) // если селект не мультипл
     {
-      let option = $(self.select).find('option[value=' + id + ']'),
+      let option = $(self.select).find('option[value="' + id + '"]'),
         selected = $(self.main).find('.form__select-selected');
 
       self.selected = [];
@@ -690,6 +701,7 @@ var InitSelect = (function () {
       option.length
         ? $(option).prop('selected',true)
         : $(self.select).append('<option value="' + id + '" selected>');
+      $(self.select).change(); // имитируем событие селекта
     }
     else // если селект мультипл
     {
@@ -699,6 +711,7 @@ var InitSelect = (function () {
       {
         $(self.select).append('<option value="' + id + '" selected>');
       }
+      $(self.select).change(); // имитируем событие селекта
       self.selected.push(id);
     }
 
@@ -720,25 +733,42 @@ var InitPeriod = (function () {
   //
   InitPeriod.prototype.init = function ()
   {
-    var main = arguments[0];
-    if(!$(main).length)
+    var params = arguments[0];
+    if(typeof params!=='object' || typeof params.selector==undefined)
     {
+      console.log('error in init');
       return;
     }
 
-    $.each($(main),function(){
+    $.each($(params.selector),function(){
       let arInputs = $(this).find('input'),
-        params = JSON.parse(this.dataset.params);
+          bParams = {
+            beforeShow: function(){
+              $('#ui-datepicker-div').addClass('custom-calendar');
+            }
+          },
+          eParams = {
+            beforeShow: function(){
+              $('#ui-datepicker-div').addClass('custom-calendar');
+            }
+          };
 
-      $(arInputs).datepicker({
-        minDate: params.minDate,
-        maxDate: params.maxDate,
-        beforeShow: function(){
-          $('#ui-datepicker-div').addClass('custom-calendar');
-        }
-      })
-        .on("change", function(){
-          let parent = $(this).closest(main),
+      if(typeof params.minDate!=undefined)
+      {
+        bParams.minDate = params.minDate;
+        eParams.minDate = params.minDate;
+      }
+      if(typeof params.maxDate!=undefined)
+      {
+        bParams.maxDate = params.maxDate;
+        eParams.maxDate = params.maxDate;
+      }
+
+      $(arInputs[0]).datepicker(bParams);
+      $(arInputs[1]).datepicker(eParams);
+
+      $(arInputs).on("change", function(){
+          let parent = $(this).closest(params.selector),
             arCalendars = $(parent).find('input'),
             date1 = $(arCalendars[0]).datepicker('getDate'),
             date2 = $(arCalendars[1]).datepicker('getDate');

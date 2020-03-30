@@ -14,7 +14,7 @@ class VacancyCheckFields
    * @param $value - string
    * @return bool|string - допустимое значение, или false в случае ошибки
    */
-  public static function checkTitle($value) // Заголовок
+  public static function checkTextField($value) // Заголовок
   {
     $value = trim($value);
     $value = preg_replace("/[^\w\d\s\-\,\.\+\#\!\?\%\:\;\(\)]/u", '', $value);

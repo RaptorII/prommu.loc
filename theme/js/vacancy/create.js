@@ -24,21 +24,25 @@ var CreateVacancy = (function () {
 
     if(step==='1')
     {
-      new InitSelect('#posts');
-      new InitSelect('#cities');
-      new InitPeriod('#period');
+      new InitSelect({selector:'#posts',search:true});
+      new InitSelect({selector:'#cities',ajax:'/ajax/GetCitiesByName'});
+      new InitPeriod({
+        selector:'#period',
+        minDate:'0',
+        maxDate:'+2M'
+      });
     }
     else if(step==='2')
     {
-      new InitSelect('#work_type');
-      new InitSelect('#experience');
-      new InitSelect('#self_employed');
+      new InitSelect({selector:'#work_type'});
+      new InitSelect({selector:'#experience'});
+      new InitSelect({selector:'#self_employed'});
       new InitPeriod('#period');
     }
     else if(step==='3')
     {
-      new InitSelect('#salary');
-      new InitSelect('#salary_time');
+      new InitSelect({selector:'#salary'});
+      new InitSelect({selector:'#salary_time'});
     }
     else if(step==='4')
     {
