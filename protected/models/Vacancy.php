@@ -4341,7 +4341,7 @@ class Vacancy extends ARModel
         }
 
         $arId = $db->createCommand()
-                                ->select("ev.id")
+                                ->selectDistinct("ev.id")
                                 ->from('empl_vacations ev')
                                 ->join('empl_city ec','ec.id_vac=ev.id')
                                 ->where(implode(' and ',$conditions), $params)
