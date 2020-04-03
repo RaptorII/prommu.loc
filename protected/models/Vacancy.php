@@ -658,10 +658,10 @@ class Vacancy extends ARModel
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
             LEFT JOIN city c2 ON c2.id_city = c1.id_city 
-            JOIN empl_attribs ea ON ea.id_vac = e.id
-            JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
-            JOIN employer em ON em.id_user = e.id_user
-            JOIN user u ON u.id_user = em.id_user
+            LEFT JOIN empl_attribs ea ON ea.id_vac = e.id
+            LEFT JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
+            LEFT JOIN employer em ON em.id_user = e.id_user
+            LEFT JOIN user u ON u.id_user = em.id_user
             WHERE e.id= {$inId}
             ORDER BY e.ispremium DESC, e.id DESC";
             $res = Yii::app()->db->createCommand($sql);
