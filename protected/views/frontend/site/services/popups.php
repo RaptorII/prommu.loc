@@ -167,6 +167,6 @@
 
 */
 ?>
-<div class="creation-vacancy_mess prmu__popup tmpl">Нам очень жаль, но размещать вакансии могут только зарегистрированные работодатели<br>
-  <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>"><span>Регистрация</span></a>
+<div class="creation-vacancy_mess prmu__popup tmpl">Нам очень жаль, но размещать вакансии могут только авторизованные работодатели<br>
+  <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?>"><span>Войти</span></a>
 </div>

@@ -416,13 +416,13 @@ var InitSelect = (function () {
 
     if(!$(self.main).is('*') || !$(self.select).is('*'))
     {
-      console.log('error in init');
+      console.log('error in init',params);
       return;
     }
 
     $(self.select).hide();
 
-    self.data = typeof self.main.dataset=='object' ? self.main.dataset : {};
+    self.data = {};
 
     self.data.search = (params.search!=undefined ? true : false);
     if(params.ajax!=undefined)
@@ -461,12 +461,13 @@ var InitSelect = (function () {
           else if($(e.target).is('.form__select-selected b')) // удаляем из списка, если multiple
           {
             let parent = $(e.target).parent(),
-              id = parent[0].dataset.id;
+                id = parent[0].dataset.id;
 
             $(self.select).find('option[value="' + id + '"]').remove();
             $(e.target).parent().remove();
             self.selected.splice(self.selected.indexOf(id));
             self.showList(false);
+            $(self.select).change(); // имитируем событие селекта
           }
           else if($(e.target).is('.form__select-selected')) // просто кликаем по выделенному блоку
           {
@@ -628,7 +629,6 @@ var InitSelect = (function () {
     else // создаем список с нуля
     {
       html = '<ul class="form__select-list">';
-
       if(self.data.search)
       {
         html += '<li class="form__select-li" data-id="">'
@@ -736,7 +736,7 @@ var InitPeriod = (function () {
     var params = arguments[0];
     if(typeof params!=='object' || typeof params.selector==undefined)
     {
-      console.log('error in init');
+      console.log('error in init',params);
       return;
     }
 

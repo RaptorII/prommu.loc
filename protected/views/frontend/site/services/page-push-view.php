@@ -31,9 +31,8 @@
         <br>
         <h2 class="service__title center">У ВАС НЕТ АКТИВНЫХ ВАКАНСИЙ</h2>
         <div class="center">
-          <a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal">
-            <span>ДОБАВИТЬ ВАКАНСИЮ</span>
-          </a>
+          <br>
+          <?=VacancyView::createVacancyLink('<span>ДОБАВИТЬ ВАКАНСИЮ</span>','service__btn visible prmu-btn prmu-btn_normal')?>
         </div>
       <?php endif; ?>
     </div>

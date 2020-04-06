@@ -1,19 +1,4 @@
-<?php /* ?>
-<div class="row">
-    <div class="col-xs-12 page-empl__content">
-        <div class="img-01 page-empl__img">
-            <?php if (Share::$UserProfile->type != 2): ?>
-                <div class="btn-wrapp btn-orange-fix-wr">
-                    <a href="<?= Share::$UserProfile->type == 3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_REGISTER . '?p=2' ?>"
-                            class="hvr-sweep-to-right btn__orange">опубликовать<br/>вакансию</a></div>
-            <?php endif; ?>
-        </div>
-        <?php echo $viData['html']; ?>
-    </div>
-</div>
-<?php */
-
-
+<?php
 $bUrl = Yii::app()->baseUrl;
 $gcs = Yii::app()->getClientScript();
 
@@ -88,13 +73,13 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                 </div>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-6 flex768up">
-                <? if(Share::isEmployer()): ?>
-                    <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_VACPUB?>">Разместить вакансию<br>бесплатно</a>
-                <? elseif(Share::isApplicant()): ?>
-                    <a class="btn__orange btn__ads applicant_create_vac" href="javascript:void(0)">Разместить анкету<br>бесплатно</a>
-                <? else: ?>
-                    <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_REGISTER?>">Разместить вакансию<br>бесплатно</a>
-                <? endif; ?>
+              <? if(Share::isEmployer()): ?>
+                <?=VacancyView::createVacancyLink('Разместить вакансию<br>бесплатно','btn__orange btn__ads')?>
+              <? elseif(Share::isApplicant()): ?>
+                <a class="btn__orange btn__ads applicant_create_vac" href="javascript:void(0)">Разместить вакансию<br>бесплатно</a>
+              <? else: ?>
+                <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_LOGIN?>">Разместить вакансию<br>бесплатно</a>
+              <? endif; ?>
             </div>
         </div>
     </div>
@@ -153,7 +138,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
 
             <div class="col-xs-12 col-sm-5 col-md-6">
                 <div class="map__rus">
-                    <?php echo file_get_contents("theme/pic/static-page/rus.svg"); ?>
+                        <?php echo file_get_contents("theme/pic/static-page/rus.svg"); ?>
                 </div>
             </div>
 
@@ -227,7 +212,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
             <div class="col-xs-12 col-md-9">
                 <h3 class="static__title">
                     <? if(Share::isEmployer()): ?>
-                        <a class="" href="<?=MainConfig::$PAGE_VACPUB?>">Публикация вакансий</a>
+                      <?=VacancyView::createVacancyLink('Публикация вакансий')?>
                     <? elseif(Share::isApplicant()): ?>
                         <a class="applicant_service" href="javascript:void(0)">Публикация вакансий</a>
                     <? else: ?>
@@ -246,11 +231,11 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-3 col-md-offset-0">
                 <? if(Share::isEmployer()): ?>
-                    <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_VACPUB?>">Разместить</a>
+                  <?=VacancyView::createVacancyLink('Разместить','btn__orange btn__sized center text-uppercase')?>
                 <? elseif(Share::isApplicant()): ?>
                     <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Разместить</a>
                 <? else: ?>
-                    <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_REGISTER?>">Разместить</a>
+                    <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_LOGIN?>">Разместить</a>
                 <? endif; ?>
             </div>
             <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-3 col-md-offset-0">
@@ -260,7 +245,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
             </div>
         </div>
         <div class="row">
-            <div class="separator"></div>
+                <div class="separator"></div>
         </div>
 
         <div class="row flex768up">
@@ -335,20 +320,20 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                 <div class="row">
                     <h3 class="static__title">
                         <? if(Share::isEmployer()): ?>
-                            <div class="service_select">
+<!--                            <div class="service_select">-->
                                 <span>Приглашение персонала на вакансии</span>
-                                <ul>
-                                    <li>
-                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_EMAIL?>">E-mail</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_SMS?>">SMS</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_PUSH?>">Push - уведомления</a>
-                                    </li>
-                                </ul>
-                            </div>
+<!--                                <ul>-->
+<!--                                    <li>-->
+<!--                                        <a href="--><?//='/user' . MainConfig::$PAGE_SERVICES_EMAIL?><!--">E-mail</a>-->
+<!--                                    </li>-->
+<!--                                    <li>-->
+<!--                                        <a href="--><?//='/user' . MainConfig::$PAGE_SERVICES_SMS?><!--">SMS</a>-->
+<!--                                    </li>-->
+<!--                                    <li>-->
+<!--                                        <a href="--><?//='/user' . MainConfig::$PAGE_SERVICES_PUSH?><!--">Push - уведомления</a>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
                         <? elseif(Share::isApplicant()): ?>
                             <a class="applicant_service" href="javascript:void(0)">Приглашение персонала на вакансии</a>
                         <? else: ?>
@@ -439,7 +424,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
 <div class="static__outs grey-bg" >
     <div id="particle-canvas">
 
-        <!--    </div>-->
+<!--    </div>-->
         <div class="static__outs-wrap">
             <div class="container">
                 <div class="row">
@@ -456,9 +441,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                             <span class="clock-flash__icon green centered-elem"></span>
                         </div>
                         <? if(Share::isApplicant()): ?>
-                            <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Аутсорсинг</a>
+                          <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Аутсорсинг</a>
                         <? else: ?>
-                            <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_OUTSOURCING?>">Аутсорсинг</a>
+                          <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_OUTSOURCING?>">Аутсорсинг</a>
                         <? endif; ?>
                         <span class="box__txt center">
                             Если нужен персонал, но нет времени и возможности самостоятельно заниматься рекрутингом — наш
@@ -471,9 +456,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                             <span class="list-clock__icon green centered-elem"></span>
                         </div>
                         <? if(Share::isApplicant()): ?>
-                            <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Аутстаффинг</a>
+                          <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Аутстаффинг</a>
                         <? else: ?>
-                            <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_OUTSTAFFING?>">Аутстаффинг</a>
+                          <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_OUTSTAFFING?>">Аутстаффинг</a>
                         <? endif; ?>
                         <span class="box__txt center">
                             Если нужен персонал на краткосрочный период, аутстаффинг сэкономит бюджет и время на расходы по
@@ -635,9 +620,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                         базе данных Соискателей нашего сайта.
                     </span>
                     <? if(Share::isApplicant()): ?>
-                        <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Подробнее</a>
+                      <a class="btn__orange btn__sized center text-uppercase applicant_service" href="javascript:void(0)">Подробнее</a>
                     <? else: ?>
-                        <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_API?>">Подробнее</a>
+                      <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_SERVICES_API?>">Подробнее</a>
                     <? endif; ?>
                 </div>
             </div>

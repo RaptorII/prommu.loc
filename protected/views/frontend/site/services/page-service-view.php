@@ -36,7 +36,7 @@
       >
         <? if(((Share::isApplicant() || Share::isEmployer()) && $viData['service']['link']!='geolocation-staff') || in_array($viData['service']['link'], $arGuest)): ?>
           <? if(Share::isEmployer() && $viData['service']['link']==='creation-vacancy'): ?>
-            <a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить</a>
+            <?=VacancyView::createVacancyLink('Разместить','user')?>
           <? else: ?>
             <a href="<?='/user/services/' . $viData['service']['link']?>" class="user">Заказать</a>
           <? endif; ?>

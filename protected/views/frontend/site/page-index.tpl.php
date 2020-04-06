@@ -32,11 +32,11 @@
 						</div>
 						<div class="search-module__left-btn">
 							<?php if(Share::isEmployer()): ?>
-								<a class="left" href="<?=MainConfig::$PAGE_VACPUB?>">Опубликовать вакансию</a>
+                <?=VacancyView::createVacancyLink('Опубликовать вакансию','left')?>
 							<?php endif; ?>
 							<?php if(Share::isGuest()): ?>
 								<a class="left" href="<?=MainConfig::$PAGE_REGISTER?>">Разместить анкету</a>
-								<a class="left" href="<?=MainConfig::$PAGE_REGISTER?>">Опубликовать вакансию</a>
+								<a class="left" href="<?=MainConfig::$PAGE_LOGIN?>">Опубликовать вакансию</a>
 							<?php endif; ?>
 						</div>
 						<div class="search-container">

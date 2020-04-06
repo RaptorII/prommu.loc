@@ -6,6 +6,17 @@
     <?
     //
     ?>
+    <? if(!Share::$UserProfile->accessToFreeVacancy): ?>
+      <div class="form__field">
+        <div class="form__field-content form__content-indent form__field-first">
+          <b>РАЗМЕЩЕНИЕ ВАКАНСИИ: <?=ServiceCloud::getCostForVacancyCreate(array_keys($model->dataOther->arSelectCity)) . ' руб.';?></b>
+        </div>
+      </div>
+      <hr>
+    <? endif; ?>
+    <?
+    //
+    ?>
     <div class="form__field">
       <div class="form__field-content form__content-indent form__field-first">
         <div class="form__content-flex">

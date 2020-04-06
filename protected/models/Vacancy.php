@@ -48,6 +48,8 @@ class Vacancy extends ARModel
     static private $VACANCIES_IN_MAIN_PAGE = 12;
     // ID атрибута - должности
     const ID_POSTS_ATTRIBUTE = 110;
+
+    const PAYMENT_VACANCY_PERIOD = 30; // 30 дней с момента создания последней вакансии
     /** @var UserProfile */
     private $Profile;
     /**
@@ -4936,6 +4938,11 @@ class Vacancy extends ARModel
         'id_vacancy' => $vacancy
       ]
     );
+    //
+    Yii::app()->db->createCommand()
+      ->update('employer',['vacancy_payment'=>strtotime('today')],['id_user'=>$objUser->id_user]);
+
+    //
     return $vacancy;
   }
   /**

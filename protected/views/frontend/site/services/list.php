@@ -172,7 +172,7 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
                             data-type="<?=$m['icon']?>"
                     >
                         <? if(Share::isEmployer() && $m['icon']=='creation-vacancy'): ?>
-                            <a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить Вакансию</a>
+                          <?=VacancyView::createVacancyLink('Разместить Вакансию','user')?>
                         <? elseif(Share::isGuest() && $m['icon']=='creation-vacancy'): ?>
                             <a href="javascript:void(0)">Заказать</a>
                         <? elseif($m['icon']=='geolocation-staff'): ?>

@@ -942,22 +942,19 @@ class City extends CActiveRecord
         ->queryAll();
     }
     /**
-     * @param $id
+     * @param $id_user
      * @return mixed
      */
-    public static function getCityIdByUserId($id)
+    public static function getCityIdByIdUser($id_user)
     {
-        $city = Yii::app()->db->createCommand("
-            SELECT 
-                id_city
-            FROM 
-                user_city
-            WHERE 
-                id_user={$id}
-        ")->queryAll();
+      $query = Yii::app()->db->createCommand()
+              ->select('c.*')
+              ->from('city c')
+              ->join('user_city uc','uc.id_city=c.id_city')
+              ->where('uc.id_user=:id_user',[':id_user'=>$id_user])
+              ->limit(1)
+              ->queryRow();
 
-        $city = $city[0]['id_city'];
-
-        return $city;
+      return ($query ? (object)$query : false);
     }
 }

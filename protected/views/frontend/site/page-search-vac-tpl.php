@@ -15,12 +15,12 @@ $this->renderPartial('../site/page-search-vac-tpl_css');
 <div class='row page-search-vacancy'>
     <div class="psv__veil"></div>
     <div class="col-xs-12">
-        <?php if(Share::$UserProfile->type == 3): ?>
-            <div class="psv__header">
-                <h1 class="psv__header-name"><?=Share::$UserProfile->exInfo->name?></h1>
-                <a class='psv__btn psv__header-btn btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
-            </div>
-        <?php endif; ?>
+      <?php if (Share::isEmployer()): ?>
+        <div class="psv__header">
+          <h1 class="psv__header-name"><?= Share::$UserProfile->exInfo->name ?></h1>
+          <?=VacancyView::createVacancyLink('Добавить вакансию','psv__btn psv__header-btn btn__orange')?>
+        </div>
+      <?php endif; ?>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-3">
         <div class="psv__filter-vis hidden-sm hidden-md hidden-lg hidden-xl">ФИЛЬТР</div>

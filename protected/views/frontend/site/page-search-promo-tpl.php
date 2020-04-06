@@ -13,10 +13,10 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
 <div class='row page-search-ankety'>
     <div class="psa__veil"></div>
     <div class="col-xs-12">
-        <?php if (Share::$UserProfile->type == 3): ?>
+        <?php if (Share::isEmployer()): ?>
             <div class="psa__header">
                 <h1 class="psa__header-name"><?= Share::$UserProfile->exInfo->name ?></h1>
-                <a class='psa__btn psa__header-btn btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
+                <?=VacancyView::createVacancyLink('Добавить вакансию','psa__btn psa__header-btn btn__orange')?>
             </div>
         <?php endif; ?>
     </div>

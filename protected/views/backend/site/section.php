@@ -132,6 +132,12 @@
           <span>Заказ услуг гостями</span>
         </a>
       </li>
+      <li>
+        <a href="<?=$hUrl?>services?type=creation_vacancy">
+          <i class="glyphicon glyphicon-floppy-disk"></i>
+          <span>Создание вакансии</span>
+        </a>
+      </li>
 			<li>
 				<a href="<?=$hUrl?>services?type=vacancy">
                 	<i class="glyphicon glyphicon-star-empty"></i>

@@ -3,6 +3,7 @@ p {
     /*margin: 0;*/
     text-align: justify;
 }
+.prmu__popup p{ text-align: center }
 .btn__orange p,
 .btn__orange-rnd p {
     margin: 5px 0;

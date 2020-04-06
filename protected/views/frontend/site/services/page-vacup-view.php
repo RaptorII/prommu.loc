@@ -40,12 +40,15 @@
 				</div>
 				<input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
 				<br>
-				<button class="service__btn pull-right prmu-btn prmu-btn_normal"><span>ОПЛАТИТЬ</span></button>
+				<button class="service__btn pull-right prmu-btn prmu-btn_normal" id="payment-btn"><span>ОПЛАТИТЬ</span></button>
 			</form>
 		<?php else: ?>
 			<br>
 			<h2 class="premium-service__title center">У ВАС НЕТ АКТИВНЫХ ВАКАНСИЙ</h2>
-			<a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal"><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
+      <div class="center">
+        <br>
+        <?=VacancyView::createVacancyLink('<span>ДОБАВИТЬ ВАКАНСИЮ</span>','service__btn visible prmu-btn prmu-btn_normal')?>
+      </div>
 		<?php endif; ?>
 	</div>
 </div>

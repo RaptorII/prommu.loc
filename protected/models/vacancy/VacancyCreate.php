@@ -128,25 +128,29 @@ class VacancyCreate
       {
         $this->data->city = $v;
       }
-      // Дата начала
-      $v = $rq->getParam('bdate');
-      if(!Share::checkFormatDate($v))
+      $v1 = $rq->getParam('bdate'); // Дата начала
+      $v2 = $rq->getParam('edate'); // Дата завершения
+      if(!Share::checkFormatDate($v1))
       {
         $this->errors['bdate'] = true;
       }
-      else
+      elseif(!Share::checkFormatDate($v2))
       {
-        $this->data->bdate = $v;
+        $this->errors['edate'] = true;
       }
-      // Дата завершения
-      $v = $rq->getParam('edate');
-      if(!Share::checkFormatDate($v))
+      elseif(
+        (strtotime($v1)>strtotime($v2)) // если даты отличаются
+        ||
+        ((strtotime($v2)-strtotime($v1)) > (30*86400)) // период сильно большой(больше 30 дней)
+      )
       {
+        $this->errors['bdate'] = true;
         $this->errors['edate'] = true;
       }
       else
       {
-        $this->data->edate = $v;
+        $this->data->bdate = $v1;
+        $this->data->edate = $v2;
       }
     }
     elseif($step==2)
@@ -282,6 +286,10 @@ class VacancyCreate
           $this->dataOther->arSelectCity[$v['id_city']] = $v['name'];
         }
       }
+      if(!count($this->dataOther->arSelectCity))
+      {
+        $this->dataOther->arSelectCity[Share::$UserProfile->cache->city->id_city] = Share::$UserProfile->cache->city->name;
+      }
     }
     if($this->step==5)
     {
@@ -315,24 +323,28 @@ class VacancyCreate
     }
 
     $rq = Yii::app()->getRequest();
-    if($rq->getParam('premium')==1)
+    if($rq->getParam('premium')==1 || !Share::$UserProfile->accessToFreeVacancy)
     {
       $arCity = [];
       $arPrice = [];
-      foreach ($this->dataOther->prices as $v)
+      if($rq->getParam('premium')==1)
       {
-        if(in_array($v['id_city'],$rq->getParam('premium_region')))
+        foreach ($this->dataOther->prices as $v)
         {
-          $arCity[] = $v['id_city'];
-          $arPrice[] = $v['price'];
+          if(in_array($v['id_city'],$rq->getParam('premium_region')))
+          {
+            $arCity[] = $v['id_city'];
+            $arPrice[] = $v['price'];
+          }
         }
       }
       $model = new PrommuOrder();
-      $arRes = $model->orderPremiumInCreationVac(
+      $arRes = $model->orderInCreationVac(
         $this->id_vacancy,
         $arCity,
         $arPrice,
-        $rq->getParam('premium_period')
+        $rq->getParam('premium_period'),
+        $this->data->city
       );
     }
     return $arRes;

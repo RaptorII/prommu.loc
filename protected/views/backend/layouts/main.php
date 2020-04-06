@@ -557,6 +557,12 @@ else
                             <span>Заказ услуг гостями</span>
                           </a>
                         </li>
+                        <li class="<?=($action=='service_cloud' && $service=='creation-vacancy' ? 'active' : '')?>">
+                          <a href="<?= $hUrl ?>service/service_cloud/creation_vacancy">
+                            <i class="glyphicon glyphicon-floppy-disk"></i>
+                            <span><?=Services::getServiceName('creation-vacancy')?></span>
+                          </a>
+                        </li>
                         <li class="<?=($action=='service_cloud' && $service=='vacancy' ? 'active' : '')?>">
                             <a href="<?= $hUrl ?>service/service_cloud/vacancy">
                                 <i class="glyphicon glyphicon-star-empty"></i>

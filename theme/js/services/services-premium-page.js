@@ -43,7 +43,7 @@ $(function(){
 "use_strict";
 window.onload = function() {
 	let arInputs = $('.ps-vacancies__item-input'),
-		$button = $('.service__btn'),
+		$button = $('#payment-btn'),
 		$all = $('#choose-all'),
 		bAllTrue = false,
 		bAllFalse = false;

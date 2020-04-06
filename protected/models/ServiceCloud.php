@@ -1,6 +1,16 @@
 <?
 class ServiceCloud
 {
+  //
+  // Оплата за создание вакансии
+  //
+  const PAYMENT_FOR_CREATE = [
+    ['id_city' => 1307, 'price' => 200],
+    ['id_city' => 1838, 'price' => 100]
+  ];
+  //
+  //
+  //
 	public $limit;
 	public $offset;
 
@@ -263,5 +273,22 @@ class ServiceCloud
       ->from('service_cloud')
       ->where(['in','id',$arr])
       ->queryAll();
+  }
+  /**
+   * @param $arCities - array
+   * @return string
+   * метод для вычисления стоимости создания вакансии
+   */
+  public static function getCostForVacancyCreate($arCities)
+  {
+    $cost = 0;
+    foreach (self::PAYMENT_FOR_CREATE as $v)
+    {
+      if(in_array($v['id_city'], $arCities) && $v['price']>$cost)
+      {
+        $cost = $v['price'];
+      }
+    }
+    return $cost;
   }
 }

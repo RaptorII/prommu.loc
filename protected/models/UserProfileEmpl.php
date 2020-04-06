@@ -7,12 +7,14 @@
 
 class UserProfileEmpl extends UserProfile
 {
+    public $accessToFreeVacancy; // доступ к бесплатной вакансии
+
     function __construct($inProps)
     {
         parent::__construct($inProps);
         $props = is_object($inProps) ? get_object_vars($inProps) : $inProps;
 
-        $this->type = 3;
+        $this->type = self::$EMPLOYER;
         if( $props['idProfile'] ) $this->exInfo = (object)array('eid' => $props['idProfile']);
 
         $this->photosMax = MainConfig::$EMPLOYER_MAX_PHOTOS;
@@ -769,6 +771,7 @@ class UserProfileEmpl extends UserProfile
                 );
               }
             }
+            $this->getCachedData(true);
         }
     }
 
@@ -842,6 +845,7 @@ class UserProfileEmpl extends UserProfile
                 , e.logo
                 , u.is_online
                 , u.mdate
+                , e.vacancy_payment
             ")
             ->from('user u')
             ->leftJoin('user_work w', 'u.id_user = w.id_user')

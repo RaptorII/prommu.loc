@@ -5,7 +5,6 @@
 
 class ViewModelEmpl extends ViewModel
 {
-    public $pageVacpub;
     public $pageVacancies;
 
 
@@ -15,7 +14,6 @@ class ViewModelEmpl extends ViewModel
 
         $this->pageProfile = MainConfig::$VIEWS_COMPANY_PROFILE_OWN;
         $this->pageEditProfile = MainConfig::$VIEWS_EDIT_PROFILE_EMPLOYER;
-        $this->pageVacpub = MainConfig::$VIEWS_PUBL_VACANCY;
         $this->pageVacancies = MainConfig::$VIEWS_COMPANY_VACS_OWN;
         $this->pageResponses = MainConfig::$VIEWS_EMPL_RESPONSES;
         $this->pageSetRate = MainConfig::$VIEWS_APPLICANT_SETRATE;

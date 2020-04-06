@@ -1,6 +1,7 @@
 <?php
   $id = Yii::app()->getRequest()->getParam('id');
   $service = Yii::app()->getRequest()->getParam('service');
+  $service=='creation_vacancy' && $service='creation-vacancy';
   $serviceTitle = Services::getServiceName($service);
   $title = 'Заказ #' . $id;
   $this->setPageTitle($title);
@@ -62,7 +63,7 @@
                   <tr><td><b>Дата начала</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                   <tr><td><b>Дата окончания</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                 <? endif; ?>
-                <? if(in_array($service,['vacancy','email','sms','upvacancy'])): ?>
+                <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy'])): ?>
                   <tr><td><b>Cумма</b></td><td><?=$order->sum?></td></tr>
                   <tr>
                     <td>
@@ -128,7 +129,7 @@
               </tbody>
             </table>
             <div class="pull-right">
-              <? if(in_array($service,['vacancy','email','sms','upvacancy']) && !empty($order->legal)): ?>
+              <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy']) && !empty($order->legal)): ?>
                 <? if(!$order->status): ?>
                   <span class="btn btn-success d-indent" id="start_service">Запустить услугу</span>
                 <? endif; ?>

@@ -21,7 +21,7 @@ class UserProfileApplic extends UserProfile
         parent::__construct($inProps);
         $props = is_object($inProps) ? get_object_vars($inProps) : $inProps;
 
-        $this->type = 2;
+        $this->type = self::$APPLICANT;
         if( $props['idProfile'] ) $this->exInfo = (object)array('id_resume' => $props['idProfile']);
 
 
@@ -719,6 +719,7 @@ class UserProfileApplic extends UserProfile
                 , CONCAT(e.firstname,\" \",e.lastname) efio
                 , e.name
                 , e.logo
+                , r.isman
             ")
             ->from('user u')
             ->leftJoin('user_work w', 'u.id_user = w.id_user')

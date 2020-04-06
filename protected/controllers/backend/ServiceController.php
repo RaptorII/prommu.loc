@@ -45,13 +45,13 @@ class ServiceController extends Controller
     $this->render('service_order-' . ($this->id ? 'item' : 'list'));
   }
   /**
-   *  premium, upvacancy, email, push, sms, repost, api
+   *  creation_vacancy, premium, upvacancy, email, push, sms, repost, api
    */
   public function actionService_cloud()
   {
     $service = Yii::app()->getRequest()->getParam('service');
 
-    if(!in_array($service,['vacancy','upvacancy','email','push','sms','repost','api']))
+    if(!in_array($service,['creation_vacancy','vacancy','upvacancy','email','push','sms','repost','api']))
     {
       $this->redirect('/admin/service');
     }

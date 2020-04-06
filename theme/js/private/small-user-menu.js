@@ -1,11 +1,10 @@
 'use_strict'
 
 $(function() {
-//fixed menu in personal account
+    //fixed menu in personal account
 
     let heightSmlMenu = $('.personal-acc__menu').height();
     let heightTopWrap = $('#DiTopMenuWrapp').height();
-    let posAccMenu = $('.personal-acc__menu').offset().top - 0;
 
     $(window).on('resize scroll',scrollAccMenu);
     scrollAccMenu();

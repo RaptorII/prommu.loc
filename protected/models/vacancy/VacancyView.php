@@ -63,4 +63,26 @@ class VacancyView
     $arRes['full'] = $arRes['salary'] . ' ' . Vacancy::SALARY_TYPE[$arRes['salary_type']];
     return $arRes;
   }
+  /**
+   * @param $name
+   * @param bool $class
+   * @return string
+   */
+  public static function createVacancyLink($name, $class=false)
+  {
+    $arParams = [];
+    if(Share::$UserProfile->accessToFreeVacancy===true)
+    {
+      $arParams['class'] = ($class ? $class : '');
+    }
+    else
+    {
+      $arParams['class'] = ($class ? $class.' popup__paid-vacancy' : 'popup__paid-vacancy');
+      $arParams['data-message'] = "Уважаемый, «" . Share::$UserProfile->exInfo->name
+        . "»<br>Добавление новой вакансии является платной услугой.<br>Желаете продолжить?<br><a href='"
+        . MainConfig::$PAGE_VACPUB . "' class='btn__orange'>Продолжить</a>";
+    }
+
+    return CHtml::link($name, MainConfig::$PAGE_VACPUB, $arParams);
+  }
 }

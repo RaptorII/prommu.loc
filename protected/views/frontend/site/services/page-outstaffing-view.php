@@ -173,9 +173,7 @@
 				<h2 class="outstaffing-service__title center">У ВАС НЕТ ОПУБЛИКОВАНЫХ ВАКАНСИЙ</h2>
 				<div class="center">
 					<br>
-					<a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal">
-						<span>ДОБАВИТЬ ВАКАНСИЮ</span>
-					</a>
+          <?=VacancyView::createVacancyLink('<span>ДОБАВИТЬ ВАКАНСИЮ</span>','service__btn visible prmu-btn prmu-btn_normal')?>
 				</div>
 			<?php endif; ?>
 		<?php endif; ?>

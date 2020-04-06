@@ -77,11 +77,10 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                 </div>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-6 flex768up">
-                <!--                <img class="static__img" src="/theme/pic/static-page/ma-up.png" alt="">-->
                 <? if(Share::isApplicant()): ?>
-                    <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_VACPUB?>">Разместить анкету<br>бесплатно</a>
+                    <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_PROFILE?>">Разместить анкету<br>бесплатно</a>
                 <? elseif(Share::isEmployer()): ?>
-                    <a class="btn__orange btn__ads employer_public_anc" href="javascript:void(0)">Разместить вакансию<br>бесплатно</a>
+                    <a class="btn__orange btn__ads employer_public_anc" href="javascript:void(0)">Разместить анкету<br>бесплатно</a>
                 <? else: ?>
                     <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_REGISTER?>">Разместить анкету<br>бесплатно</a>
                 <? endif; ?>
@@ -297,7 +296,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                             <span class="consultant__icon green centered-elem"></span>
                         </div>
                         <div class="box__name center text-uppercase">
-                            Консультант
+                          Консультант
                         </div>
                         <span class="box__txt center">
                           от 40 000 рублей в месяц
@@ -331,7 +330,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
 
             <div class="col-xs-12 col-sm-6 col-md-3" >
                 <div  class="btn__orange-rnd  center text-uppercase ">
-                    В месяц от <span style="color: red">30 000</span> Р
+                        В месяц от <span style="color: red">30 000</span> Р
                 </div>
             </div>
 

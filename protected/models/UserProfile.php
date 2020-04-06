@@ -28,6 +28,9 @@ abstract class UserProfile extends CModel
 
     public $filesRoot;
     public $filesUrl;
+
+    public $cache;
+    public $avatar;
     // constant
     public static $APPLICANT = 2;
     public static $EMPLOYER = 3;
@@ -102,10 +105,53 @@ abstract class UserProfile extends CModel
      */
     public function setUserData()
     {
-        if( !Share::is_set($this->exInfo, 'id') ) $this->exInfo = (object)$this->getUserData($this->id);
+        if( !Share::is_set($this->exInfo, 'id') )
+        {
+          $this->exInfo = (object)$this->getUserData($this->id);
+        }
+        if(!is_array($this->cache))
+        {
+          $this->getCachedData();
+        }
+        if($this->type==self::$APPLICANT)
+        {
+          $this->avatar = Share::getPhoto($this->id,$this->type,$this->exInfo->photo,'small',$this->exInfo->isman);
+        }
+        if($this->type==self::$EMPLOYER)
+        {
+          $this->avatar = Share::getPhoto($this->id,$this->type,$this->exInfo->logo);
+          if(!$this->exInfo->vacancy_payment)
+          {
+            $this->accessToFreeVacancy = true;
+          }
+          else
+          {
+            $diff = strtotime('today') - $this->exInfo->vacancy_payment;
+            $this->accessToFreeVacancy = $diff>=(Vacancy::PAYMENT_VACANCY_PERIOD * 86400);
+          }
+        }
     }
-
-
+    /**
+     * @param bool $clearCache
+     */
+    public function getCachedData($clearCache=false)
+    {
+      $cacheId = '/users/profile/'.$this->id;
+      if($clearCache)
+      {
+        Cache::deleteData($cacheId);
+      }
+      $arRes = Cache::getData($cacheId);
+      if($arRes['data']===false)
+      {
+        $arRes['data'] = [
+          'city' => City::getCityIdByIdUser($this->id)
+        ];
+        $arRes['data'] = (object)$arRes['data'];
+        Cache::setData($arRes, 604800); // кеш на неделю
+      }
+      $this->cache = $arRes['data'];
+    }
     /**
      * фабрика модели рейтинга
      * @param $inProps: id - user id

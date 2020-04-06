@@ -5,16 +5,12 @@
 	$arUser = $viData['user']['userInfo'];
 	$cntComments = $viData['user']['lastComments']['count'][0] + $viData['user']['lastComments']['count'][1];
 	$isActiveVacs = strpos(Yii::app()->request->requestUri, DS . MainConfig::$PAGE_VACANCIES)!==false;
-
-	//display($viData);
 ?>
 <div class='row employer-vacansies-list'>
 	<div class="col-xs-12">
 		<div class="evl__header">
 			<h1 class="evl__header-name"><?=$arUser['name']?></h1>
-			<a class='evl__header-btn prmu-btn' href='<?=MainConfig::$PAGE_VACPUB?>'>
-				<span>ДОБАВИТЬ ВАКАНСИЮ</span>
-			</a>  
+      <?=VacancyView::createVacancyLink('<span>ДОБАВИТЬ ВАКАНСИЮ</span>','evl__header-btn prmu-btn')?>
 		</div>
 	</div>
 	<?

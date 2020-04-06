@@ -908,34 +908,49 @@ class PrommuOrder {
   /**
    *  Формирование заказа для формы создания вакансии
    */
-  public function orderPremiumInCreationVac($id_vacancy, $arCity, $arPrice, $period)
+  public function orderInCreationVac($id_vacancy, $arCity, $arPrice, $period, $arVacCities)
   {
     $arRes = [];
-    $arRes['cost'] = 0;
-    $arRes['id'] = [];
     $day = 60 * 60 * 24;
     $from = strtotime('today');;
     $to = $from + $period*$day;
     $days = ($to - $from) / $day;
 
-    for($i=0, $n=sizeof($arCity); $i<$n; $i++)
+    if(count($arCity) && count($arPrice)) // Premium
     {
-      $price = intval($arPrice[$i] * $days);
-      $arRes['id'][] = $this->serviceOrder(
-        Share::$UserProfile->id,
-        $price,
-        $arCity[$i],
-        0,
-        0,
-        date('Y-m-d', $from),
-        date('Y-m-d', $to),
-        $id_vacancy,
-        'vacancy'
-      );
-      $arRes['cost'] += $price;
+      for($i=0, $n=sizeof($arCity); $i<$n; $i++)
+      {
+        $cost = intval($arPrice[$i] * $days);
+        $arRes[] = $this->serviceOrder(
+          Share::$UserProfile->id,
+          $cost,
+          $arCity[$i],
+          0,
+          0,
+          date('Y-m-d', $from),
+          date('Y-m-d', $to),
+          $id_vacancy,
+          'vacancy'
+        );
+      }
     }
 
-    $arRes['account'] = Share::$UserProfile->id . '.' . implode('.', $arRes['id']) . '.vacancy.' . time();
+    if(!Share::$UserProfile->accessToFreeVacancy) // Creation
+    {
+      $cost = ServiceCloud::getCostForVacancyCreate($arVacCities);
+      $arRes[] = $this->serviceOrder(
+        Share::$UserProfile->id,
+        $cost,
+        null,
+        0,
+        0,
+        date('Y-m-d'),
+        date('Y-m-d'),
+        $id_vacancy,
+        'creation-vacancy'
+      );
+    }
+
     return $arRes;
   }
 }

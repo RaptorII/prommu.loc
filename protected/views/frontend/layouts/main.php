@@ -202,12 +202,7 @@
                                         <div class="small-menu__list">
                                             <? if(Share::isEmployer()): ?>
                                                 <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
-                                                  <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
-                                                    <span class="small-menu__circle">
-                                                        <span class="small-menu__icon icn-plus-prommu color-white"></span>
-                                                    </span>
-                                                    <span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
-                                                  </a>
+                                                  <?=VacancyView::createVacancyLink('<span class="small-menu__circle"><span class="small-menu__icon icn-plus-prommu color-white"></span></span><span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>','addvac')?>
                                                 </div>
                                             <? endif; ?>
                                             <?
@@ -371,7 +366,7 @@
                                                     </ul>
 
                                                     <?php
-                                                    if ( City::getCityIdByUserId($iduser) == 1307
+                                                    if ( City::getCityIdByIdUser($iduser) == 1307
                                                         && !Share::isGuest()
                                                         && Share::isApplicant()
                                                     ): ?>

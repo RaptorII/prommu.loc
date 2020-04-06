@@ -29,15 +29,15 @@ var CreateVacancy = (function () {
       new InitPeriod({
         selector:'#period',
         minDate:'0',
-        maxDate:'+2M'
+        maxDate:'+30D'
       });
+      self.setCost();
     }
     else if(step==='2')
     {
       new InitSelect({selector:'#work_type'});
       new InitSelect({selector:'#experience'});
       new InitSelect({selector:'#self_employed'});
-      new InitPeriod('#period');
     }
     else if(step==='3')
     {
@@ -118,6 +118,27 @@ var CreateVacancy = (function () {
         opacity: Math.random() / 2 ,
       }, 20000, mina.easeinout);
     });
+  };
+  //
+  CreateVacancy.prototype.setCost = function ()
+  {
+    if(typeof arVacancyPrice!=undefined) // вычисляем стоимость услуги
+    {
+      $('#cities').off('change');
+      $('#cities').on('change',function(e){
+        let arOptions = $(e.target).find('option:selected'),
+          arVals = [], cost = 0;
+
+        $.each(arOptions,function(){ arVals.push(Number(this.value)) });
+        $.each(arVacancyPrice,function(){
+          if(arVals.includes(this.id_city) && this.price>cost)
+          {
+            cost = this.price;
+          }
+        });
+        $('#cost').text(cost + ' руб.');
+      });
+    }
   };
   //
   return CreateVacancy;

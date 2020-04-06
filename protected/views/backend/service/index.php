@@ -12,6 +12,12 @@
       </a>
     </li>
     <li>
+      <a href="<?=$this->createUrl('service/service_cloud/creation_vacancy')?>">
+        <i class="glyphicon glyphicon-floppy-disk"></i>
+        <span><?=Services::getServiceName('creation-vacancy')?></span>
+      </a>
+    </li>
+    <li>
       <a href="<?=$this->createUrl('service/service_cloud/vacancy')?>">
         <i class="glyphicon glyphicon-star-empty"></i>
         <span><?=Services::getServiceName('vacancy')?></span>

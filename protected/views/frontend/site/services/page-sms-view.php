@@ -27,7 +27,10 @@ if(!$rq->getParam('vacancy')):?>
 			<?php else: ?>
 				<br>
 				<h2 class="sms-service__title center">У ВАС НЕТ АКТИВНЫХ ВАКАНСИЙ</h2>
-				<a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal"><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
+        <div class="center">
+          <br>
+          <?=VacancyView::createVacancyLink('<span>ДОБАВИТЬ ВАКАНСИЮ</span>','service__btn visible prmu-btn prmu-btn_normal')?>
+        </div>
 			<?php endif; ?>
 		</div>
 	</div>

@@ -6,10 +6,10 @@
   <script type="text/javascript">var arAllData = <?=json_encode($viData['filter'])?></script>
   <div class="pse__veil"></div>
   <div class="col-xs-12">
-      <?php if(Share::$UserProfile->type == 3): ?>
+      <?php if(Share::isEmployer()): ?>
           <div class="pse__header">
               <h1 class="pse__header-name"><?=Share::$UserProfile->exInfo->name?></h1>
-              <a class='pse__btn pse__header-btn btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
+              <?=VacancyView::createVacancyLink('Добавить вакансию','pse__btn pse__header-btn btn__orange')?>
           </div>
       <?php endif; ?>
   </div>

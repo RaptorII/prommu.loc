@@ -5,7 +5,7 @@
         $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
       }");
   $service = Yii::app()->getRequest()->getParam('service');
-
+  $service=='creation_vacancy' && $service='creation-vacancy';
   $title = Services::getServiceName($service);
   $this->setPageTitle($title);
   $this->breadcrumbs = ['Все услуги'=>['/service'], $title];

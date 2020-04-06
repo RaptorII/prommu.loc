@@ -67,7 +67,6 @@ class MainConfig
     public static $VIEWS_COMPANY_PROFILE_OWN = 'page-company-profile-own-tpl';
     public static $VIEWS_COMPANY_VACS_OWN = 'vacancies/employer-list';
     public static $VIEWS_VACANCY_VIEW = 'page-vacancy-view-tpl';
-    public static $VIEWS_PUBL_VACANCY = 'page-publ-vacancy-tpl';
     public static $VIEWS_APPLICANT_PROFILE_OWN = 'page-applicant-profile-own-tpl';
     public static $VIEWS_SEARCH_VAC = 'page-search-vac-tpl';
     public static $VIEWS_COMPANY_LIST = 'page-search-company-tpl';
@@ -82,7 +81,6 @@ class MainConfig
     public static $VIEWS_ARTICLES = 'page-articles-tpl';
     public static $VIEWS_ARTICLES_SINGLE = 'page-articles-single-tpl';
     public static $VIEWS_NEWS_SINGLE = 'page-news-single-tpl';
-    public static $VIEWS_ABOUT = 'page-about-tpl';
     public static $VIEWS_FEEDBACK = 'page-feedback-tpl';
     public static $VIEWS_FAQ = 'page-faq-tpl';
     public static $VIEWS_COMMENTS = 'page-comments-tpl';
@@ -94,12 +92,6 @@ class MainConfig
     public static $VIEWS_API_HELP = 'page-help-tpl';
     public static $VIEWS_PASS_RESTORE_FORM = 'passrestore/page-pass-restore-form-tpl';
     public static $VIEWS_NEW_PASS_FORM = 'passrestore/page-new-pass-form-tpl';
-
-    public static $VIEWS_PUBVAC_BLOCK3_CITY_VIEW_TPL = '_block3-city-view-tpl';
-    public static $VIEWS_PUBVAC_BLOCK3_NEW_CITY_TPL = '_block3-new-city-tpl';
-    public static $VIEWS_PUBVAC_BLOCK3_LOCATION_VIEW_TPL = '_block3-loc-view-tpl';
-    public static $VIEWS_PUBVAC_BLOCK3_LOCATION_EDIT_TPL = '_block3-loc-edit-tpl';
-    public static $VIEWS_PUBVAC_BLOCK3_LOCATION_WRAPPER_TPL = '_block3-loc-wrapper-tpl';
 
     public static $PAGE_INDEX = '';
     public static $PAGE_SITE_MESSAGE = '/message';

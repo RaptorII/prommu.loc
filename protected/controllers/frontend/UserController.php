@@ -749,10 +749,10 @@ class UserController extends AppController
       $model->getDataByStep();
       if($model->id_vacancy) // вакансия создана
       {
-        $arOrder = $model->checkPayment();
-        if(count($arOrder)) // страница выбора типа оплаты
+        $arOrderId = $model->checkPayment();
+        if(count($arOrderId)) // страница выбора типа оплаты
         {
-          $this->redirect(MainConfig::$PAGE_PAYMENT . '?receipt=' . implode(',',$arOrder['id']));
+          $this->redirect(MainConfig::$PAGE_PAYMENT . '?receipt=' . implode(',',$arOrderId));
         }
         else
         {
@@ -876,39 +876,6 @@ class UserController extends AppController
             ['htmlTitle'=>$title]
         );
     }
-
-
-    public function actionVacedit()
-    {
-        // no profile for guest
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
-
-        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('save') )
-        {
-           // $res = (new Vacancy())->saveVacpubData();
-            if( $res['err'] ) {
-            } else {
-//                $project = new ProjectConvertVacancy();
-//                $project->synphronization($res['idvac'],'vacancy');
-                $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['idvac']);
-            } // endif
-        } // endif
-
-        $idvac = filter_var(Yii::app()->getRequest()->getParam('id', false), FILTER_SANITIZE_NUMBER_INT);
-        $this->setBreadcrumbsEx(array('Вакансия', MainConfig::$PAGE_VACANCY . DS . $idvac), array($title = 'Редактирование вакансии', MainConfig::$PAGE_VACANCY_EDIT));
-
-        $idvac && (Yii::app()->session['editVacId'] = $idvac);
-
-       /* Yii::app()->getClientScript()->registerCssFile("/jslib/jquery-autocomplete/styles.css");
-        Yii::app()->getClientScript()->registerScriptFile("/jslib/jquery-autocomplete/jquery.autocomplete.min.js", CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/vac_edit.js", CClientScript::POS_END);*/
-
-
-        $this->render($this->ViewModel->pageVacpub,
-                array('viData' => (new Vacancy())->getVacEditFormData()));
-    }
-
-
 
     public function actionResponses()
     {
