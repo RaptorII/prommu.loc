@@ -13,7 +13,7 @@ class VacancyEdit
     $rq = Yii::app()->getRequest();
     $module = $rq->getParam('module');
 
-    if($module==1)
+    if($module==2)
     {
       // Заголовок
       $value = VacancyCheckFields::checkTextField($rq->getParam('title'));
@@ -51,7 +51,7 @@ class VacancyEdit
       $value = VacancyCheckFields::checkList($rq->getParam('istemp'),'work_type');
       $value===false ? $object->errors['istemp']=true : $object->data->istemp=$value;
     }
-    if($module==3)
+    if($module==4)
     {
       // Должность
       $value = VacancyCheckFields::checkPost($rq->getParam('post'));
@@ -178,7 +178,7 @@ class VacancyEdit
         $object->data->add_props = true;
       }
     }
-    if($module==4)
+    if($module==5)
     {
       // Описание
       $value = VacancyCheckFields::checkTextarea($rq->getParam('requirements'), true);
@@ -188,13 +188,13 @@ class VacancyEdit
       // Условия
       $object->data->conditions = VacancyCheckFields::checkTextarea($rq->getParam('conditions'));
     }
-    if($module==5)
+    if($module==6)
     {
       // Налоговый статус
       $value = VacancyCheckFields::checkList($rq->getParam('self_employed'),'self_employed');
       $value===false ? $object->errors['self_employed']=true : $object->data->self_employed=$value;
     }
-    if($module==6)
+    if($module==7)
     {
       // Тип оплаты и Заработная плата
       $type = VacancyCheckFields::checkList($rq->getParam('salary_type'), 'salary_type');
@@ -241,7 +241,7 @@ class VacancyEdit
         ];
       }
     }
-    if($module==7)
+    if($module==8)
     {
       $object->data->ismed = $rq->getParam('medbook')==1;
       $object->data->isavto = $rq->getParam('car')==1;
@@ -254,5 +254,20 @@ class VacancyEdit
         || $object->data->card
         || $object->data->cardPrommu;
     }
+  }
+  /**
+   * @param $id_vacancy
+   * @param $id_user
+   * @return bool|int - service_cloud.id
+   */
+  public static function checkPayment($id_vacancy, $id_user)
+  {
+    $result = false;
+    $city = (new City())->changeVacancyPayCity($id_vacancy, $id_user);
+    if($city)
+    {
+      $result = (new PrommuOrder())->orderInEditVac($id_vacancy, $city);
+    }
+    return $result;
   }
 }

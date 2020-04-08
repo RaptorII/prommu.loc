@@ -467,26 +467,28 @@ class SiteController extends AppController
         {
           $section = $rq->getParam('section');
           $module = $rq->getParam('module');
+          $event = $rq->getParam('event');
+          $arEvents = ['activate','create_city','delete_city','change_city','create_loc','edit_loc'];
           $view = '/user/vacancy/edit/index';//$this->ViewModel->pageVacancy;
           $model = new Vacancy;
-          if($rq->isAjaxRequest && $module==8) // локации редактируем не так, как остальные модули
+          if($rq->isAjaxRequest && in_array($event,$arEvents)) // локации редактируем не так, как остальные модули
           {
+            $module = ($event=='activate' ? 1 : 9);
             $model->setVacancy($id, Share::$UserProfile->id, $module);
           }
           $viData = $model->getVacancy($id);
-
           if($viData->is_owner)
           {
             if($rq->isAjaxRequest)
             {
-              if(!in_array($module,[1,3,4,5,6,7,8]))
+              if(!in_array($module,[1,2,3,4,5,6,7,8,9]))
               {
                 $viData->errors['access'] = true;
               }
               else
               {
                 new VacancyEdit($viData);
-                if(!count($viData->errors) && $module!=8) // ошибок нет
+                if(!count($viData->errors) && !in_array($event,$arEvents)) // ошибок нет и отменяем повторную запись для событий
                 {
                   $model->setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
                 }
@@ -499,6 +501,18 @@ class SiteController extends AppController
                   ['viData'=>$viData]
                 );
                 Yii::app()->end();
+              }
+            }
+            elseif (in_array($event,['pay_change_city','pay_create_city']))
+            {
+              $orderId = VacancyEdit::checkPayment($id, Share::$UserProfile->id);
+              if($orderId) // страница выбора типа оплаты
+              {
+                $this->redirect(MainConfig::$PAGE_PAYMENT . '?receipt=' . $orderId);
+              }
+              else
+              {
+                $this->redirect(MainConfig::$PAGE_VACANCY . DS . $id);
               }
             }
             else

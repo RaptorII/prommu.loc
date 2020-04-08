@@ -957,4 +957,60 @@ class City extends CActiveRecord
 
       return ($query ? (object)$query : false);
     }
+  /**
+   * @param $id_vacancy
+   * @param $id_user
+   * @return bool
+   * Сохраняем данные локации
+   */
+  public function changeVacancyPayCity($id_vacancy, $id_user)
+  {
+    $access = Vacancy::hasAccess($id_vacancy, $id_user);
+    if(!$access)
+    {
+      return false; // нет доступа
+    }
+    $rq = Yii::app()->getRequest();
+    $event = $rq->getParam('event');
+    $city = intval($rq->getParam('new_id_city'));
+
+    if($event=='pay_create_city') // добавление города
+    {
+
+      $arCity = Yii::app()->db->createCommand()
+        ->from('empl_city')
+        ->where('id_vac=:id_vac', [':id_vac'=>$id_vacancy])
+        ->limit(1)
+        ->queryRow();
+
+      if(!$arCity || !$city) // не найден ни один город у вакансии, чего быть не должно. Либо новый код города некорректный
+      {
+        return false;
+      }
+      unset($arCity['id']);
+      $arCity['id_city'] = $city;
+      Yii::app()->db->createCommand()->insert('empl_city',$arCity);
+      Yii::app()->db->createCommand()->update(
+        'empl_vacations',
+        ['status'=>Vacancy::$STATUS_NO_ACTIVE],
+        'id=:id AND id_user=:id_user',
+        [':id'=>$id_vacancy, ':id_user'=>$id_user]
+      );
+      return $city;
+    }
+    if($event=='pay_change_city') // изменение города
+    {
+      $oldCity = intval($rq->getParam('old_id_city'));
+      $sql = "UPDATE `empl_city` SET `id_city`={$city} WHERE `id_vac`={$id_vacancy} AND `id_city`={$oldCity}";
+      Yii::app()->db->createCommand($sql)->execute();
+      Yii::app()->db->createCommand()->update(
+        'empl_vacations',
+        ['status'=>Vacancy::$STATUS_NO_ACTIVE],
+        'id=:id AND id_user=:id_user',
+        [':id'=>$id_vacancy, ':id_user'=>$id_user]
+      );
+      return $city;
+    }
+    return false;
+  }
 }

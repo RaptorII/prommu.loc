@@ -812,24 +812,6 @@ class UserController extends AppController
     }
 
 
-
-    public function actionVacactivate()
-    {
-
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
-
-        $res = (new Vacancy())->vacActivate();
-
-        if( $res['error'] < 0 ) {
-            $this->redirect(MainConfig::$PAGE_INDEX);
-        } else {
-            Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $res['message']));
-            $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['id']);
-        }
-    }
-
-
-
     public function actionVacancies()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);

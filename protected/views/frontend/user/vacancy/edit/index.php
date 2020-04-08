@@ -9,35 +9,29 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScr
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
 ?>
 <div class="row">
+  <? if($viData->data->is_actual_remdate): ?>
+    <div class="col-xs-12">
+      <a href="<?=MainConfig::$PAGE_VACPUB . "?duplicate=Y&id={$viData->data->id}"?>" class="btn__orange">Дублировать вакансию</a>
+      <div class="personal__area--separator"></div>
+    </div>
+  <? endif; ?>
   <div class="col-xs-12 col-sm-6">
-    <? if($viData->data->status==Vacancy::$STATUS_NO_ACTIVE): ?>
-      <div class="personal__area--capacity border__red">
-        <div class="personal__area--capacity-name text__red">Важно!</div>
-        <p class="text__justify text__red">На данный момент Ваша вакансия сохранена, но не опубликована - Вы можете опубликовать вакансию сразу,
-          нажав кнопку “ОПУБЛИКОВАТЬ ВАКАНСИЮ” или согласно наших рекомендаций заполнить дополнительные данные,
-          которые помогут оперативнее и качественнее, в сжатые сроки, найти необходимый персонал,
-          ну и главное проверить корректность введения данных по Вашей вакансии.</p>
-        <a href="/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData->data->id}" ?>" class="btn__orange">ОПУБЛИКОВАТЬ ВАКАНСИЮ</a>
-        <br>
-        <br>
-      </div>
-    <? endif; ?>
-    <div class="personal__area--capacity module">
+    <div id="activate-block">
       <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
+    </div>
+    <div class="personal__area--capacity module">
+      <? $this->renderPartial('../user/vacancy/edit/module_2',['viData'=>$viData]) ?>
     </div>
     <? if($viData->data->is_actual): ?>
       <div class="personal__area--capacity module">
-        <? $this->renderPartial('../user/vacancy/edit/module_2',['viData'=>$viData]) ?>
+        <? $this->renderPartial('../user/vacancy/edit/module_3',['viData'=>$viData]) ?>
       </div>
     <? endif; ?>
     <div class="personal__area--capacity module">
-      <? $this->renderPartial('../user/vacancy/edit/module_3',['viData'=>$viData]) ?>
+      <? $this->renderPartial('../user/vacancy/edit/module_4',['viData'=>$viData]) ?>
     </div>
   </div>
   <div class="col-xs-12 col-sm-6">
-    <div class="personal__area--capacity module">
-      <? $this->renderPartial('../user/vacancy/edit/module_4',['viData'=>$viData]) ?>
-    </div>
     <div class="personal__area--capacity module">
       <? $this->renderPartial('../user/vacancy/edit/module_5',['viData'=>$viData]) ?>
     </div>
@@ -49,6 +43,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
     </div>
     <div class="personal__area--capacity module">
       <? $this->renderPartial('../user/vacancy/edit/module_8',['viData'=>$viData]) ?>
+    </div>
+    <div class="personal__area--capacity module">
+      <? $this->renderPartial('../user/vacancy/edit/module_9',['viData'=>$viData]) ?>
     </div>
   </div>
 </div>

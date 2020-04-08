@@ -884,7 +884,7 @@ try google material design
 .fancybox-close-small:after {
     /*color: var(--color-white)!important;*/
 }
-
+#activate-block{ margin-bottom: 20px }
 /* end popup
 */
 
@@ -909,6 +909,9 @@ try google material design
 }
 .text__nowrap{
     white-space: nowrap;
+}
+.text__underline{
+    text-decoration: underline !important;
 }
 /*
 * FORM

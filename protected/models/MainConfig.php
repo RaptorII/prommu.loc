@@ -135,7 +135,6 @@ class MainConfig
     public static $PAGE_VACANCIES = 'user/vacancies';
     public static $PAGE_VACARHIVE = 'user/vacarhive';
     public static $PAGE_PROMMUCARD = 'user/prommucard';
-    public static $PAGE_VACACTIVATE = 'user/vacactivate';
     public static $PAGE_SITEMAP = 'map';
     public static $PAGE_PASS_RESTORE = 'pass-restore';
     public static $PAGE_NEW_PASS = 'new-pass';

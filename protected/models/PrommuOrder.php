@@ -954,13 +954,19 @@ class PrommuOrder {
     return $arRes;
   }
   /**
-   *  Формирование заказа для формы создания вакансии
+   * @param $id_vacancy - integer
+   * @param $arCity - array of city.id_city for premium service
+   * @param $arPrice - array of prices for premium service
+   * @param $period - integer, count of days
+   * @param $arVacCities - array of city.id_city for creation-vacancy service
+   * @return array id of service_cloud rows
+   * Формирование заказа для формы создания вакансии
    */
   public function orderInCreationVac($id_vacancy, $arCity, $arPrice, $period, $arVacCities)
   {
     $arRes = [];
     $day = 60 * 60 * 24;
-    $from = strtotime('today');;
+    $from = strtotime('today');
     $to = $from + $period*$day;
     $days = ($to - $from) / $day;
 
@@ -986,10 +992,69 @@ class PrommuOrder {
     if(!Share::$UserProfile->accessToFreeVacancy) // Creation
     {
       $cost = ServiceCloud::getCostForVacancyCreate($arVacCities);
-      $arRes[] = $this->serviceOrder(
+      if($cost>0) // Нужно оплачивать только если сумма больше нуля
+      {
+        if(in_array(1838, $arVacCities) && in_array(1307, $arVacCities)) // особый случай - оплата двух городов
+        {
+          $arRes[] = $this->serviceOrder(
+            Share::$UserProfile->id,
+            $cost,
+            1307, // МСК
+            0,
+            0,
+            date('Y-m-d'),
+            date('Y-m-d'),
+            $id_vacancy,
+            'creation-vacancy'
+          );
+          $arRes[] = $this->serviceOrder(
+            Share::$UserProfile->id,
+            0,
+            1838, // СПБ
+            0,
+            0,
+            date('Y-m-d'),
+            date('Y-m-d'),
+            $id_vacancy,
+            'creation-vacancy'
+          );
+        }
+        else
+        {
+          $arRes[] = $this->serviceOrder(
+            Share::$UserProfile->id,
+            $cost,
+            null,
+            0,
+            0,
+            date('Y-m-d'),
+            date('Y-m-d'),
+            $id_vacancy,
+            'creation-vacancy'
+          );
+        }
+      }
+    }
+
+    return $arRes;
+  }
+  /**
+   * @param $id_vacancy - integer
+   * @param $id_city - integer, city.id_city for creation-vacancy service
+   * @return integer, id of service_cloud rows
+   * Формирование заказа для формы создания вакансии
+   */
+  public function orderInEditVac($id_vacancy, $id_city)
+  {
+    $result = false;
+
+    $cost = ServiceCloud::getCostForVacancyCreate([$id_city]);
+    if($cost>0) // Нужно оплачивать только если сумма больше нуля
+    {
+      $result = $this->serviceOrder(
         Share::$UserProfile->id,
         $cost,
-        null,
+        $id_city,
         0,
         0,
         date('Y-m-d'),
@@ -999,7 +1064,7 @@ class PrommuOrder {
       );
     }
 
-    return $arRes;
+    return $result;
   }
 }
 ?>

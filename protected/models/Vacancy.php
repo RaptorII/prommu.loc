@@ -4907,7 +4907,8 @@ class Vacancy extends ARModel
     Yii::app()->db->createCommand()->update(
       self::tableName(),
       ['sort'=>$vacancy],
-      ['id'=>$vacancy]
+      'id=:id',
+      [':id'=>$vacancy]
     );
     // добавление городов вакансии
     $arInsert = [];
@@ -4941,7 +4942,6 @@ class Vacancy extends ARModel
     //
     Yii::app()->db->createCommand()
       ->update('employer',['vacancy_payment'=>strtotime('today')],['id_user'=>$objUser->id_user]);
-
     //
     return $vacancy;
   }
@@ -4955,7 +4955,15 @@ class Vacancy extends ARModel
   public function setVacancy($id, $id_user, $module, $data=false)
   {
     $arUpdate = [];
-    if($module==1)
+    if($module==1) // активация вакансии
+    {
+      $services = (new ServiceCloud())->getCreateVacancyPaidService($id);
+      if(!$this->count($services->items)) // активируем только если оплачено создание вакансии
+      {
+        $arUpdate = ['status'=>self::$STATUS_ACTIVE];
+      }
+    }
+    if($module==2)
     {
       $arUpdate = [
         'title' => $data->title,
@@ -4968,7 +4976,7 @@ class Vacancy extends ARModel
       ];
       self::saveVacancyPosts($id, $data->post);
     }
-    if($module==3)
+    if($module==4)
     {
       $arUpdate = [
         'exp' => $data->exp,
@@ -4996,7 +5004,7 @@ class Vacancy extends ARModel
       }
       self::saveVacancyAttributes($id, $arAttr);
     }
-    if($module==4)
+    if($module==5)
     {
       $arUpdate = [
         'requirements' => $data->requirements,
@@ -5004,11 +5012,11 @@ class Vacancy extends ARModel
         'conditions' => $data->conditions
       ];
     }
-    if($module==5)
+    if($module==6)
     {
       $arUpdate = ['self_employed' => $data->self_employed];
     }
-    if($module==6)
+    if($module==7)
     {
       $arUpdate = [
         'shour' => $data->shour,
@@ -5021,7 +5029,7 @@ class Vacancy extends ARModel
         'salary-comment' => $data->properties['salary-comment']['value']
       ]);
     }
-    if($module==7)
+    if($module==8)
     {
       $arUpdate = [
         'ismed' => $data->ismed,
@@ -5031,7 +5039,7 @@ class Vacancy extends ARModel
         'card' => $data->card
       ];
     }
-    if($module==8)
+    if($module==9)
     {
       $model = new City();
       $model->changeVacancyLocations($id, $id_user);
@@ -5061,6 +5069,7 @@ class Vacancy extends ARModel
       'employer' => [],
       'posts' => $this->getPostsSortList(),
       'attributes' => $this->getAllAttributes(),
+      'services' => [],
       'is_owner' => false,
       'error_moodule' => false
     ];
@@ -5090,9 +5099,12 @@ class Vacancy extends ARModel
     $result->data->ageto=0 && $result->data->ageto = '';
     ($query['duties']=="<br>" || $query['duties']=="&lt;br&gt;") && $result->data->duties = '';
     ($query['conditions']=="<br>" || $query['conditions']=="&lt;br&gt;") && $result->data->conditions = '';
-    // Актуальная вакансия - активная и промодерированая
+    // Актуальная вакансия - активная, промодерированая, подходящая по дате
     $result->data->is_actual =
-      ($query['status']==self::$STATUS_ACTIVE) && ($query['ismoder']==self::$ISMODER_APPROVED);
+      ($query['status']==self::$STATUS_ACTIVE)
+      &&
+      ($query['ismoder']==self::$ISMODER_APPROVED);
+    $result->data->is_actual_remdate = strtotime('today') <= $result->data->remdate_unix;
     // Атрибуты
     $query = Yii::app()->db->createCommand()
       ->from('empl_attribs')
@@ -5162,6 +5174,8 @@ class Vacancy extends ARModel
     {
       $result->is_owner = true;
     }
+    // Услуги ServiceCloud creation-vacancy
+    $result->services = (new ServiceCloud())->getCreateVacancyPaidService($id);
 
     return $result;
   }

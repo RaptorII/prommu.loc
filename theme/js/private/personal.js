@@ -440,7 +440,7 @@ var InitSelect = (function () {
     $.each($(self.select).find('option:selected'), function(){
       if($(this).is(':selected'))
       {
-        self.setSelected($(this).val(),$(this).text());
+        self.setSelected($(this).val(),$(this).text(),true);
       }
     });
 
@@ -456,7 +456,7 @@ var InitSelect = (function () {
         {
           if($(e.target).is('li')) // по элементам списка
           {
-            self.setSelected(e.target.dataset.id, $(e.target).text());
+            self.setSelected(e.target.dataset.id, $(e.target).text(),false);
           }
           else if($(e.target).is('.form__select-selected b')) // удаляем из списка, если multiple
           {
@@ -669,7 +669,8 @@ var InitSelect = (function () {
   {
     let self = this,
       id = arguments[0],
-      name = arguments[1];
+      name = arguments[1],
+      isInit = arguments[2];
 
     if(!id.length) // клик по поиску
     {
@@ -701,7 +702,10 @@ var InitSelect = (function () {
       option.length
         ? $(option).prop('selected',true)
         : $(self.select).append('<option value="' + id + '" selected>');
-      $(self.select).change(); // имитируем событие селекта
+      if(!isInit)
+      {
+        $(self.select).change(); // имитируем событие селекта
+      }
     }
     else // если селект мультипл
     {
@@ -711,7 +715,10 @@ var InitSelect = (function () {
       {
         $(self.select).append('<option value="' + id + '" selected>');
       }
-      $(self.select).change(); // имитируем событие селекта
+      if(!isInit)
+      {
+        $(self.select).change(); // имитируем событие селекта
+      }
       self.selected.push(id);
     }
 

@@ -5,12 +5,17 @@
   <div class="form__container">
     <? if(!Share::$UserProfile->accessToFreeVacancy): ?>
       <div class="form__field form__field-first">
+        <div class="form__field-content form__content-indent">Создание данной вакансии будет платной потому, что в период 30 дней вакансия уже добавлялась Вами</div>
+        <?/*?>
         <label class="form__field-label text__nowrap">Стоимость</label>
         <div class="form__field-content form__content-indent form__content-hint" id="cost">
           <?=ServiceCloud::getCostForVacancyCreate(array_keys($model->dataOther->arSelectCity)) . ' руб.';?>
         </div>
+        <?*/?>
       </div>
-      <script>var arVacancyPrice = <?=json_encode(ServiceCloud::PAYMENT_FOR_CREATE)?></script>
+      <?/*?>
+        <script>var arVacancyPrice = <?=json_encode(ServiceCloud::PAYMENT_FOR_CREATE)?></script>
+      <?*/?>
     <? endif; ?>
     <?
     //

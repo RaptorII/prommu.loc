@@ -31,7 +31,7 @@ var CreateVacancy = (function () {
         minDate:'0',
         maxDate:'+30D'
       });
-      self.setCost();
+      //self.setCost();
     }
     else if(step==='2')
     {
@@ -52,6 +52,18 @@ var CreateVacancy = (function () {
     }
     else if(step==='5')
     {
+      $('form').attr('data-params','');
+      $('form').submit(function(){
+        $('body').addClass('prmu-load');
+      });
+    }
+    else if(step==='duplicate')
+    {
+      new InitPeriod({
+        selector:'#period',
+        minDate:'0',
+        maxDate:'+30D'
+      });
       $('form').attr('data-params','');
       $('form').submit(function(){
         $('body').addClass('prmu-load');

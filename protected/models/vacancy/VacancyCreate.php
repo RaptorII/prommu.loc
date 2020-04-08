@@ -16,7 +16,6 @@ class VacancyCreate
   public $dataOther;
   public $errors;
   public $id_vacancy;
-  public $finish_link;
   const VIEW_TEMPLATE = '/user/vacancy/create/step_';
 
   function __construct($vacancy=false)
@@ -25,7 +24,109 @@ class VacancyCreate
     $this->errors = [];
     $this->dataOther = (object)[];
 
-    if($vacancy)
+    $duplicate = Yii::app()->getRequest()->getParam('duplicate');
+    if($duplicate=='Y') // дублирование вакансии
+    {
+      $id_vacancy = intval(Yii::app()->getRequest()->getParam('id'));
+
+      $model = new Vacancy();
+      $query = $model->getVacanciesById([$id_vacancy]);
+      if(count($query))
+      {
+        $query = reset($query);
+        $this->data = (object)[
+          'title' => $query['title'],
+          'istemp' => $query['istemp'],
+          'exp' => $query['exp'],
+          'self_employed' => $query['self_employed'],
+          'age_from' => $query['agefrom'],
+          'age_to' => $query['ageto'],
+          'gender' => [],
+          'post' => [],
+          'city' => [],
+          'salary_time' => '',
+          'salary_comment' => '',
+          'salary_type' => 0,
+          'salary' => 0,
+          'requirements' => $query['requirements'],
+          'duties' => $query['duties'],
+          'conditions' => $query['conditions'],
+          'medbook' => $query['ismed'],
+          'car' => $query['isavto'],
+          'smartphone' => $query['smart'],
+          'card_prommu' => $query['cardPrommu'],
+          'card' => $query['card'],
+          'repost' => []
+        ];
+        $query['isman'] && $this->data->gender[] = 'man';
+        $query['iswoman'] && $this->data->gender[] = 'woman';
+        if($query['shour']>0)
+        {
+          $this->data->salary_type = 0; // руб / час
+          $this->data->salary = $query['shour'];
+        }
+        if($query['sweek']>0)
+        {
+          $this->data->salary_type = 1; // руб / неделя
+          $this->data->salary = $query['sweek'];
+        }
+        if($query['smonth']>0)
+        {
+          $this->data->salary_type = 2; // руб / месяц
+          $this->data->salary = $query['smonth'];
+        }
+        if($query['svisit']>0)
+        {
+          $this->data->salary_type = 3; // руб / посещение
+          $this->data->salary = $query['svisit'];
+        }
+        substr($query['repost'], 0,1)=='1' && $this->data->repost[] = 'vk';
+        substr($query['repost'], 1,1)=='1' && $this->data->repost[] = 'facebook';
+        substr($query['repost'], 2,1)=='1' && $this->data->repost[] = 'telegram';
+
+        $query = Yii::app()->db->createCommand()
+          ->from('empl_attribs')
+          ->where('id_vac=:id',[':id'=>$id_vacancy])
+          ->queryAll();
+        $arAttr = $model::getAllAttributes();
+
+        foreach ($query as $v)
+        {
+          $arProp = $arAttr->items[$v['key']];
+          if($arProp['id_par']==Vacancy::ID_POSTS_ATTRIBUTE) // должность
+          {
+            $this->data->post[] = $v['key'];
+          }
+          else // прочие атрибуты
+          {
+            if($v['key']=='paylims')
+            {
+              $this->data->salary_time = $v['id_attr'];
+            }
+            if($v['key']=='salary-comment')
+            {
+              $this->data->salary_comment = $v['val'];
+            }
+          }
+        }
+
+        $this->data->city = Yii::app()->db->createCommand()
+          ->select('id_city')
+          ->from('empl_city')
+          ->where('id_vac=:id',[':id'=>$id_vacancy])
+          ->queryColumn();
+
+        $this->vacancy = md5(time() . $this->id_user);
+        $this->vacancy = substr($this->vacancy,0,7);
+        $this->step = 'duplicate';
+        $this->is_new = true;
+      }
+      else
+      {
+        $this->errors['access'] = 'Вакансии не существует, либо у вас нет доступа';
+      }
+    }
+    elseif($vacancy) // открытие существующей вакансии
     {
       $this->vacancy = filter_var($vacancy, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $this->is_new = false;
@@ -37,7 +138,7 @@ class VacancyCreate
       $this->data = $object->data;
       $this->step = $object->step; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
-    else
+    else // создание новой вакансии
     {
       $this->vacancy = md5(time() . $this->id_user);
       $this->vacancy = substr($this->vacancy,0,7);
@@ -47,7 +148,6 @@ class VacancyCreate
     }
 
     $this->id_vacancy = false;
-    $this->finish_link = false;
   }
   /**
    * Получение данных по вакансии
@@ -128,30 +228,7 @@ class VacancyCreate
       {
         $this->data->city = $v;
       }
-      $v1 = $rq->getParam('bdate'); // Дата начала
-      $v2 = $rq->getParam('edate'); // Дата завершения
-      if(!Share::checkFormatDate($v1))
-      {
-        $this->errors['bdate'] = true;
-      }
-      elseif(!Share::checkFormatDate($v2))
-      {
-        $this->errors['edate'] = true;
-      }
-      elseif(
-        (strtotime($v1)>strtotime($v2)) // если даты отличаются
-        ||
-        ((strtotime($v2)-strtotime($v1)) > (30*86400)) // период сильно большой(больше 30 дней)
-      )
-      {
-        $this->errors['bdate'] = true;
-        $this->errors['edate'] = true;
-      }
-      else
-      {
-        $this->data->bdate = $v1;
-        $this->data->edate = $v2;
-      }
+      $this->checkPeriod();
     }
     elseif($step==2)
     {
@@ -237,12 +314,20 @@ class VacancyCreate
         $this->data->repost = $v;
       }
     }
+    elseif ($step=='duplicate')
+    {
+      $this->checkPeriod();
+    }
 
     if(!count($this->errors)) // ошибок нет
     {
-      $this->step<5 && $this->step=$step+1;
+      if($this->step!='duplicate' && $this->step<5)
+      {
+        $this->step=$step+1;
+      }
+
       $this->setData();
-      if($step==5)
+      if($step==5 || $step=='duplicate')
       {
         $model = new Vacancy();
         $this->id_vacancy = $model->createVacancy(
@@ -274,7 +359,7 @@ class VacancyCreate
         }
       }
     }
-    if(in_array($this->step,[1,5]))
+    if(in_array($this->step,[1,5,'duplicate']))
     {
       $this->dataOther->arSelectCity = [];
       if(count($this->data->city))
@@ -291,7 +376,7 @@ class VacancyCreate
         $this->dataOther->arSelectCity[Share::$UserProfile->cache->city->id_city] = Share::$UserProfile->cache->city->name;
       }
     }
-    if($this->step==5)
+    if(in_array($this->step,[5,'duplicate']))
     {
       $period = strtotime($this->data->edate) - strtotime($this->data->bdate);
       $this->dataOther->period = $period/86400;
@@ -323,7 +408,11 @@ class VacancyCreate
     }
 
     $rq = Yii::app()->getRequest();
-    if($rq->getParam('premium')==1 || !Share::$UserProfile->accessToFreeVacancy)
+    if(
+      $rq->getParam('premium')==1
+      ||
+      (!Share::$UserProfile->accessToFreeVacancy && $this->step!='duplicate')
+    )
     {
       $arCity = [];
       $arPrice = [];
@@ -348,5 +437,35 @@ class VacancyCreate
       );
     }
     return $arRes;
+  }
+  /**
+   * Проверка даты начала и даты завершения
+   */
+  private function checkPeriod()
+  {
+    $v1 = Yii::app()->getRequest()->getParam('bdate'); // Дата начала
+    $v2 = Yii::app()->getRequest()->getParam('edate'); // Дата завершения
+    if(!Share::checkFormatDate($v1))
+    {
+      $this->errors['bdate'] = true;
+    }
+    elseif(!Share::checkFormatDate($v2))
+    {
+      $this->errors['edate'] = true;
+    }
+    elseif(
+      (strtotime($v1)>strtotime($v2)) // если даты отличаются
+      ||
+      ((strtotime($v2)-strtotime($v1)) > (30*86400)) // период сильно большой(больше 30 дней)
+    )
+    {
+      $this->errors['bdate'] = true;
+      $this->errors['edate'] = true;
+    }
+    else
+    {
+      $this->data->bdate = $v1;
+      $this->data->edate = $v2;
+    }
   }
 }

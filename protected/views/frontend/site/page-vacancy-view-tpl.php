@@ -139,13 +139,17 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                               <span class="erv__not-publ" style="max-width:initial">Для публикации вакансий необходимо пройти модерацию</span>
                             <? elseif (!$viData['vac']['status']): ?>
                               <span class="erv__not-publ">Вакансия не опубликована</span>
+                              <?/*?>
                               <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
                                  class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
+                              <?*/?>
                               <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
                                  class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
                             <? else: ?>
+                              <?/*?>
                               <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
                                  class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                              <?*/?>
                               <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
                                  class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
                             <? endif; ?>
@@ -948,11 +952,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="erv__button-block">
                             <button class="erv__button prmu-btn erv__button-block-btn"><span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
                             </button>
-                            <? if (!isset($viData['vac']['cannot-publish']) && $viData['vac']['status']): ?>
+                            <? /*if (!isset($viData['vac']['cannot-publish']) && $viData['vac']['status']): ?>
                                 <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="prmu-btn erv__button-block-btn">
                                     <span>СНЯТЬ С ПУБЛИКАЦИИ</span>
                                 </a>
-                            <? endif; ?>
+                            <? endif;*/ ?>
                             <?/*
                             <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>'
                                class="prmu-btn erv__button-block-btn" id="rv-vac-del"><span>УДАЛИТЬ ВАКАНСИЮ</span></a>*/?>
@@ -1205,7 +1209,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="sv__attributes-name"><b>Заработная плата:</b></div>
                         <div class="sv__attributes-val">
                             <? if ($vacancy['shour'] > 0): ?>
-                                <span><?= $vacancy['shour'] . (!$viData['vac']['istemp'] ? ' руб/час' : ' за проект') ?></span>
+                                <span><?= $vacancy['shour'] . ' руб/час' ?></span>
                                 <br>
                             <? endif; ?>
                             <? if ($vacancy['sweek'] > 0): ?>

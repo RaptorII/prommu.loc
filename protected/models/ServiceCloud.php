@@ -291,4 +291,54 @@ class ServiceCloud
     }
     return $cost;
   }
+
+  public function getCreateVacancyPaidService($id_vacancy)
+  {
+    $result = (object)[
+      'creation_vacancy' => (object)[
+        'items' => [],
+        'legal_links' => [],
+        'cities' => [],
+        'individual_link' => ''
+      ]
+    ];
+
+    $query = Yii::app()->db->createCommand()
+      ->from('service_cloud')
+      ->where(
+        "name=:id_vacancy AND type='creation-vacancy' AND status=0",
+        [':id_vacancy' => $id_vacancy]
+      )
+      ->queryAll();
+
+    if(!$query)
+    {
+      return $result;
+    }
+    $result->creation_vacancy->items = $query;
+
+    $arId = [];
+    $cost = 0;
+    foreach ($query as $v)
+    {
+      if ($v['legal']) // юр.лицо
+      {
+        $result->creation_vacancy->legal_links[] = MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $v['legal'];
+      } else {
+        $arId[] = $v['id'];
+        $cost += $v['sum'];
+      }
+      $result->creation_vacancy->cities[] = $v['city'];
+    }
+    if(count($arId))
+    {
+      $result->creation_vacancy->individual_link = (new PrommuOrder())->createPayLink(
+        Share::$UserProfile->id . '.' . implode('.', $arId) . '.creation-vacancy.' . time(),
+        '',
+        $cost
+      );
+    }
+
+    return $result;
+  }
 }

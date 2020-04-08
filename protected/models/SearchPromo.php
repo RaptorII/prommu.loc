@@ -248,8 +248,8 @@ class SearchPromo extends Model
         // читаем должности
         $sql = "SELECT d.id, d.id_par, d.type, d.name, d.postself
             FROM user_attr_dict d
-            WHERE d.id_par = 110
-            ORDER BY d.name
+            WHERE d.id_par = 110 AND d.key <> 'custpo'
+            ORDER BY d.npp, d.name
             ";
         $data['posts'] = Yii::app()->db->createCommand($sql)->queryAll();
         if( $posts )
