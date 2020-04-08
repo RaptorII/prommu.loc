@@ -55,6 +55,22 @@
   font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 
+.service-vac__item.service-vac__person-inv:after {
+  font-family: "PrommuFont";
+  content: '\e9d4';
+  font-size: 40px;
+  padding-left: 25px;
+  color: white;
+  width: 100px;
+  display: block;
+  position: absolute;
+  top: 0px;
+  bottom: 0;
+  right: -100px;
+  background: #BBC823;
+  background-size: 50px;
+}
+
 #DiContent .service-vac__item-input {
   display: none;
 }
@@ -106,6 +122,7 @@
 }
 
 /* LIST TABLE */
+#DiContent.action-personal-invitation .questionnaire,
 #DiContent.action-email-invitation .questionnaire {
   position: relative;
   margin: 20px 0;
@@ -114,6 +131,7 @@
   text-transform: uppercase;
 }
 
+#DiContent.action-personal-invitation .questionnaire div,
 #DiContent.action-email-invitation .questionnaire div {
   display: inline-block;
   position: relative;
@@ -126,10 +144,12 @@
   color: #abb820;
 }
 
+#DiContent.action-personal-invitation .table-view .comm-logo-wrapp,
 #DiContent.action-email-invitation .table-view .comm-logo-wrapp {
   margin-bottom: 40px;
 }
 
+#DiContent.action-personal-invitation .table-view .comm-logo img,
 #DiContent.action-email-invitation .table-view .comm-logo img {
   width: 100%;
   max-width: 225px;
@@ -278,6 +298,7 @@
   float: none;
 }
 
+.action-personal-invitation .table-view .smss-promo__label,
 .action-email-invitation .table-view .smss-promo__label {
   display: block;
   position: absolute;
@@ -312,6 +333,7 @@
     float: left;
   }
 
+  .action-personal-invitation .table-view .smss-promo__label,
   .action-email-invitation .table-view .smss-promo__label {
     left: 5px;
     bottom: 40px;
@@ -346,6 +368,7 @@
 /*
 *	active
 */
+.action-personal-invitation .list-view .smss-promo__label,
 .action-email-invitation .list-view .smss-promo__label {
   display: block;
   position: absolute;
@@ -360,6 +383,8 @@
   transition: all 0.3s ease-out;
 }
 
+#DiContent.action-personal-invitation .list-view .promo_inp,
+#DiContent.action-personal-invitation .table-view .promo_inp,
 #DiContent.action-email-invitation .list-view .promo_inp,
 #DiContent.action-email-invitation .table-view .promo_inp {
   display: none

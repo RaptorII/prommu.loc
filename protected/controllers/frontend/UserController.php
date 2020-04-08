@@ -189,6 +189,52 @@ class UserController extends AppController
             ['in','id',$arIdVacs]
           );
       }
+      elseif ($serviceType=='personal-invitation') // personal-invitation
+      {
+          // set invite after send moneypay-service unitpay
+          $arRes = Yii::app()->db->createCommand()
+              ->select('id, id_user, name, user')
+              ->from('service_cloud')
+              ->where(
+                  'id_user=:idp',
+                  [
+                      ':idp'=>$id_user
+                  ])
+              ->order('id_user DESC')
+              ->queryRow();
+
+          $props['idvac'] = $arRes['name'];
+
+          if (explode(',',$arRes['user'])) {
+              $users = explode(',', $arRes['user']);
+          } else {
+              $users = $arRes['user'];
+          }
+
+          for($i=0; $i<=count($users); ++$i)
+          {
+              $props['id'] = Yii::app()->db->createCommand()
+                  ->select('id')
+                  ->from('resume')
+                  ->where(
+                      'id_user=:idp',
+                      [':idp'=>$users[$i]]
+                  )
+                  ->queryScalar();
+
+              if ($props['id']) {
+                  (new ResponsesApplic())->invite($props);
+              }
+          }
+
+          $db->createCommand()
+              ->update(
+                  'service_cloud',
+                  ['status' => 1],
+                  ['and', 'id_user=:id', ['in','id',$arIdOrder]],
+                  [':id'=>$id_user]
+              );
+      }
       echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
     }
   }
@@ -1115,6 +1161,64 @@ class UserController extends AppController
                 }
                 break;
 
+            // personal-invitation
+            case 'personal-invitation':
+
+                if ($price > 0) { // pay service
+
+                    $price = $model->servicePrice($vac, $service);
+                    $users = $rq->getParam('users');
+
+                    $data = $model->orderPersonalInvitation($vac, $users, $emp, $price);
+
+                    if ($data['cost'] > 0 ) {
+
+                        display($data);
+                        display($rq->getParam('personal'));
+
+                        if ($rq->getParam('personal') === 'individual') // people
+                        {
+                            $link = $model->createPayLink($data['account'], $vac, $data['cost']);
+                            $link && $this->redirect($link);
+                        }
+                        if ($rq->getParam('personal') === 'legal') // company
+                        {
+                            $model->setLegalEntityReceipt($data['id']);
+                            $this->redirect(MainConfig::$PAGE_SERVICES);
+                        }
+                    } elseif ($data['cost'] = -2) {
+//                      invite users
+//                      save data to database
+//                      database = vacation_stat
+
+                        $props['idvac'] = $vac;
+
+                        $users = explode(',',$users);
+                        for($i=0; $i<=count($users); ++$i)
+                        {
+                            $props['id'] = Yii::app()->db->createCommand()
+                                ->select('id')
+                                ->from('resume')
+                                ->where(
+                                    'id_user=:idp',
+                                    [':idp'=>$users[$i]]
+                                )
+                                ->queryScalar();
+
+                            if ($props['id']) {
+                                (new ResponsesApplic())->invite($props);
+                            }
+                        }
+                        $this->redirect(MainConfig::$PAGE_SERVICES);
+                    }
+
+
+                } else { // free or no price
+                    //die('personal-invitation no price');
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                }
+                break;
+
             case 'email-invitation':
                 if($price > 0)
                 {
@@ -1713,6 +1817,40 @@ class UserController extends AppController
                 $vac = new Vacancy();
                 $data = $vac->getMVacsForPayService();
 
+                break;
+
+            case 'personal-invitation':
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
+
+                $vac = Yii::app()->getRequest()->getParam('vacancy');
+                $data['price'] = (new PrommuOrder())->servicePrice($vac, $id);
+
+                if(Yii::app()->getRequest()->getParam('users') && $data['price']>=0)
+                {
+                    $data['emp'] = Share::$UserProfile->getProfileDataView()['userInfo'];
+                    $data['vac'] = (new Vacancy())->getVacancyInfo($vac);
+                    $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+                    $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
+                    isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];
+                    $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
+                }
+                elseif(Yii::app()->request->isAjaxRequest)
+                {
+                    $this->renderPartial(
+                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
+                        array('viData' => (new Services())->getFilteredPromos()),
+                        false,
+                        true
+                    );
+                    return;
+                }
+                else{
+                    $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
+                    $data2 = (Yii::app()->getRequest()->getParam('vacancy')
+                        ? (new Services())->prepareFilterData()
+                        : (new Vacancy())->getModerVacs());
+                    $data = array_merge($data,$data2);
+                }
                 break;
 
             case 'email-invitation':

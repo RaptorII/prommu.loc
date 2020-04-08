@@ -363,6 +363,7 @@ class Services extends Model
         case 'repost': $name = 'Публикация в соцсетях'; break;
         case 'email': $name = 'Электронная почта'; break;
         case 'push': $name = 'PUSH уведомления'; break;
+        case 'personal-invitation': $name = 'Приглашение на вакансию'; break;
         case 'sms': $name = 'SMS информирование'; break;
         case 'api': $name = 'Получение API ключа'; break;
         case 'outsourcing': $name = 'Личный менеджер и аутсорсинг персонала'; break;
@@ -412,6 +413,15 @@ class Services extends Model
               'link' => '/admin/service/service_cloud/upvacancy',
               'icon' => 'glyphicon-level-up',
               'cnt' => $arOrder['upvacancy']
+          ];
+        }
+        if($arOrder['personal-invitation']>0) // personal-invitation
+        {
+          $arRes['items'][] = [
+              'name' => Services::getServiceName('personal-invitation'),
+              'link' => '/admin/service/service_cloud/personal-invitation',
+              'icon' => 'glyphicon-hand-right',
+              'cnt' => $arOrder['personal-invitation']
           ];
         }
         if($arOrder['email']>0) // email

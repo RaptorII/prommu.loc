@@ -162,6 +162,12 @@
 					<span>PUSH уведомления</span>
 				</a>
 			</li>
+            <li>
+                <a href="<?=$hUrl?>services?type=personal-invitation">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    <span>Приглашение на вакансию</span>
+                </a>
+            </li>
 			<li>
 				<a href="<?=$hUrl?>services?type=sms">
 					<i class="glyphicon glyphicon-envelope"></i>

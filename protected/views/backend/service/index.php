@@ -30,6 +30,12 @@
       </a>
     </li>
     <li>
+      <a href="<?=$this->createUrl('service/service_cloud/personal-invitation')?>">
+        <i class="glyphicon glyphicon-hand-right"></i>
+        <span><?=Services::getServiceName('personal-invitation')?></span>
+      </a>
+    </li>
+    <li>
       <a href="<?=$this->createUrl('service/service_cloud/email')?>">
         <i class="glyphicon">@</i>
         <span><?=Services::getServiceName('email')?></span>

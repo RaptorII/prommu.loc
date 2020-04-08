@@ -1149,4 +1149,23 @@ class ResponsesApplic extends Responses
         }
         return $result;
     }
+
+    /**
+     * @param $id_vac - id of vacation
+     * @return CDbDataReader|mixed
+     * @throws CException
+     */
+    public static function getCntVacStat($id_vac)
+    {
+        $cntVac = Yii::app()->db->createCommand("
+            SELECT 
+                COUNT(vs.id_vac) cnt
+            FROM 
+                vacation_stat vs
+            WHERE 
+                vs.id_vac = {$id_vac}
+        ")->queryRow();
+
+        return $cntVac['cnt'];
+    }
 }

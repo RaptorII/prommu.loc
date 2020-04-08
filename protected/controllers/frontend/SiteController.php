@@ -913,6 +913,7 @@ class SiteController extends AppController
               case 'creation-vacancy':
               case 'premium-vacancy':
               case 'podnyatie-vacansyi-vverh':
+              case 'personal-invitation':
               case 'email-invitation':
               case 'push-notification':
               case 'sms-informing-staff':

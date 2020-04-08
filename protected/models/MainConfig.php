@@ -144,6 +144,7 @@ class MainConfig
     /* SERVICES */
     public static $PAGE_SERVICES_PREMIUM = '/services/premium-vacancy';
     public static $PAGE_SERVICES_VAC_UP = '/services/podnyatie-vacansyi-vverh';
+    public static $PAGE_SERVICES_PERSONAL_INVITATION = '/services/personal-invitation';
     public static $PAGE_SERVICES_SHARES = '/services/#';
     public static $PAGE_SERVICES_PUSH = '/services/push-notification';
     public static $PAGE_SERVICES_SOCIAL = '/services/publication-vacancy-social-net';
@@ -159,6 +160,7 @@ class MainConfig
     public static $VIEWS_SERVICES = 'services/list';
     public static $VIEWS_SERVICE_VIEW = 'services/page-service-view';
     public static $VIEWS_SERVICE_PREMIUM_VIEW = 'services/page-premium-view';
+    public static $VIEWS_SERVICES_PERSONAL_INVITATION = 'services/page-personal-invitation-view';
     public static $VIEWS_SERVICES_VACUP_VIEW = 'services/page-vacup-view';
     public static $VIEWS_SERVICE_PUSH_VIEW = 'services/page-push-view';
     public static $VIEWS_SERVICE_SMS_VIEW = 'services/page-sms-view';

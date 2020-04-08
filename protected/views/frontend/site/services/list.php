@@ -9,6 +9,10 @@ $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // 
 $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
+<?
+//display($viData);
+//display($prices);
+?>
 <div class="row">
     <div class="col-xs-12">
 
@@ -65,7 +69,17 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               <?
               //
               ?>
-              <? if(in_array($v['type'],['email','push','sms','repost','vacancy','outsourcing','outstaffing'])): ?>
+              <? if(in_array(
+                      $v['type'],[
+                          'email',
+                          'push',
+                          'sms',
+                          'repost',
+                          'vacancy',
+                          'outsourcing',
+                          'outstaffing',
+                      ]
+                    )): ?>
                 Вакансия: <a href="<?=MainConfig::$PAGE_VACANCY . DS . $v['vacancy']?>" target="_blank"><?=$viData['history']['vacancies'][$v['vacancy']]['title']?></a><br>
               <? endif; ?>
               <? if($v['type']=='vacpub'): ?>
@@ -201,6 +215,7 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
             </div>
             <div class="clearfix"></div>
             <? foreach ($viData['menu'][$m['id']] as $s): ?>
+<!--            --><?// display($s); ?>
               <div class="services__sublevel">
                 <div class="col-xs-12 col-sm-6 services__item-descr">
                   <div class="services__sub">

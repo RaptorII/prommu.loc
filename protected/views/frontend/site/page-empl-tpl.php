@@ -322,6 +322,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                         <? if(Share::isEmployer()): ?>
 <!--                            <div class="service_select">-->
                                 <span>Приглашение персонала на вакансии</span>
+<<<<<<< HEAD
 <!--                                <ul>-->
 <!--                                    <li>-->
 <!--                                        <a href="--><?//='/user' . MainConfig::$PAGE_SERVICES_EMAIL?><!--">E-mail</a>-->
@@ -334,6 +335,23 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
 <!--                                    </li>-->
 <!--                                </ul>-->
 <!--                            </div>-->
+=======
+                                <ul>
+                                    <li>
+                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_PERSONAL_INVITATION?>">Персональное приглашение</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_EMAIL?>">E-mail</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_SMS?>">SMS</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?='/user' . MainConfig::$PAGE_SERVICES_PUSH?>">Push - уведомления</a>
+                                    </li>
+                                </ul>
+                            </div>
+>>>>>>> add new service Personal-invitation
                         <? elseif(Share::isApplicant()): ?>
                             <a class="applicant_service" href="javascript:void(0)">Приглашение персонала на вакансии</a>
                         <? else: ?>

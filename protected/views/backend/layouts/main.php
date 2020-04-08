@@ -575,6 +575,12 @@ else
                                 <span><?=Services::getServiceName('upvacancy')?></span>
                             </a>
                         </li>
+                        <li class="<?=($action=='service_cloud' && $service=='personal-invitation' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/personal-invitation">
+                                <i class="glyphicon glyphicon-hand-right"></i>
+                                <span><?=Services::getServiceName('personal-invitation')?></span>
+                            </a>
+                        </li>
                         <li class="<?=($action=='service_cloud' && $service=='email' ? 'active' : '')?>">
                             <a href="<?= $hUrl ?>service/service_cloud/email">
                                 <i class="glyphicon">@</i>

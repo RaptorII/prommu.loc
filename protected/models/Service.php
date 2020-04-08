@@ -599,6 +599,51 @@ class Service extends CActiveRecord
           $arParam['vacancy']
         );
       }
+
+      if($arParam['service']=='personal-invitation') // premium
+      {
+          // set invite after send moneypay-service unitpay
+          $arRes = Yii::app()->db->createCommand()
+              ->select('id, id_user, name, user')
+              ->from('service_cloud')
+              ->where(
+                  'id_user=:idp and id=:id',
+                  [
+                      ':idp'=>$arParam['id_user'],
+                      ':id' =>$arParam['id']
+                  ])
+              ->queryRow();
+
+          $props['idvac'] = $arRes['name'];
+
+          if (explode(',',$arRes['user'])) {
+              $users = explode(',', $arRes['user']);
+          } else {
+              $users = $arRes['user'];
+          }
+
+          display($users);
+//          display(count($users));
+
+          for($i=0; $i<=count($users); ++$i)
+          {
+
+              $props['id'] = Yii::app()->db->createCommand()
+                  ->select('id')
+                  ->from('resume')
+                  ->where(
+                      'id_user=:idp',
+                      [':idp'=>$users[$i]]
+                  )
+                  ->queryScalar();
+
+              if ($props['id']) {
+                  (new ResponsesApplic())->invite($props);
+              }
+          }
+
+      }
+
       $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';
     }
     Yii::app()->user->setFlash('success', $message);

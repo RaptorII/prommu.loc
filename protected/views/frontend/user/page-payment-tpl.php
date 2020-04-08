@@ -8,6 +8,10 @@ $this->setBreadcrumbsEx(
 $this->ViewModel->addContentClass('page-payment');
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'page-payment.css');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'payment-page.js', CClientScript::POS_END);
+
+
+//display($viData);
+
 ?>
 <div class="row">
   <div class="col-xs-12 payment">
@@ -105,7 +109,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
           <input type="hidden" name="vacancy_city[]" value="<?=$id['region']?>">
         <?php endforeach; ?>
         <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
-      <?endif;?>
+      <? endif; ?>
       <?if(count($viData['receipt_items'])): // оплата при создании вакансии ?>
         <?
           $price = 0;

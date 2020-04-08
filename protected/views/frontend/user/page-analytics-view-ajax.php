@@ -62,6 +62,10 @@
 						<span class="pa-service__item-cnt"><b><?=$viData['services']['push']?></b></span>
 					</div>
 					<div class="pa-service__item">
+						<span class="pa-service__item-name sms">Приглашение на вакансию</span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['personal-invitation']?></b></span>
+					</div>
+                    <div class="pa-service__item">
 						<span class="pa-service__item-name sms">SMS информирование</span>
 						<span class="pa-service__item-cnt"><b><?=$viData['services']['sms']?></b></span>
 					</div>

@@ -448,6 +448,9 @@
 									case 'sms':
 										$name = 'SMS информирование';
 										break;
+                                    case 'personal-invitation':
+										$name = 'Приглашение на вакансию';
+										break;
 									case 'push':
 										$name = 'PUSH уведомления';
 										break;

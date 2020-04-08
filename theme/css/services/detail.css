@@ -53,6 +53,10 @@
   background-image: url(/theme/pic/services-page/email-invitation.jpg)
 }
 
+.service__img.personal-invitation {
+  background-image: url(/theme/pic/services-page/personal-invitation.jpg)
+}
+
 .service__img.push-notification {
   background-image: url(/theme/pic/services-page/push-notification.jpg)
 }
@@ -101,6 +105,11 @@
 
 .geolocation-staff .service__title:before {
   content: '\e926';
+}
+
+.personal-invitation .service__title:before {
+  content: '\e9d4';
+  font-size: 65px;
 }
 
 .personal-manager-outsourcing .service__title:before {

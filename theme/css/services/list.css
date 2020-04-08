@@ -252,6 +252,19 @@
   position: absolute;
 }
 
+.services__sub-label.personal-invitation:before {
+  content: '';
+}
+.services__sub-label.personal-invitation:after {
+  content: '\e9d4';
+  font-family: "PrommuFont";
+  position: absolute;
+  top: 5px;
+  font-size: 25px;
+  left: 9px;
+  color: var(--color-white);
+}
+
 .services__sub-label.email-invitation:before {
   content: '\e923';
 }

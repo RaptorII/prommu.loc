@@ -42,6 +42,14 @@
 	</form>
 <?php endif; ?>
 <?php
+//	Personal Vacancy Invitation
+?>
+<?php if($viData['service']=='personal-invitation'): ?>
+    <form action="<?='/user' . MainConfig::$PAGE_SERVICES_EMAIL?>" method="POST" id="order-form">
+        <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('id')?>">
+    </form>
+<?php endif; ?>
+<?php
 //	email invitation
 ?>
 <?php if($viData['service']=='email'): ?>

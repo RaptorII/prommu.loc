@@ -57,7 +57,7 @@
     ];
   }
   //
-  if(in_array($service,['vacancy','email','sms','upvacancy'])) // платные услуги
+  if(in_array($service,['vacancy','email','sms','upvacancy','personal-invitation'])) // платные услуги
   {
     if($service=='vacancy') // только для премиум
     {

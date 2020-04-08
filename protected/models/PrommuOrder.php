@@ -35,7 +35,7 @@ class PrommuOrder {
 
      if(in_array(
        $service,
-       ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation'])
+       ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation','personal-invitation'])
      ) // цену формируем лишь для платных услуг
      {
        foreach ($arTemp as $id => $v)
@@ -107,7 +107,7 @@ class PrommuOrder {
         
         for($i = 0; $i < sizeof($results); $i ++)
             $data['prices'][$results[$i]['service']][] = $results[$i];
-    
+
         return $data; 
     }
 
@@ -152,38 +152,39 @@ class PrommuOrder {
     if($arService['status']==0)
       return;
 
-    if ($serviceType == 'email')
-    {
-        $logo = Yii::app()->db->createCommand()
-            ->select('photo')
-            ->from('user_photos')
-            ->where('id_user=:id',[':id'=>$id_user])
-            ->queryColumn();
-        $bigSrc = Share::getPhoto($id_user, 3, $logo, 'big');
-        $imgCmpLogo = $_SERVER['SERVER_NAME'].$bigSrc;
+    if ($serviceType == 'email') {
+
+      $logo = Yii::app()->db->createCommand()
+          ->select('photo')
+          ->from('user_photos')
+          ->where('id_user=:id', [':id' => $id_user])
+          ->queryColumn();
+      $bigSrc = Share::getPhoto($id_user, 3, $logo[0], 'big');
+      $imgCmpLogo = $_SERVER['SERVER_NAME'] . $bigSrc;
 
       // собираем емейлы С
       $arEmails = Yii::app()->db->createCommand()
-        ->select('email')
-        ->from('user')
-        ->where(['in','id_user',$arIdUsers])
-        ->queryColumn();
+          ->select('email')
+          ->from('user')
+          ->where(['in', 'id_user', $arIdUsers])
+          ->queryColumn();
 
       // для письма нужен заголовок вакансии и оплата
       $vacancyTitle = Yii::app()->db->createCommand()
-        ->select('title, shour, sweek, smonth, svisit')
-        ->from('empl_vacations')
-        ->where('id=:id',[':id'=>$id_vacancy])
-        ->queryScalar();
+          ->select('title, shour, sweek, smonth, svisit')
+          ->from('empl_vacations')
+          ->where('id=:id', [':id' => $id_vacancy])
+          ->queryRow();
 
-      if( $vacancyTitle['shour'] > 0 )
+      $payForVacancy = 'по договорённости';
+      if ($vacancyTitle['shour'] > 0)
           $payForVacancy = $vacancyTitle['shour'] . ' руб/час';
-      if( $vacancyTitle['sweek'] > 0 )
+      if ($vacancyTitle['sweek'] > 0)
           $payForVacancy = $vacancyTitle['sweek'] . ' руб/неделю';
-      if( $vacancyTitle['smonth'] > 0 )
-          $payForVacancy = $vacancyTitle['smonth']. ' руб/месяц';
-      if( $vacancyTitle['svisit'] > 0 )
-          $payForVacancy = $vacancyTitle['svisit']. ' руб/посещение';
+      if ($vacancyTitle['smonth'] > 0)
+          $payForVacancy = $vacancyTitle['smonth'] . ' руб/месяц';
+      if ($vacancyTitle['svisit'] > 0)
+          $payForVacancy = $vacancyTitle['svisit'] . ' руб/посещение';
 
       //для письма от Р название должности
       $sql = "SELECT
@@ -199,33 +200,33 @@ class PrommuOrder {
         ON
             empl_attribs.id_attr = d1.id AND d1.id_par = d.id
         WHERE
-            id_vac =".$id_vacancy;
-      $positionVacancy = Yii::app()->db->createCommand($sql)->execute();
-
+            id_vac =" . $id_vacancy;
+      $positionVacancy = Yii::app()->db->createCommand($sql)->queryRow();
 
       // для письма инфа о Р
       $arEmployer = Yii::app()->db->createCommand()
-        ->select('e.name, e.firstname, e.lastname, u.email')
-        ->from('employer e')
-        ->leftJoin('user u','u.id_user=e.id_user')
-        ->where('e.id_user=:id',[':id'=>$id_user])
-        ->queryRow();
+          ->select('e.name, e.firstname, e.lastname, u.email')
+          ->from('employer e')
+          ->leftJoin('user u', 'u.id_user=e.id_user')
+          ->where('e.id_user=:id', [':id' => $id_user])
+          ->queryRow();
       // Письмо для С о том, что его приглашают на работу
       //   $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
       $arEmails[] = 'mikekarpenko@gmail.com'; // Добавляем в рассылку Мих
+
       Mailing::set(34,
-        [
-          'id_user'          => $id_user,
-          'name_user'        => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],
-          'id_vacancy'       => $id_vacancy,
-          'company_user'     => $arEmployer['name'],
-          'img_company_logo' => $imgCmpLogo,         //add
-          'title_vacancy'    => $vacancyTitle,
-          'position_vacancy' => $positionVacancy,    //add
-          'pay_for_vacancy'  => $payForVacancy,      //add
-        ],
-        UserProfile::$APPLICANT,
-        $arEmails
+          [
+              'id_user' => $id_user,
+              'name_user' => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],
+              'id_vacancy' => $id_vacancy,
+              'company_user' => $arEmployer['name'],
+              'img_company_logo' => $imgCmpLogo,         //add
+              'title_vacancy' => $vacancyTitle['title'],
+              'position_vacancy' => $positionVacancy['name'],    //add
+              'pay_for_vacancy' => $payForVacancy,      //add
+          ],
+          UserProfile::$APPLICANT,
+          $arEmails
       );
     }
     elseif ($serviceType == 'sms')
@@ -585,7 +586,52 @@ class PrommuOrder {
     $arRes['account'] = $employer . '.' . implode('.', $arRes['id']) . '.upvacancy.' . time();
     return $arRes;
   }
-    /**
+
+    public function orderPersonalInvitation($vacancy, $users, $employer, $price)
+    {
+        if (!isset($employer))
+            return false;
+
+        $arRes = [];
+
+        $cntVacStat = ResponsesApplic::getCntVacStat($vacancy);
+        $cntUsers   = count(explode(',',$users));
+
+        if (($cntVacStat + $cntUsers - 10) <= 0) {
+            $arRes['cost'] = -2;
+        } else {
+            $arRes['cost'] = ($cntVacStat + $cntUsers - 10) * $price;
+        }
+
+        $date = date("Y-m-d h-i-s");
+        $stack = time();
+
+        // add info to data-base
+        if ($arRes['cost'] > 0) {
+            $arRes['id'][] = $this->serviceOrderEmail(
+                $employer,
+                $arRes['cost'],
+                0,
+                0,
+                $date,
+                $date,
+                $vacancy, //id vac
+                'personal-invitation',
+                $vacancy,
+                $users,
+                $stack
+            );
+        }
+
+        $arRes['account'] = $employer . '.' . $vacancy . '.personal-invitation.' . time();
+
+        //display($arRes['cost']);
+        //die('asd');
+
+        return $arRes;
+
+    }
+        /**
      * @param $arServices
      * @return code
      */
@@ -809,7 +855,7 @@ class PrommuOrder {
       $arReg = [4]; // по умолчанию бесплатно
       if(in_array(
         $service,
-        ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation'])
+        ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation','personal-invitation'])
       )
       {
         switch ($bin)
@@ -866,6 +912,8 @@ class PrommuOrder {
       $arRes['email-invitation'] = $arPrice['email-invitation'];
     if(!array_key_exists('podnyatie-vacansyi-vverh', $arRes))
       $arRes['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
+    if(!array_key_exists('personal-invitation', $arRes))
+      $arRes['personal-invitation'] = $arPrice['personal-invitation'];
 
     return $arRes;
   }
