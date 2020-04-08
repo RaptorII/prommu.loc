@@ -95,6 +95,9 @@ if(!$rq->getParam('vacancy')):?>
             <form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
                 </br></br>
                 <h1 class="smss-result__title">Услуга </br> "Персональное приглашение"</h1>
+                <p>
+                    Помните - первые 10 приглашений - <b>бесплатно</b>!
+                </p>
                 <table class="smss-result__table">
                     <tr>
                         <td>Количество ранее приглашённых</td>
