@@ -1520,8 +1520,6 @@ class SiteController extends AppController
 
         $data['service'] = Yii::app()->getRequest()->getParam('service');
 
-        //display($data);
-        //die('service');
         $this->render(MainConfig::$VIEW_ORDER_SERVICE, ['viData' => $data]);
     }
 
