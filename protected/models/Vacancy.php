@@ -4939,9 +4939,14 @@ class Vacancy extends ARModel
         'id_vacancy' => $vacancy
       ]
     );
-    //
+    // Изменяем в базе дату добавления платной вакансии
     Yii::app()->db->createCommand()
-      ->update('employer',['vacancy_payment'=>strtotime('today')],['id_user'=>$objUser->id_user]);
+      ->update(
+        'employer',
+        ['vacancy_payment'=>strtotime('today')],
+        'id_user=:id_user',
+        [':id_user'=>$objUser->id_user]
+      );
     //
     return $vacancy;
   }

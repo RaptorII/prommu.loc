@@ -275,7 +275,7 @@ class ServiceCloud
       ->queryAll();
   }
   /**
-   * @param $arCities - array
+   * @param $arCities - array of id_city
    * @return string
    * метод для вычисления стоимости создания вакансии
    */

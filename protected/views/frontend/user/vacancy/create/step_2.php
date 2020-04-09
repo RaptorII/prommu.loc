@@ -3,6 +3,13 @@
   <h2 class="form__header-h2">2й этап</h2>
   <h6 class="form__header-h6">Введите данные</h6>
   <div class="form__container">
+    <? $cost = ServiceCloud::getCostForVacancyCreate($model->data->city);?>
+    <? if(!Share::$UserProfile->accessToFreeVacancy && $cost>0): ?>
+      <div class="form__field form__field-first">
+        <div class="form__field-content form__content-indent">Создание данной вакансии будет платной услугой потому, что в период 30 дней вакансия уже добавлялась Вами
+          <br>Стоимость составит: <?=$cost?>руб.</div>
+      </div>
+    <? endif; ?>
     <?
     //
     ?>

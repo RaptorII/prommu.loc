@@ -3,24 +3,20 @@
   <h2 class="form__header-h2">1й этап</h2>
   <h6 class="form__header-h6">Введите данные</h6>
   <div class="form__container">
-    <? if(!Share::$UserProfile->accessToFreeVacancy): ?>
+    <? /*if(Share::$UserProfile->accessToFreeVacancy): ?>
       <div class="form__field form__field-first">
         <div class="form__field-content form__content-indent">Создание данной вакансии будет платной потому, что в период 30 дней вакансия уже добавлялась Вами</div>
-        <?/*?>
         <label class="form__field-label text__nowrap">Стоимость</label>
         <div class="form__field-content form__content-indent form__content-hint" id="cost">
           <?=ServiceCloud::getCostForVacancyCreate(array_keys($model->dataOther->arSelectCity)) . ' руб.';?>
         </div>
-        <?*/?>
       </div>
-      <?/*?>
-        <script>var arVacancyPrice = <?=json_encode(ServiceCloud::PAYMENT_FOR_CREATE)?></script>
-      <?*/?>
-    <? endif; ?>
+      <script>var arVacancyPrice = <?=json_encode(ServiceCloud::PAYMENT_FOR_CREATE)?></script>
+    <? endif; */?>
     <?
     //
     ?>
-    <div class="form__field">
+    <div class="form__field form__field-first">
       <label class="form__field-label text__nowrap">Заголовок <span class="text__red">*</span></label>
       <div class="form__field-content form__content-indent form__content-hint">
         <? if($model->errors['title']): ?>

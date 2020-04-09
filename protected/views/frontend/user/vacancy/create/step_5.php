@@ -6,10 +6,11 @@
     <?
     //
     ?>
-    <? if(!Share::$UserProfile->accessToFreeVacancy): ?>
+    <? $cost = ServiceCloud::getCostForVacancyCreate($model->data->city);?>
+    <? if(!Share::$UserProfile->accessToFreeVacancy && $cost>0): ?>
       <div class="form__field">
         <div class="form__field-content form__content-indent form__field-first">
-          <b>РАЗМЕЩЕНИЕ ВАКАНСИИ: <?=ServiceCloud::getCostForVacancyCreate(array_keys($model->dataOther->arSelectCity)) . ' руб.';?></b>
+          <b>РАЗМЕЩЕНИЕ ВАКАНСИИ: <?=$cost . ' руб.';?></b>
         </div>
       </div>
       <hr>
