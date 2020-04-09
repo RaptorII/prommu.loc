@@ -1119,3 +1119,7 @@ input:checked + .filter__chbox-lab:after {
     width: 50px
   }
 }
+
+.service__btn--vac.visible {
+  display: block;
+}

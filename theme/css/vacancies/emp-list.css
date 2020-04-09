@@ -639,6 +639,11 @@ span.evl__tabs-link.enable {
   content: '\e92f';
 }
 
+.evl__service-popup .evl-vacancies__personal-invitation:before {
+  content: '\e9d4';
+  font-size: 23px;
+}
+
 .evl__service-popup .evl-vacancies__email:before {
   content: '\e924';
 }

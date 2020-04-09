@@ -136,6 +136,9 @@
 	                      <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$v['id']}&soc=3&page=0"?>" class="evl-vacancies__tl">Опубликовать в Telegram</a>
 	                    <? endif; ?>
 	                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=sms"?>" class="evl-vacancies__sms">Произвести СМС рассылку</a>
+
+                         <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=personal-invitation"?>" class="evl-vacancies__personal-invitation">Пригласить персонал</a>
+
 	                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=email"?>" class="evl-vacancies__email">Произвести EMAIL рассылку</a>
 	                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=push"?>" class="evl-vacancies__push">PUSH уведомления</a>
 	                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=outsourcing"?>" class="evl-vacancies__atsrc">Аутсорсинг</a>

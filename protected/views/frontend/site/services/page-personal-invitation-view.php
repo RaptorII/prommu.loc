@@ -24,7 +24,7 @@ if(!$rq->getParam('vacancy')):?>
             <?php else: ?>
                 <br>
                 <h2 class="service__title center">У ВАС НЕТ АКТИВНЫХ ВАКАНСИЙ ПРОШЕДШИХ МОДЕРАЦИЮ</h2>
-                <a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal"><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
+                <a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn--vac visible prmu-btn prmu-btn_normal"><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
             <?php endif; ?>
         </div>
     </div>

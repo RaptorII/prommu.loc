@@ -148,7 +148,7 @@ var ServicesList = (function () {
                 content: itm, 
                 action: { active: 0 }, 
                 additionalStyle:'dark-ver',
-                afterOpen: function () { $(".mw-win.dark-ver").css({ position:'absolute', margin: '0 0 0 50%', left:'-175px', top: '100px' }) }
+                afterOpen: function () { $(".mw-win.dark-ver").css({ position:'fixed', margin: '0 0 0 50%', left:'-175px', top: '100px' }) }
             });
         }
         else if(type==='premium-vacancy'){
@@ -157,6 +157,26 @@ var ServicesList = (function () {
             ModalWindow.open({ 
                 content: itm, 
                 action: { active: 0 }, 
+                additionalStyle:'light-ver',
+                afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
+            });
+        }
+        else if(type==='podnyatie-vacansyi-vverh'){
+            var itm = $(".services-form.premium-form.upvacancy").clone();
+            itm.toggleClass('services-form tmpl');
+            ModalWindow.open({
+                content: itm,
+                action: { active: 0 },
+                additionalStyle:'light-ver',
+                afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
+            });
+        }
+        else if(type==='personal-invitation'){
+            var itm = $(".services-form.premium-form.personal-invitation").clone();
+            itm.toggleClass('services-form tmpl');
+            ModalWindow.open({
+                content: itm,
+                action: { active: 0 },
                 additionalStyle:'light-ver',
                 afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
             });

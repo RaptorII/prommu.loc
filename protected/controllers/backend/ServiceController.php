@@ -45,11 +45,7 @@ class ServiceController extends Controller
     $this->render('service_order-' . ($this->id ? 'item' : 'list'));
   }
   /**
-<<<<<<< HEAD
-   *  creation_vacancy, premium, upvacancy, email, push, sms, repost, api
-=======
-   *  premium, upvacancy, email, push, sms, repost, api, personal-invitation
->>>>>>> add new service Personal-invitation
+   *  creation_vacancy, premium, upvacancy, email, push, sms, repost, api, personal-invitation
    */
   public function actionService_cloud()
   {

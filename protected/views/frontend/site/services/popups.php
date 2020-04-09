@@ -69,6 +69,49 @@
 </div>
 <?
 /*
+*   UPVACANCY
+*/
+?>
+<div class="services-form premium-form upvacancy tmpl">
+    <div class="form-str1__header">Уважаемый пользователь!<br>Для того что бы использовать данную услугу Вам необходимо<b>ЗАРЕГИСТРИРОВАТЬСЯ</b></div>
+    <hr>
+    <div class="form-str1__content">
+        <p class="form-str1__content-utext">После регистрации<br>Вы сможете<b>создавать вакансии</b>для поиска необходимого персонала</p>
+        <p class="form-str1__content-dtext">А услуга Поднятие вакансии вверх даст преимущество над другими, тем что будет в начале публикаций всех вакансий, а также на главной странице сервиса</p>
+        <div class="btn-white-green-2 field-t2-hor">
+      <span class="form-str__btn">
+        <ul class="form-str__btn-list">
+          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
+          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
+        </ul>ЗАРЕГИСТРИРОВАТЬСЯ
+      </span>
+        </div>
+    </div>
+</div>
+<?
+/*
+*   personal-invitation
+*/
+?>
+<div class="services-form premium-form personal-invitation tmpl">
+    <div class="form-str1__header">Уважаемый пользователь!<br>Для того что бы использовать данную услугу Вам необходимо<b>ЗАРЕГИСТРИРОВАТЬСЯ</b></div>
+    <hr>
+    <div class="form-str1__content">
+        <p class="form-str1__content-utext">После регистрации<br>Вы сможете<b>создавать вакансии</b>для поиска необходимого персонала</p>
+        <p class="form-str1__content-dtext">А услуга Персональное приглашение даст возможность пригласить на работу интересующий Вас персонал</p>
+        <div class="btn-white-green-2 field-t2-hor">
+      <span class="form-str__btn">
+        <ul class="form-str__btn-list">
+          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
+          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
+        </ul>ЗАРЕГИСТРИРОВАТЬСЯ
+      </span>
+        </div>
+    </div>
+</div>
+
+<?
+/*
 *   VACANCY
 */
 ?>

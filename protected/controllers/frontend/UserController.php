@@ -1091,7 +1091,7 @@ class UserController extends AppController
 
             if (count($vacCity)>0)
             {
-                for ($i=0; $i<=count($vacCity); $i++)
+                for ($i=0; $i<count($vacCity); ++$i)
                     $vac[$i] = $vac[0];
             }
         }

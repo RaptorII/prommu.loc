@@ -63,11 +63,8 @@
                   <tr><td><b>Дата начала</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                   <tr><td><b>Дата окончания</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                 <? endif; ?>
-<<<<<<< HEAD
-                <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy'])): ?>
-=======
-                <? if(in_array($service,['vacancy','email','sms','upvacancy','personal-invitation'])): ?>
->>>>>>> add new service Personal-invitation
+
+                <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy','personal-invitation'])): ?>
                   <tr><td><b>Cумма</b></td><td><?=$order->sum?></td></tr>
                   <tr>
                     <td>
@@ -133,11 +130,7 @@
               </tbody>
             </table>
             <div class="pull-right">
-<<<<<<< HEAD
-              <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy']) && !empty($order->legal)): ?>
-=======
-              <? if(in_array($service,['vacancy','email','sms','upvacancy','personal-invitation']) && !empty($order->legal)): ?>
->>>>>>> add new service Personal-invitation
+              <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy','personal-invitation']) && !empty($order->legal)): ?>
                 <? if(!$order->status): ?>
                   <span class="btn btn-success d-indent" id="start_service">Запустить услугу</span>
                 <? endif; ?>
