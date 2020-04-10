@@ -1067,7 +1067,7 @@ if (!share::isApplicant()):
   </script>
   <script id="TplInvVacs" type="text/template" data-btn="Пригласить">
       <div class="vac-form">
-          <p>Выберите вакансию на которую вы хотите пригласить соискателя</p>
+          <p>Выберите вакансию на которую вы хотите пригласить соискателя </p>
           <label for="CbVacs">
               <b></b>
               <select id="CbVacs">

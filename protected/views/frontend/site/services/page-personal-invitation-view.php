@@ -107,8 +107,6 @@ if(!$rq->getParam('vacancy')):?>
         $cntUsers = 0;
     }
 
-
-
     if (($cntVacStat < 10) && ($cntVacStat + $cntUsers ) > 10) {
         $price = ($cntVacStat + $cntUsers - 10) * $viData['price'];
     } elseif (($cntVacStat + $cntUsers ) < 10){
@@ -116,10 +114,10 @@ if(!$rq->getParam('vacancy')):?>
     } elseif($cntVacStat > 10) {
         $price = $cntUsers * $viData['price'];
     }
-    display($cntVacStat);
-    display($cntUsers);
-    display($price);
-    display($viData['price']);
+//    display($cntVacStat);
+//    display($cntUsers);
+//    display($price);
+//    display($viData['price']);
 
     ?>
     <div class="row">
@@ -136,7 +134,7 @@ if(!$rq->getParam('vacancy')):?>
                         <td><?=$cntVacStat?></td>
                     </tr>
                     <tr>
-                        <td>Количество получателей</td>
+                        <td>Количество уникальных получателей</td>
                         <td><?=$cntUsers?></td>
                     </tr>
                     <tr>

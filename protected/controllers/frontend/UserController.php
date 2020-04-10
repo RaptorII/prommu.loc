@@ -220,7 +220,7 @@ class UserController extends AppController
                   ->queryScalar();
 
               if ($props['id']) {
-                  (new ResponsesApplic())->invite($props);
+                  (new ResponsesApplic())->invitePersonal($props);
               }
           }
 
@@ -1189,7 +1189,7 @@ class UserController extends AppController
                                 ->queryScalar();
 
                             if ($props['id']) {
-                                (new ResponsesApplic())->invite($props);
+                                (new ResponsesApplic())->invitePersonal($props);
                             }
                         }
                         $this->redirect(MainConfig::$PAGE_SERVICES);

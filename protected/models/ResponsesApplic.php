@@ -887,16 +887,6 @@ class ResponsesApplic extends Responses
       )
       ->queryRow();
 
-    //$cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
-
-   /* if ($cntInv >= 10) {
-        return [
-            'error' => -101,
-            'message' => 'Вы исчерпали лимит в 10 бесплатных приглашений. '.
-                         'Воспользуйтесь услугой "Приглашение на вакансию"',
-        ];
-    }*/
-
     // Добавляем приглашение на вакансию
     if( isset($query['id']) )
     {
@@ -907,9 +897,6 @@ class ResponsesApplic extends Responses
     }
     else
     {
-        display($props);
-        //die('ku');
-
       Yii::app()->db->createCommand()
         ->insert(
           'vacation_stat',
@@ -943,7 +930,6 @@ class ResponsesApplic extends Responses
         ->where('r.id=:id', [':id'=>$idPromo])
         ->queryRow();
       // отправляем email для С
-        /*
       Mailing::set(21,
         [
           'email_user' => $arUser['email'],
@@ -954,7 +940,6 @@ class ResponsesApplic extends Responses
           'title_vacancy' => $title,
         ]
       );
-        */
 
       PushChecker::setPushMess($arUser['id_user'], 'respond');
       // уведомление С в ЛК
@@ -970,6 +955,113 @@ class ResponsesApplic extends Responses
       ];
     }
   }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function invitePersonal($props=[])
+    {
+
+        $id_vacancy = $props['idvac'] ?: filter_var(
+            Yii::app()->getRequest()->getParam('id'),
+            FILTER_SANITIZE_NUMBER_INT
+        );
+        $idPromo = $props['id'] ?: filter_var(
+            Yii::app()->getRequest()->getParam('idPromo'),
+            FILTER_SANITIZE_NUMBER_INT
+        );
+
+        if(!$id_vacancy || !$idPromo)
+            return [
+                'error' => -101,
+                'message' => 'Ошибка запроса. Пожалуйста обновите страницу!'
+            ];
+
+        $query = Yii::app()->db->createCommand()
+            ->select('vs.id, ev.title')
+            ->from('vacation_stat vs')
+            ->join('empl_vacations ev','vs.id_vac=ev.id')
+            ->where(
+                'vs.id_promo=:idp AND vs.id_vac=:idvac',
+                [':idp'=>$idPromo, ':idvac'=>$id_vacancy]
+            )
+            ->queryRow();
+
+        //$cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
+
+        /* if ($cntInv >= 10) {
+             return [
+                 'error' => -101,
+                 'message' => 'Вы исчерпали лимит в 10 бесплатных приглашений. '.
+                              'Воспользуйтесь услугой "Приглашение на вакансию"',
+             ];
+         }*/
+
+        // Добавляем приглашение на вакансию
+        if( isset($query['id']) )
+        {
+            return [
+                'error' => -101,
+                'message' => 'Вы уже  отправили приглашение этому пользователю на данную вакансию, ожидайте ответа'
+            ];
+        }
+        else
+        {
+
+            Yii::app()->db->createCommand()
+                ->insert(
+                    'vacation_stat',
+                    [
+                        'id_promo' => $idPromo,
+                        'id_vac' => $id_vacancy,
+                        'isresponse' => Responses::$STATE_INVITE,
+                        'status' => Responses::$STATUS_EMPLOYER_ACCEPT,
+                        'date' => date('Y-m-d H:i:s'),
+                    ]
+                );
+            $lastId = Yii::app()->db->getLastInsertID();
+            // достаем заголовок вакансии
+            $title = Yii::app()->db->createCommand()
+                ->select('title')
+                ->from('empl_vacations')
+                ->where('id=:id', [':id'=>$id_vacancy])
+                ->queryScalar();
+            // достаем информацию о С
+            $arUser = Yii::app()->db->createCommand()
+                ->select('u.id_user, u.email')
+                ->from('resume r')
+                ->join('user u','u.id_user=r.id_user')
+                ->where('r.id=:id', [':id'=>$idPromo])
+                ->queryRow();
+            // отправляем email для С
+            /*
+          Mailing::set(21,
+            [
+              'email_user' => $arUser['email'],
+              'id_user' => Share::$UserProfile->id,
+              'name_user' => Share::$UserProfile->exInfo->efio ?: 'Пользователь',
+              'company_user' => Share::$UserProfile->exInfo->name,
+              'id_vacancy' => $id_vacancy,
+              'title_vacancy' => $title,
+            ]
+          );
+            */
+
+            PushChecker::setPushMess($arUser['id_user'], 'respond');
+            // уведомление С в ЛК
+            UserNotifications::setDataByVac(
+                $arUser['id_user'],
+                $id_vacancy,
+                UserNotifications::$APP_INVITATIONS
+            );
+
+            return [
+                'error' => 100,
+                'message' => 'Приглашение отправлено пользователю, ожидайте ответа'
+            ];
+        }
+    }
   /**
    * @param $inData
    */

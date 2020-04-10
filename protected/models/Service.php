@@ -635,33 +635,11 @@ class Service extends CActiveRecord
                   ->queryScalar();
 
               if ($props['id']) {
-                  (new ResponsesApplic())->invite($props);
+                  (new ResponsesApplic())->invitePersonal($props);
 
               }
           }
 
-          /*
-
-          $props = [];
-                        $props['idvac'] = $vac;
-
-                        $users = explode(',',$users);
-                        for($i=0; $i<=count($users); ++$i)
-                        {
-                            $props['id'] = Yii::app()->db->createCommand()
-                                ->select('id')
-                                ->from('resume')
-                                ->where(
-                                    'id_user=:idp',
-                                    [':idp'=>$users[$i]]
-                                )
-                                ->queryScalar();
-
-                            if ($props['id']) {
-                                (new ResponsesApplic())->invite($props);
-                            }
-                        }
-          */
       }
 
       $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';
