@@ -600,7 +600,7 @@ class Service extends CActiveRecord
         );
       }
 
-      if($arParam['service']=='personal-invitation') // premium
+      if($arParam['service']=='personal-invitation') // personal-invitation
       {
           // set invite after send moneypay-service unitpay
           $arRes = Yii::app()->db->createCommand()
@@ -614,6 +614,7 @@ class Service extends CActiveRecord
                   ])
               ->queryRow();
 
+          $props = [];
           $props['idvac'] = $arRes['name'];
 
           if (explode(',',$arRes['user'])) {
@@ -622,12 +623,8 @@ class Service extends CActiveRecord
               $users = $arRes['user'];
           }
 
-          display($users);
-//          display(count($users));
-
           for($i=0; $i<=count($users); ++$i)
           {
-
               $props['id'] = Yii::app()->db->createCommand()
                   ->select('id')
                   ->from('resume')
@@ -639,9 +636,32 @@ class Service extends CActiveRecord
 
               if ($props['id']) {
                   (new ResponsesApplic())->invite($props);
+
               }
           }
 
+          /*
+
+          $props = [];
+                        $props['idvac'] = $vac;
+
+                        $users = explode(',',$users);
+                        for($i=0; $i<=count($users); ++$i)
+                        {
+                            $props['id'] = Yii::app()->db->createCommand()
+                                ->select('id')
+                                ->from('resume')
+                                ->where(
+                                    'id_user=:idp',
+                                    [':idp'=>$users[$i]]
+                                )
+                                ->queryScalar();
+
+                            if ($props['id']) {
+                                (new ResponsesApplic())->invite($props);
+                            }
+                        }
+          */
       }
 
       $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';

@@ -597,11 +597,15 @@ class PrommuOrder {
         $cntVacStat = ResponsesApplic::getCntVacStat($vacancy);
         $cntUsers   = count(explode(',',$users));
 
-        if (($cntVacStat + $cntUsers - 10) <= 0) {
-            $arRes['cost'] = -2;
-        } else {
+        if (($cntVacStat < 10) && ($cntVacStat + $cntUsers ) > 10) {
             $arRes['cost'] = ($cntVacStat + $cntUsers - 10) * $price;
+        } elseif (($cntVacStat + $cntUsers) < 10) {
+            $arRes['cost'] = -2;
+        } elseif ($cntVacStat > 10) {
+            $arRes['cost'] = $cntUsers * $price;
         }
+
+        display($arRes['cost']);
 
         $date = date("Y-m-d h-i-s");
         $stack = time();
@@ -623,11 +627,8 @@ class PrommuOrder {
             );
         }
 
+        //die('qwe');
         $arRes['account'] = $employer . '.' . $vacancy . '.personal-invitation.' . time();
-
-        //display($arRes['cost']);
-        //die('asd');
-
         return $arRes;
 
     }

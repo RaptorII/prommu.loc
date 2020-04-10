@@ -861,6 +861,7 @@ class ResponsesApplic extends Responses
    */
   public function invite($props=[])
   {
+
     $id_vacancy = $props['idvac'] ?: filter_var(
       Yii::app()->getRequest()->getParam('id'),
       FILTER_SANITIZE_NUMBER_INT
@@ -885,6 +886,17 @@ class ResponsesApplic extends Responses
         [':idp'=>$idPromo, ':idvac'=>$id_vacancy]
       )
       ->queryRow();
+
+    //$cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
+
+   /* if ($cntInv >= 10) {
+        return [
+            'error' => -101,
+            'message' => 'Вы исчерпали лимит в 10 бесплатных приглашений. '.
+                         'Воспользуйтесь услугой "Приглашение на вакансию"',
+        ];
+    }*/
+
     // Добавляем приглашение на вакансию
     if( isset($query['id']) )
     {
@@ -895,6 +907,9 @@ class ResponsesApplic extends Responses
     }
     else
     {
+        display($props);
+        //die('ku');
+
       Yii::app()->db->createCommand()
         ->insert(
           'vacation_stat',
@@ -928,6 +943,7 @@ class ResponsesApplic extends Responses
         ->where('r.id=:id', [':id'=>$idPromo])
         ->queryRow();
       // отправляем email для С
+        /*
       Mailing::set(21,
         [
           'email_user' => $arUser['email'],
@@ -938,6 +954,7 @@ class ResponsesApplic extends Responses
           'title_vacancy' => $title,
         ]
       );
+        */
 
       PushChecker::setPushMess($arUser['id_user'], 'respond');
       // уведомление С в ЛК
@@ -1168,4 +1185,30 @@ class ResponsesApplic extends Responses
 
         return $cntVac['cnt'];
     }
+
+    /**
+     * $id_vac - id of vacation
+     * @param $id_vac
+     * @return array|CDbDataReader
+     * @throws CException
+     */
+    public static function getInvitedUsrFromVacStat($id_vac)
+    {
+        $arUsrVac = Yii::app()->db->createCommand("
+            SELECT 
+                vs.id_promo, 
+                r.id_user
+            FROM 
+                vacation_stat vs
+            JOIN
+                resume r    
+            WHERE 
+                vs.id_vac = {$id_vac}
+            AND 
+                vs.id_promo = r.id
+        ")->queryAll();
+
+        return $arUsrVac;
+    }
+
 }

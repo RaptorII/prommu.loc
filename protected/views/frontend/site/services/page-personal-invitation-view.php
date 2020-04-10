@@ -82,12 +82,44 @@ if(!$rq->getParam('vacancy')):?>
     $appCount = $rq->getParam('users-cnt');
     $vacancy = $rq->getParam('vacancy');
     $cntVacStat = ResponsesApplic::getCntVacStat($vacancy);
+    $users = $rq->getParam('users');
+    $arUsr = explode(',', $users);
+    $cntUsers   = count($arUsr);
+    $usrVS = ResponsesApplic::getInvitedUsrFromVacStat($vacancy);
 
-    if (($cntVacStat + $appCount - 10) <= 0) {
-        $price = 0; //view;
-    } else {
-        $price = ($cntVacStat + $appCount - 10) * $viData['price'];
+    for ($i=0; $i<count($usrVS); ++$i)
+    {
+        for ($j=0; $j<=count($arUsr); ++$j) {
+            if ($usrVS[$i]['id_user'] == $arUsr[$j]) {
+                //выпилить из строки данных $users
+                if ($cntUsers == 1){
+                    $users = str_replace($usrVS[$i]['id_user'], '', $users );
+                } else {
+                    $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
+                }
+            }
+        }
     }
+
+    if ($users) {
+        $cntUsers = count(explode(',', $users));
+    } else {
+        $cntUsers = 0;
+    }
+
+
+
+    if (($cntVacStat < 10) && ($cntVacStat + $cntUsers ) > 10) {
+        $price = ($cntVacStat + $cntUsers - 10) * $viData['price'];
+    } elseif (($cntVacStat + $cntUsers ) < 10){
+        $price = 0;
+    } elseif($cntVacStat > 10) {
+        $price = $cntUsers * $viData['price'];
+    }
+    display($cntVacStat);
+    display($cntUsers);
+    display($price);
+    display($viData['price']);
 
     ?>
     <div class="row">
@@ -105,7 +137,7 @@ if(!$rq->getParam('vacancy')):?>
                     </tr>
                     <tr>
                         <td>Количество получателей</td>
-                        <td><?=$appCount?></td>
+                        <td><?=$cntUsers?></td>
                     </tr>
                     <tr>
                         <td>Стоимость приглашения</td>
@@ -127,14 +159,10 @@ if(!$rq->getParam('vacancy')):?>
                         <? endif; ?>
                     </button>
                 </div>
-                <?
-                if (($cntVacStat + $appCount - 10) <= 0) {
-                    $price = 1; //flag to back
-                }
-                ?>
+
                 <input type="hidden" name="vacancy" value="<?=$vacancy?>">
                 <input type="hidden" name="users-cnt" value="<?=$appCount?>">
-                <input type="hidden" name="users" value="<?=$rq->getParam('users')?>">
+                <input type="hidden" name="users" value="<?=$users?>">
                 <input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
                 <input type="hidden" name="service" value="personal-invitation">
                 <input type="hidden" name="price" value="<?=$price?>">

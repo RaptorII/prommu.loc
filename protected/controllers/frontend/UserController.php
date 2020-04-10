@@ -203,13 +203,10 @@ class UserController extends AppController
               ->order('id_user DESC')
               ->queryRow();
 
+          $props = [];
           $props['idvac'] = $arRes['name'];
 
-          if (explode(',',$arRes['user'])) {
-              $users = explode(',', $arRes['user']);
-          } else {
-              $users = $arRes['user'];
-          }
+          $users = explode(',', $arRes['user']);
 
           for($i=0; $i<=count($users); ++$i)
           {
@@ -234,6 +231,7 @@ class UserController extends AppController
                   ['and', 'id_user=:id', ['in','id',$arIdOrder]],
                   [':id'=>$id_user]
               );
+
       }
       echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
     }
@@ -1157,6 +1155,7 @@ class UserController extends AppController
 
                         display($data);
                         display($rq->getParam('personal'));
+                        //die('cost');
 
                         if ($rq->getParam('personal') === 'individual') // people
                         {
@@ -1169,10 +1168,12 @@ class UserController extends AppController
                             $this->redirect(MainConfig::$PAGE_SERVICES);
                         }
                     } elseif ($data['cost'] = -2) {
+                        //die('-2');
 //                      invite users
 //                      save data to database
 //                      database = vacation_stat
 
+                        $props = [];
                         $props['idvac'] = $vac;
 
                         $users = explode(',',$users);
