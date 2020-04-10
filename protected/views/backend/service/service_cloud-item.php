@@ -61,7 +61,7 @@
                 <? if($service=='vacancy'): ?>
                   <tr><td colspan="2"></td></tr>
                   <tr><td><b>Дата начала</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
-                  <tr><td><b>Дата окончания</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
+                  <tr><td><b>Дата окончания</b></td><td><?=Share::getDate(strtotime($order->edate),"d.m.Y")?></td></tr>
                 <? endif; ?>
 
                 <? if(in_array($service,['vacancy','email','sms','upvacancy','creation-vacancy','personal-invitation'])): ?>
