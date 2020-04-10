@@ -247,8 +247,9 @@ if (!share::isApplicant()):
         <div class='js-btn-invite btn-white-green-wr'>
           <a href='#'>Пригласить на вакансию</a>
         </div>
+          <?*/?>
       <?php endif; ?>
-      <?*/?>
+
       <?php  if(Share::$UserProfile->type == 3 && !$ismoder):?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right btn__orange' href='#'>Невозможно отправить сообщение</a>
