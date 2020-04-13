@@ -4963,7 +4963,7 @@ class Vacancy extends ARModel
     if($module==1) // активация вакансии
     {
       $services = (new ServiceCloud())->getCreateVacancyPaidService($id);
-      if(!$this->count($services->items)) // активируем только если оплачено создание вакансии
+      if(!count($services->items)) // активируем только если оплачено создание вакансии
       {
         $arUpdate = ['status'=>self::$STATUS_ACTIVE];
       }

@@ -12,7 +12,7 @@ $arSalary = VacancyView::getSalary(
 //
 ?>
 <div class="module_info<?=$viData->error_moodule==$module?' block__hide':''?>">
-  <? if(!$viData->data->is_actual_remdate): ?>
+  <? if($viData->data->is_actual_remdate && !count($viData->services->creation_vacancy->items)): ?>
     <a href="javascript:void(0)" class="personal__area--capacity-edit js-g-hashint" title="Редактировать"></a>
   <? endif; ?>
   <div class="group ppe__field">

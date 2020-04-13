@@ -16,6 +16,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
     </div>
   <? endif; ?>
   <div class="col-xs-12 col-sm-6">
+    <? //if(!($viData->data->status==Vacancy::$STATUS_NO_ACTIVE && count($viData->services->creation_vacancy->items))): ?>
     <div id="activate-block">
       <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
     </div>

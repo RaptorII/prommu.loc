@@ -9,7 +9,7 @@
 //
 ?>
 <div class="module_info<?=Yii::app()->getRequest()->isAjaxRequest?' block__hide':''?>">
-  <? if(!$viData->data->is_actual_remdate): ?>
+  <? if($viData->data->is_actual_remdate && !count($viData->services->creation_vacancy->items)): ?>
     <a href="javascript:void(0)" class="personal__area--capacity-edit js-g-hashint" title="Редактировать"></a>
   <? endif; ?>
   <div id="location"></div>

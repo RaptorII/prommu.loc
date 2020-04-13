@@ -25,7 +25,12 @@ class VacancyCreate
     $this->dataOther = (object)[];
 
     $duplicate = Yii::app()->getRequest()->getParam('duplicate');
-    if($duplicate=='Y') // дублирование вакансии
+
+    if(!Share::$UserProfile->isModer()) // Непромодерированный не может добавлять вакансии
+    {
+      $this->errors['access'] = 'Вы сможете добавить вакансию, после прохождения модерации, спасибо за понимание';
+    }
+    elseif($duplicate=='Y') // дублирование вакансии
     {
       $id_vacancy = intval(Yii::app()->getRequest()->getParam('id'));
 

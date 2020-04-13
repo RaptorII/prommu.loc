@@ -90,6 +90,11 @@ var EditVacancy = (function () {
     });
 
 
+    // Прячем блок, если в нем нет данных
+    if(!$('#activate-block').text().trim().length)
+    {
+      $('#activate-block').addClass('block__hide');
+    }
     // событие активации вакансии
     $(document).on('click','#activate',function(){
       MainScript.stateLoading(true);

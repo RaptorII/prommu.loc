@@ -8,6 +8,12 @@
 
 class VacancyView
 {
+  const AR_PAYMENT_HINT = [
+    0 => 'Средняя оплата по регионам<br> <b>150</b> руб/час<br> <b>2400</b> руб/неделя<br> <b>9600</b> руб/месяц<br> <b>500</b> руб/посещение', // регионы
+    1307 => 'Средняя оплата по Москве<br> <b>280</b> руб/час<br> <b>4480</b> руб/неделя<br> <b>17920</b> руб/месяц<br> <b>1000</b> руб/посещение', // МСК
+    1838 => 'Средняя оплата по Санкт-Петербургу<br> <b>200</b> руб/час<br> <b>3200</b> руб/неделя<br> <b>12800</b> руб/месяц<br> <b>700</b> руб/посещение' // СПБ
+  ];
+
   public static function getAge($from, $to)
   {
     $result = 'от ' . $from . ' ';
@@ -84,5 +90,38 @@ class VacancyView
     }
 
     return CHtml::link($name, MainConfig::$PAGE_VACPUB, $arParams);
+  }
+  /**
+   * @param $arCities - array of city.id_city
+   * @return bool|string
+   */
+  public static function getSalaryByHints($arCities)
+  {
+    if(!count($arCities))
+    {
+      return false;
+    }
+    $result = [];
+    if(in_array(1307, $arCities)) // МСК
+    {
+      $result[] = self::AR_PAYMENT_HINT[1307];
+    }
+    if(in_array(1838, $arCities)) // СПБ
+    {
+      $result[] = self::AR_PAYMENT_HINT[1838];
+    }
+
+    $cnt = 0;
+    foreach ($arCities as $v)
+    {
+      in_array($v,[1307,1838]) && $cnt++;
+    }
+
+    if(count($arCities)>$cnt) // Регионы
+    {
+      $result[] = self::AR_PAYMENT_HINT[0];
+    }
+
+    return implode('<br>',$result);
   }
 }
