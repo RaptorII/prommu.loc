@@ -64,6 +64,12 @@
     <?
     //
     ?>
+    <p class="separator text__center">
+      <a href="javascript:void(0)" class="back__away" id="prev_step">НАЗАД</a>
+    </p>
+    <?
+    //
+    ?>
     <input type="hidden" name="step" value="<?=$model->step?>">
   </div>
 </div>

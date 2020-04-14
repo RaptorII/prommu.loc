@@ -905,7 +905,7 @@ try google material design
     text-align: justify;
 }
 .text__center{
-    text-align: justify;
+    text-align: center;
 }
 .text__nowrap{
     white-space: nowrap;

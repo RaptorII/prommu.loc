@@ -794,6 +794,7 @@ class UserController extends AppController
       if($model->id_vacancy) // вакансия создана
       {
         $arOrderId = $model->checkPayment();
+        $model->deleteData();
         if(count($arOrderId)) // страница выбора типа оплаты
         {
           $this->redirect(MainConfig::$PAGE_PAYMENT . '?receipt=' . implode(',',$arOrderId));

@@ -141,7 +141,15 @@ class VacancyCreate
         $this->errors['access'] = 'Вакансии не существует, либо у вас нет доступа';
       }
       $this->data = $object->data;
-      $this->step = $object->step; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      $changeStep = Yii::app()->getRequest()->getParam('change_step');
+      if(in_array($changeStep,[1,2,3,4,5]))
+      {
+        $this->step = $changeStep; // Делаем возврат на предыдущую ступень
+      }
+      else
+      {
+        $this->step = $object->step; // Переходим на следующую
+      }
     }
     else // создание новой вакансии
     {
@@ -206,6 +214,19 @@ class VacancyCreate
         );
     }
     return $result;
+  }
+  /**
+   * Удаление данных по вакансии
+   * @return CDbDataReader|mixed
+   */
+  public function deleteData()
+  {
+    return Yii::app()->db->createCommand()
+      ->delete(
+        'vacancy_create',
+        "vacancy=:vacancy",
+        [':vacancy'=>$this->vacancy]
+      );
   }
   /**
    * Проверка полей

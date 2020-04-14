@@ -38,6 +38,30 @@
       text-align: center;
       border-bottom: 1px solid #000000;
     }
+    .payment_to_pdf{
+      width: 70px;
+      height: 70px;
+      position: fixed;
+      top: 100px;
+      left: 0;
+      display: block;
+      background: #abb820;
+      color: #ffffff;
+      text-decoration: none;
+      line-height: 68px;
+      text-align: center;
+      font-size: 25px;
+      font-weight: bold;
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+      font-family: sans-serif;
+    }
+    .payment_to_pdf:hover{
+      background: #f68000
+    }
+    @media print {
+      .payment_to_pdf{ display: none; }
+    }
   </style>
   <body>
   <?
@@ -48,7 +72,7 @@
   */
   ?>
 
-
+    <a href="?pdf=1" class="payment_to_pdf" title="выгрузить в PDF файл">PDF</a>
     <div class="payment">
       <table class="payment-top">
         <tr>

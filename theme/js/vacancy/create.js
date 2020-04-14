@@ -81,6 +81,25 @@ var CreateVacancy = (function () {
     new CheckRequiredFields(self);
     // запуск анимашки
     self.startSvg();
+    // возвращаемся назад
+    $(document).off('click','#prev_step');
+    $(document).on('click','#prev_step',function(){
+      let step = Number($('[name="step"]').val());
+      $('body').addClass('prmu-load');
+      $.ajax({
+        type: 'GET',
+        url: '?change_step=' + --step,
+        success: function(result){
+          self.init($('form'),result);
+          $('body').removeClass('prmu-load');
+        },
+        error: function()
+        {
+          confirm('Системная ошибка');
+          $('body').removeClass('prmu-load');
+        }
+      });
+    });
   };
   //
   CreateVacancy.prototype.changeLabelWidth = function ()

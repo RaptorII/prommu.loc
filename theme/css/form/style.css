@@ -1021,3 +1021,7 @@ h6.login__header, .form__header-h6{
     left: 0px;
     line-height: 48px;
 }
+#prev_step{
+    display: inline;
+    text-decoration: underline;
+}

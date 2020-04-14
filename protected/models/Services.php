@@ -117,7 +117,7 @@ class Services extends Model
             foreach ($arVacs as $v)
             {
               $arRes['history']['vacancies'][$v['id']] = $v;
-              if(!in_array($v['id'], $arCreateIdVacancy)) // если за создание этой вакансии есть платежка - выводим только платежку
+              if(in_array($v['id'], $arCreateIdVacancy)) // если за создание этой вакансии есть платежка - выводим только платежку
               {
                 continue;
               }
