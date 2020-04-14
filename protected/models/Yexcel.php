@@ -159,7 +159,7 @@ class Yexcel
     header('Content-Disposition: attachment;filename="01simple.pdf"');
     header('Cache-Control: max-age=0');
 
-    $objWriter = PHPExcel_IOFactory::createWriter($yexcel, 'Excel2007');
+    $objWriter = PHPExcel_IOFactory::createWriter($yexcel, 'PDF');
     $objWriter->save('php://output');
     Yii::app()->end();
   }
