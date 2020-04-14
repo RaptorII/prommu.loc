@@ -211,7 +211,6 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
             </div>
             <div class="clearfix"></div>
             <? foreach ($viData['menu'][$m['id']] as $s): ?>
-<!--            --><?// display($s); ?>
               <div class="services__sublevel">
                 <div class="col-xs-12 col-sm-6 services__item-descr">
                   <div class="services__sub">

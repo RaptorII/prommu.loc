@@ -114,10 +114,6 @@ if(!$rq->getParam('vacancy')):?>
     } elseif($cntVacStat > 10) {
         $price = $cntUsers * $viData['price'];
     }
-//    display($cntVacStat);
-//    display($cntUsers);
-//    display($price);
-//    display($viData['price']);
 
     ?>
     <div class="row">

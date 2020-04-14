@@ -1154,10 +1154,6 @@ class UserController extends AppController
 
                     if ($data['cost'] > 0 ) {
 
-                        display($data);
-                        display($rq->getParam('personal'));
-                        //die('cost');
-
                         if ($rq->getParam('personal') === 'individual') // people
                         {
                             $link = $model->createPayLink($data['account'], $vac, $data['cost']);
@@ -1169,7 +1165,6 @@ class UserController extends AppController
                             $this->redirect(MainConfig::$PAGE_SERVICES);
                         }
                     } elseif ($data['cost'] = -2) {
-                        //die('-2');
 //                      invite users
 //                      save data to database
 //                      database = vacation_stat
@@ -1239,7 +1234,9 @@ class UserController extends AppController
             case 'sms-informing-staff':
               if($price > 0)
               { // оплата услуги
-                $data = $model->orderSms($vac, $price, $emp);
+                $smsCount = $rq->getParam('sms-count');
+                $data = $model->orderSms($vac, $price, $emp, $smsCount);
+
                 if($rq->getParam('personal')==='individual') // физ лица
                 {
                   $link = $model->createPayLink($data['account'], $vac, $data['cost']);
@@ -1910,10 +1907,13 @@ class UserController extends AppController
                 }
                 elseif(Yii::app()->request->isAjaxRequest)
                 {
+
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                        array('viData' => (new Services())->getFilteredPromos()), 
-                        false, 
+                            [
+                                'viData' => (new Services())->getFilteredPromos(),
+                            ],
+                        false,
                         true
                     );
                     return;
@@ -1921,9 +1921,51 @@ class UserController extends AppController
                 else
                 {
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                    $data = $vacancy 
+                    $data2 = $vacancy
                         ? (new Services())->prepareFilterData()
                         : (new Vacancy())->getModerVacs();
+
+                    $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+
+                    $positionVacancy = Yii::app()->db->createCommand("
+                        SELECT
+                            id_attr, d1.name
+                        FROM
+                            empl_attribs
+                        INNER JOIN
+                            user_attr_dict d
+                        ON
+                            d.id = 110
+                        INNER JOIN
+                            user_attr_dict d1
+                        ON
+                            empl_attribs.id_attr = d1.id AND d1.id_par = d.id
+                        WHERE
+                            id_vac = {$vacancy}
+                    ")->queryRow();
+
+                    $vacancyTime = Yii::app()->db->createCommand()
+                        ->select('shour, sweek, smonth, svisit')
+                        ->from('empl_vacations')
+                        ->where('id=:id', [':id' => $vacancy])
+                        ->queryRow();
+
+                    $payForVacancy = 'по договорённости';
+                    if ($vacancyTime['shour'] > 0)
+                        $payForVacancy = $vacancyTime['shour'] . ' руб/час';
+                    if ($vacancyTime['sweek'] > 0)
+                        $payForVacancy = $vacancyTime['sweek'] . ' руб/неделю';
+                    if ($vacancyTime['smonth'] > 0)
+                        $payForVacancy = $vacancyTime['smonth'] . ' руб/месяц';
+                    if ($vacancyTime['svisit'] > 0)
+                        $payForVacancy = $vacancyTime['svisit'] . ' руб/посещение';
+
+                    $data['current'] = $vacancy;
+                    $data['pay'] = $payForVacancy;
+                    $data['position'] = $positionVacancy['name'];
+                    $data['name'] =  $data['user']['name'];
+
+                    $data = array_merge($data,$data2);
                 }
                 break;
 

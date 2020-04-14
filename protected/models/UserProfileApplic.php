@@ -1904,8 +1904,6 @@ class UserProfileApplic extends UserProfile
      */
     public function getEfficiencyData($data)
     {
-      //display($data);
-
       $efficiency = 0;
       $arAttr = $data['userAttribs'];
       $arInfo = reset($arAttr);

@@ -234,7 +234,7 @@ class PrommuOrder {
       for ($i=0, $n=count($arIdUsers); $i<$n; $i++)
       {
         $api = new Api();
-        $api->teleProm($arIdUsers[$i], $arService['key']);
+        $api->teleProm($arIdUsers[$i], $arService['key'], $transaction);
       }
     }
     elseif ($serviceType == 'push')
@@ -605,8 +605,6 @@ class PrommuOrder {
             $arRes['cost'] = $cntUsers * $price;
         }
 
-        display($arRes['cost']);
-
         $date = date("Y-m-d h-i-s");
         $stack = time();
 
@@ -795,7 +793,7 @@ class PrommuOrder {
     /*
     *       Заказ услуги Push рассылка
     */
-    public function orderSms($vacancy, $price, $employer)
+    public function orderSms($vacancy, $price, $employer, $smsCount)
     {
       if(!isset($employer))
           return false;
@@ -805,7 +803,7 @@ class PrommuOrder {
       $date = date("Y-m-d h-i-s");
       $arApps = Yii::app()->getRequest()->getParam('users');
       $text = Yii::app()->getRequest()->getParam('text');
-      $arRes['cost'] = $price * count(Share::explode($arApps));
+      $arRes['cost'] = $smsCount * $price * count(Share::explode($arApps));
 
       $arRes['id'] = $this->serviceOrderSms(
           $employer,

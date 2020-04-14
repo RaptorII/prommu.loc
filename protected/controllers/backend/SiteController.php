@@ -1232,12 +1232,6 @@ class SiteController extends Controller
                     break;
             }
 
-//            echo'<pre>';
-//            print_r($stat);
-            //print_r($_POST);
-//            print_r($_GET);
-//            die('die');
-
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Аналитика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);          
             $this->render('analytic/index', [

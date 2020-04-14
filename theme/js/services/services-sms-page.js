@@ -1,4 +1,29 @@
 (function($){
+    // transliteration
+    function rus_to_latin(str) {
+
+        var ru = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
+            'е': 'e', 'ё': 'e', 'ж': 'j', 'з': 'z', 'и': 'i',
+            'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o',
+            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+            'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh',
+            'щ': 'shch', 'ы': 'y', 'э': 'e', 'ю': 'u', 'я': 'ya'
+        }, n_str = [];
+
+        str = str.replace(/[ъь]+/g, '').replace(/й/g, 'i');
+
+        for ( var i = 0; i < str.length; ++i ) {
+            n_str.push(
+                ru[ str[i] ]
+                || ru[ str[i].toLowerCase() ] == undefined && str[i]
+                || ru[ str[i].toLowerCase() ].replace(/^(.)/, function ( match ) { return match.toUpperCase() })
+            );
+        }
+
+        return n_str.join('');
+    }
+
   //  Проверка валидности СМС символов
   $.fn.smsArea = function(options){
     var
@@ -7,16 +32,39 @@
     s = $.extend({
         cut: true,
         maxSmsNum: 1,
-        counters: { character: $('#mess-mlength') },
+        encoding: $('#smss-encoding'),
+        txt: {
+          messText: $('#mess-text'),
+          messTextSend: $('#mess-text-send'),
+        },
+        counters: {
+          character: $('#mess-mlength'),
+          smsCnt: $('#sms-cnt'),
+          messMcountInp: $('#mess-mcount-inp'),
+        },
         lengths: {
-          ascii: [600], // -12 символов на '-PROMMU.COM-'
-          unicode: [256] // -12 символов на '-PROMMU.COM-'
-          /*ascii: [160, 306, 459, 619],unicode: [70, 134, 201, 268]*/
+          ascii:   [612], //[600], // -12 символов на '-PROMMU.COM-'
+          unicode: [268], //[256], // -12 символов на '-PROMMU.COM-'
+          asciiSMS:  153,
+          unicodeSMS: 67,
+          //ascii: [160, 306, 459, 619],unicode: [70, 134, 201, 268]
         }
     }, options);
+
+    s.encoding.click(function(){
+      if (s.encoding.val()=='true') {
+          s.encoding.val('false');
+      } else {
+          s.encoding.val('true');
+      }
+      e.keyup();
+    });
+
     e.keyup(function(){
       var
       smsType,
+      smsCntType,
+      smsCnt,
       smsLength = 0,
       smsCount = -1,
       charsLeft = 0,
@@ -43,15 +91,25 @@
         if(text.charCodeAt(charPos) > 127 && text[charPos] != "€")
         isUnicode = true;
       }
-      if(isUnicode)
+      if(isUnicode) {
         smsType = s.lengths.unicode;
-      else
+        smsCntType = s.lengths.unicodeSMS;
+      } else {
         smsType = s.lengths.ascii;
+        smsCntType = s.lengths.asciiSMS;
+      }
+      if(s.encoding.val()=='true') {
+        isUnicode = false;
+        smsType = s.lengths.ascii;
+        smsCntType = s.lengths.asciiSMS;
+      }
       for(var sCount = 0; sCount < s.maxSmsNum; sCount++){
           cutStrLength = smsType[sCount];
           if(smsLength <= smsType[sCount]){
               smsCount = sCount + 1;
               charsLeft = smsType[sCount] - smsLength;
+              if ( smsLength >= 0 && smsLength <= (smsType - 1) )
+                  smsCnt = 1 + Math.trunc(smsLength/smsCntType);
               break
           }
       }
@@ -59,6 +117,19 @@
       smsCount == -1 && (smsCount = s.maxSmsNum, charsLeft = 0);
 
       s.counters.character.html(charsLeft);
+      s.counters.smsCnt.html(smsCnt);
+      s.counters.messMcountInp.val(smsCnt);
+
+      if (isUnicode) {
+          s.txt.messTextSend.html(s.txt.messText.val());
+      } else {
+          s.txt.messTextSend.html(rus_to_latin(s.txt.messText.val()));
+      }
+
+      if (!s.txt.messText.val()) {
+        s.txt.messTextSend.html('Текст для отправки');
+      }
+
     }).keyup()
   }     
 }(jQuery));

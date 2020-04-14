@@ -1767,7 +1767,7 @@ class Api
 
     }
 
-    public function teleProm($id, $key){
+    public function teleProm($id, $key, $transaction = ''){
 
         $user = Yii::app()->db->createCommand()
             ->select("e.firstname, e.lastname, e.isman")
@@ -1782,45 +1782,99 @@ class Api
             ->where('id_us=:id_user AND id_attr=:id_attr', array(':id_user'=>$id, ':id_attr'=>1))
             ->queryAll();
 
-
         $service = Yii::app()->db->createCommand()
-            ->select("e.text")
+            ->select("e.id, e.text, e.name, e.id_user")
             ->from('service_cloud e')
-            ->where('e.key=:key', array(':key' => $key))
-            ->queryAll();
+            ->where(
+                'e.type = "sms" and e.key = :key and e.stack = :stack',
+                [
+                    ':key' => $key,
+                    ':stack' => $transaction
+                ])
+            ->order('id DESC')
+            ->queryRow();
 
-        $text = $service[0]['text'];
+        $id_vacancy = $service['name'];
+        $positionVacancy = Yii::app()->db->createCommand("
+            SELECT
+                id_attr, d1.name
+            FROM
+                empl_attribs
+            INNER JOIN
+                user_attr_dict d
+            ON
+                d.id = 110
+            INNER JOIN
+                user_attr_dict d1
+            ON
+                empl_attribs.id_attr = d1.id AND d1.id_par = d.id
+            WHERE
+                id_vac = {$id_vacancy}
+        ")->queryRow();
+
+        $vacancyTime = Yii::app()->db->createCommand()
+            ->select('shour, sweek, smonth, svisit')
+            ->from('empl_vacations')
+            ->where('id=:id', [':id' => $id_vacancy])
+            ->queryRow();
+
+        $payForVacancy = 'по договорённости';
+        if ($vacancyTime['shour'] > 0)
+            $payForVacancy = $vacancyTime['shour'] . ' руб/час';
+        if ($vacancyTime['sweek'] > 0)
+            $payForVacancy = $vacancyTime['sweek'] . ' руб/неделю';
+        if ($vacancyTime['smonth'] > 0)
+            $payForVacancy = $vacancyTime['smonth'] . ' руб/месяц';
+        if ($vacancyTime['svisit'] > 0)
+            $payForVacancy = $vacancyTime['svisit'] . ' руб/посещение';
+
+        $arEmployer = Yii::app()->db->createCommand()
+            ->select('e.name, u.email')
+            ->from('employer e')
+            ->leftJoin('user u', 'u.id_user=e.id_user')
+            ->where('e.id_user=:id', [':id' => $service[0]['id_user']]) //$service[0]['id_user'] - Employer ID
+            ->queryRow();
+
+        $text = $service['text'];
         $telephone = $list[0]['val'];
         $firstname = $user[0]['firstname'];
         $lastname = $user[0]['lastname'];
-        $text = "-PROMMU.COM- $text";
 
+        /*$text = '-PROMMU.COM- Rabotodatel '
+            . Share::transliterateRusToEn($arEmployer['name'])
+            . ' priglashaet vas na vakansiyu '
+            . Share::transliterateRusToEn($positionVacancy['name'])
+            . '. Oplata: '
+            . Share::transliterateRusToEn($payForVacancy)
+            .' | '
+            . Share::transliterateRusToEn($text);*/
 
-        $api_key = 'iu7nou5f4jhdh2b1ftvd9z57hup30758'; // Уникальный код вашей АТС 
-        $api_salt = 's2m6mibgrjkybmph5bk40g180h1rfxqx'; // Ключ для создания подписи 
-        $url = 'https://app.mango-office.ru/vpbx/commands/sms'; 
-        $data = array( 
-        "command_id" => "ID" . rand(10000000,99999999), // идентификатор команды 
-        "from_extension" => "3010", // внутренний номер сотрудника 
-        "text" => $text, // текст смс 
-        "to_number" => $telephone, // кому отправить смс 
-        "sms_sender" => "PRO" // ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР. имя отправителя. Если не заполнено - будет использоваться имя отправителя, выбранное в ЛК. 
-        ); 
-        $json = json_encode($data); 
-        $sign = hash('sha256', $api_key . $json . $api_salt); 
-        $postdata = array( 
-        'vpbx_api_key' => $api_key, 
-        'sign' => $sign, 
-        'json' => $json 
-        ); 
-        $post = http_build_query($postdata); 
-        $ch = curl_init($url); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($ch, CURLOPT_POST, 1); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post); 
-        $response = curl_exec($ch); 
-        curl_close($ch); 
-    
+        $api_key = 'iu7nou5f4jhdh2b1ftvd9z57hup30758'; // Уникальный код вашей АТС
+        $api_salt = 's2m6mibgrjkybmph5bk40g180h1rfxqx'; // Ключ для создания подписи
+        $url = 'https://app.mango-office.ru/vpbx/commands/sms';
+        $data = array(
+            "command_id" => "ID" . rand(10000000,99999999), // идентификатор команды
+            "from_extension" => "3010", // внутренний номер сотрудника
+            "text" => $text, // текст смс
+            "to_number" => $telephone, // кому отправить смс
+            "sms_sender" => "PRO" // ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР. имя отправителя. Если не заполнено - будет использоваться имя отправителя, выбранное в ЛК.
+        );
+        $json = json_encode($data);
+        $sign = hash('sha256', $api_key . $json . $api_salt);
+        $postdata = array(
+            'vpbx_api_key' => $api_key,
+            'sign' => $sign,
+            'json' => $json
+        );
+        $post = http_build_query($postdata);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
 
     }
 
