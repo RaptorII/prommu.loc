@@ -1,4 +1,10 @@
 <div class="form form-medium">
+  <a
+    class="form__tutorial form__tutorial-hint"
+    href="/theme/pdf/Instruction-PROMMU-com-vac.pdf"
+    target="_blank"
+    title="Инструкция по созданию вакансии">
+  </a>
   <svg x="0" y="0" class="svg-bg" />
   <h2 class="form__header-h2">1й этап</h2>
   <h6 class="form__header-h6">Введите данные</h6>

@@ -106,10 +106,22 @@ class Services extends Model
           // собираем публикации вакансий
           $model = new Vacancy();
           $arVacs = $model->getVacanciesByUser($id_user);
+          $arCreateIdVacancy = [];
+          foreach ($arRes['history']['items'] as $v)
+          {
+            $v['type']=='creation-vacancy' && $arCreateIdVacancy[]=$v['vacancy'];
+          }
+          //
           if(count($arVacs))
           {
             foreach ($arVacs as $v)
             {
+              $arRes['history']['vacancies'][$v['id']] = $v;
+              if(!in_array($v['id'], $arCreateIdVacancy)) // если за создание этой вакансии есть платежка - выводим только платежку
+              {
+                continue;
+              }
+
               $arRes['history']['items'][] = [
                 'id_user' => $id_user,
                 'vacancy' => $v['id'],
@@ -117,10 +129,13 @@ class Services extends Model
                 'name' => 'Размещение вакансии',
                 'date' => $v['crdate'],
                 'title' => $v['title'],
-                'status' => (($v['status']&&$v['ismoder'])?'Активна':($v['ismoder']?'Неактивна':'В процессе модерации'))
+                'status' => (
+                  ($v['status']==Vacancy::$STATUS_ACTIVE && $v['ismoder']==Vacancy::$ISMODER_APPROVED)
+                    ?'Активна'
+                    :($v['ismoder']==Vacancy::$ISMODER_APPROVED?'Неактивна':'В процессе модерации'))
               ];
 
-              $arRes['history']['vacancies'][$v['id']] = $v;
+
             }
           }
         }

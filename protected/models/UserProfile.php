@@ -108,6 +108,7 @@ abstract class UserProfile extends CModel
         if( !Share::is_set($this->exInfo, 'id') )
         {
           $this->exInfo = (object)$this->getUserData($this->id);
+          $this->ismoder = $this->exInfo->ismoder;
         }
         if(!is_array($this->cache))
         {
@@ -441,6 +442,14 @@ abstract class UserProfile extends CModel
       ->queryScalar();
 
     return boolval($query);
+  }
+  /**
+   * @return bool
+   * Проверяем является ли текущий юзер промодерированым
+   */
+  public function isModer()
+  {
+    return $this->exInfo->ismoder==User::$ISMODER_ACTIVE;
   }
 }
 

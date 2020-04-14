@@ -707,7 +707,7 @@ class UserProfileApplic extends UserProfile
     protected function getUserData($inId)
     {
         $res = Yii::app()->db->createCommand()
-            ->select("u.id_user id, u.login, u.email, u.status, u.isblocked, u.statuses
+            ->select("u.id_user id, u.login, u.email, u.status, u.isblocked, u.statuses, u.ismoder
                 , w.id wid
                 , r.id id_resume
                 , r.lastname
@@ -719,7 +719,8 @@ class UserProfileApplic extends UserProfile
                 , CONCAT(e.firstname,\" \",e.lastname) efio
                 , e.name
                 , e.logo
-                , r.isman
+                , u.is_online
+                , u.mdate
             ")
             ->from('user u')
             ->leftJoin('user_work w', 'u.id_user = w.id_user')

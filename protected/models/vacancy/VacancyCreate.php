@@ -319,6 +319,10 @@ class VacancyCreate
         $this->data->repost = $v;
       }
     }
+    elseif ($step==6)
+    {
+
+    }
     elseif ($step=='duplicate')
     {
       $this->checkPeriod();
@@ -326,13 +330,13 @@ class VacancyCreate
 
     if(!count($this->errors)) // ошибок нет
     {
-      if($this->step!='duplicate' && $this->step<5)
+      if($this->step!='duplicate' && $this->step<6)
       {
         $this->step=$step+1;
       }
 
       $this->setData();
-      if($step==5 || $step=='duplicate')
+      if($step==6 || $step=='duplicate')
       {
         $model = new Vacancy();
         $this->id_vacancy = $model->createVacancy(
@@ -364,7 +368,7 @@ class VacancyCreate
         }
       }
     }
-    if(in_array($this->step,[1,5,'duplicate']))
+    if(in_array($this->step,[1,6,'duplicate']))
     {
       $this->dataOther->arSelectCity = [];
       if(count($this->data->city))
@@ -381,7 +385,7 @@ class VacancyCreate
         $this->dataOther->arSelectCity[Share::$UserProfile->cache->city->id_city] = Share::$UserProfile->cache->city->name;
       }
     }
-    if(in_array($this->step,[5,'duplicate']))
+    if(in_array($this->step,[6,'duplicate']))
     {
       $period = strtotime($this->data->edate) - strtotime($this->data->bdate);
       $this->dataOther->period = $period/86400;

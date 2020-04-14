@@ -50,7 +50,7 @@ var CreateVacancy = (function () {
       new InitNicEditor('#duties','#duties_panel');
       new InitNicEditor('#conditions','#conditions_panel');
     }
-    else if(step==='5')
+    else if(step==='6')
     {
       $('form').attr('data-params','');
       $('form').submit(function(){
@@ -71,6 +71,7 @@ var CreateVacancy = (function () {
     }
     // инициализация подсказок
     Hinter.bind('.tooltip', { side: 'right' });
+    Hinter.bind('.form__tutorial-hint', { side: 'right' });
     // выравниваем лейблы
     self.changeLabelWidth();
     $( window ).on('resize',function() {

@@ -670,8 +670,9 @@ class PrommuOrder {
 
       Yii::app()->user->setFlash(
         'prommu_flash',
-        "Ожидаем от Вас оплаты по <a href='" . MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $result . "' target='_blank'>счету</a>. "
+        "Ожидаем от Вас оплаты по счету. "
         . "Оплата зачисляется автоматически. В назначинии обязательно указывайте Ваш ID и номер счета."
+        . "<br><a href='" . MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $result . "' target='_blank' class='btn__orange'>Скачать счет</a>"
       );
 
       return $result;

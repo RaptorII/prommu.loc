@@ -550,10 +550,13 @@
   content: '\e91d';
 }
 
-.history__item-icon.vacpub:after {
+.history__item-icon.vacpub:after,
+.history__item-icon.creation-vacancy:after {
   content: '\e949';
 }
-
+.history__item-icon.personal-invitation:after {
+  content: '\e9d4';
+}
 .history__users-name {
   background-color: #f5f5f5;
   padding: 15px 50px 15px 15px;

@@ -270,7 +270,7 @@ if (!share::isApplicant()):
                 Узнавай о самых свежих вакансиях самым первым
             </span>
             <div class="messenger__item">
-                  <a href="https://t.me/prommucom" target="_blank" class="messenger__item--link">
+                  <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" target="_blank" class="messenger__item--link">
                       <span class="icn-telegram-icon"></span>
                       <span class="messenger__name">Telegram</span>
                   </a>

@@ -2189,6 +2189,10 @@ class UserController extends AppController
      */
     public function actionLegal_entity_receipt()
     {
+      if(Yii::app()->getRequest()->getParam('pdf')==1)
+      {
+        Yexcel::makePDF();
+      }
       $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
       $model = new PrommuOrder();
       $data = $model->getLegalEntityReceipt($id);

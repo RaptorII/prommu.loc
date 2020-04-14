@@ -831,7 +831,7 @@ class UserProfileEmpl extends UserProfile
     protected function getUserData($inId)
     {
         $res = Yii::app()->db->createCommand()
-            ->select("u.id_user id, u.login, u.email, u.status, u.isblocked, u.statuses
+            ->select("u.id_user id, u.login, u.email, u.status, u.isblocked, u.statuses, u.ismoder
                 , w.id wid
                 , r.id id_resume
                 , r.lastname

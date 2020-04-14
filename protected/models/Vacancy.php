@@ -3028,7 +3028,7 @@ class Vacancy extends ARModel
         $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=" . urlencode($message) . "&disable_web_page_preview=true";
        // file_get_contents($sendto);
         //
-        $arVacUpdate['tl_link'] = "https://t.me/prommucom";
+        $arVacUpdate['tl_link'] = MainConfig::$PROMMU_TELEGRAM;
         $arCloudUpdate[] = array(
             'id_user' => $arVac['id_user'],
             'name' => $id,
