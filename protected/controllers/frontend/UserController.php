@@ -1927,43 +1927,45 @@ class UserController extends AppController
 
                     $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
 
-                    $positionVacancy = Yii::app()->db->createCommand("
-                        SELECT
-                            id_attr, d1.name
-                        FROM
-                            empl_attribs
-                        INNER JOIN
-                            user_attr_dict d
-                        ON
-                            d.id = 110
-                        INNER JOIN
-                            user_attr_dict d1
-                        ON
-                            empl_attribs.id_attr = d1.id AND d1.id_par = d.id
-                        WHERE
-                            id_vac = {$vacancy}
-                    ")->queryRow();
+                    if($vacancy) {
+                        $positionVacancy = Yii::app()->db->createCommand("
+                            SELECT
+                                id_attr, d1.name
+                            FROM
+                                empl_attribs
+                            INNER JOIN
+                                user_attr_dict d
+                            ON
+                                d.id = 110
+                            INNER JOIN
+                                user_attr_dict d1
+                            ON
+                                empl_attribs.id_attr = d1.id AND d1.id_par = d.id
+                            WHERE
+                                id_vac = {$vacancy}
+                        ")->queryRow();
 
-                    $vacancyTime = Yii::app()->db->createCommand()
-                        ->select('shour, sweek, smonth, svisit')
-                        ->from('empl_vacations')
-                        ->where('id=:id', [':id' => $vacancy])
-                        ->queryRow();
+                        $vacancyTime = Yii::app()->db->createCommand()
+                            ->select('shour, sweek, smonth, svisit')
+                            ->from('empl_vacations')
+                            ->where('id=:id', [':id' => $vacancy])
+                            ->queryRow();
 
-                    $payForVacancy = 'по договорённости';
-                    if ($vacancyTime['shour'] > 0)
-                        $payForVacancy = $vacancyTime['shour'] . ' руб/час';
-                    if ($vacancyTime['sweek'] > 0)
-                        $payForVacancy = $vacancyTime['sweek'] . ' руб/неделю';
-                    if ($vacancyTime['smonth'] > 0)
-                        $payForVacancy = $vacancyTime['smonth'] . ' руб/месяц';
-                    if ($vacancyTime['svisit'] > 0)
-                        $payForVacancy = $vacancyTime['svisit'] . ' руб/посещение';
+                        $payForVacancy = 'по договорённости';
+                        if ($vacancyTime['shour'] > 0)
+                            $payForVacancy = $vacancyTime['shour'] . ' руб/час';
+                        if ($vacancyTime['sweek'] > 0)
+                            $payForVacancy = $vacancyTime['sweek'] . ' руб/неделю';
+                        if ($vacancyTime['smonth'] > 0)
+                            $payForVacancy = $vacancyTime['smonth'] . ' руб/месяц';
+                        if ($vacancyTime['svisit'] > 0)
+                            $payForVacancy = $vacancyTime['svisit'] . ' руб/посещение';
 
-                    $data['current'] = $vacancy;
-                    $data['pay'] = $payForVacancy;
-                    $data['position'] = $positionVacancy['name'];
-                    $data['name'] =  $data['user']['name'];
+                        $data['current'] = $vacancy;
+                        $data['pay'] = $payForVacancy;
+                        $data['position'] = $positionVacancy['name'];
+                        $data['name'] = $data['user']['name'];
+                    }
 
                     $data = array_merge($data,$data2);
                 }
