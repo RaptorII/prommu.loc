@@ -1035,7 +1035,7 @@ class ResponsesApplic extends Responses
                 ->where('r.id=:id', [':id'=>$idPromo])
                 ->queryRow();
             // отправляем email для С
-            /*
+
           Mailing::set(21,
             [
               'email_user' => $arUser['email'],
@@ -1046,7 +1046,7 @@ class ResponsesApplic extends Responses
               'title_vacancy' => $title,
             ]
           );
-            */
+
 
             PushChecker::setPushMess($arUser['id_user'], 'respond');
             // уведомление С в ЛК
