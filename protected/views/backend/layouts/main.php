@@ -510,7 +510,7 @@ else
                 // vacancies
                 ?>
                 <?php
-                $enable = in_array($curId, ['vacancy', 'vacancymail', 'VacancyEdit']);
+                $enable = in_array($curId, ['vacancy', 'vacancymail', 'VacancyEdit','cost_vacancy']);
                 $enable = ($curId == 'vacancy' && $_GET['seo'] == 1) ? false : $enable;
                 $enable = ($curId == 'sect' && $_GET['p'] == 'vac') ? true : $enable;
                 ?>
@@ -532,6 +532,12 @@ else
                                 <i class="glyphicon glyphicon-hourglass"></i>
                                 <span>Брошенные</span>
                             </a>
+                        </li>
+                        <li class="<?= ($curId == 'cost_vacancy' ? 'active' : '') ?>">
+                          <a href="<?= $hUrl ?>cost_vacancy">
+                            <i class="glyphicon glyphicon-rub"></i>
+                            <span>Платные/бесплатные</span>
+                          </a>
                         </li>
                     </ul>
                 </li>

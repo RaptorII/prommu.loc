@@ -124,6 +124,8 @@ class Yexcel
     // procedure (PHPExcel_Autoloader::Register();)
     include($phpExcelPath . DIRECTORY_SEPARATOR . 'PHPExcel.php');
 
+    PHPExcel_Settings::PDF_RENDERER_MPDF;
+
     // Create new PHPExcel object
     $yexcel = new PHPExcel();
 

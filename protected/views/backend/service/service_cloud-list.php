@@ -5,13 +5,23 @@
         $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
       }");
   $service = Yii::app()->getRequest()->getParam('service');
+  $params = Yii::app()->getRequest()->getParam('Service');
   $service=='creation_vacancy' && $service='creation-vacancy';
-  $title = Services::getServiceName($service);
+  if($service=='all_by_vacancy') // просмотр платных услуг по конкретной вакансии
+  {
+    $title = 'Все услуги по вакансии №'.$params['name'];
+  }
+  else
+  {
+    $title = Services::getServiceName($service);
+  }
   $this->setPageTitle($title);
   $this->breadcrumbs = ['Все услуги'=>['/service'], $title];
-  $params = Yii::app()->getRequest()->getParam('Service');
   $model = new Service();
-  $model->type=$service;
+  if($service!='all_by_vacancy')
+  {
+    $model->type=$service; // просмотр платных услуг по конкретной вакансии
+  }
   $arColumns = [
     [
       'header'=>'id',
@@ -20,20 +30,33 @@
       'type' => 'raw',
       'htmlOptions' => ['style'=>'width:2%']
     ],
-    [
-      'header' => 'Работодатель',
-      'name' => 'company_search',
-      'value' => 'AdminView::getLink("/admin/EmplEdit/".$data->id_user, $data->company_search)',
+  ];
+  //
+  if($service=='all_by_vacancy')
+  {
+    $arColumns[] = [
+      'header' => 'Услуга',
+      'name' => 'type_custom',
+      'value' => 'Services::getServiceName($data->type)',
       'type' => 'raw',
-      'htmlOptions' => ['style'=>'width:10%']
-    ],
-    [
-      'header' => 'ID_USER работодателя',
-      'name' => 'id_user',
-      'value' => '$data->id_user',
-      'type' => 'raw',
-      'htmlOptions' => ['style'=>'width:2%']
-    ]
+      'filter' => false,
+      'htmlOptions' => ['style'=>'width:8%']
+    ];
+  }
+  //
+  $arColumns[] = [
+    'header' => 'Работодатель',
+    'name' => 'company_search',
+    'value' => 'AdminView::getLink("/admin/EmplEdit/".$data->id_user, $data->company_search)',
+    'type' => 'raw',
+    'htmlOptions' => ['style'=>'width:10%']
+  ];
+  $arColumns[] = [
+    'header' => 'ID_USER работодателя',
+    'name' => 'id_user',
+    'value' => '$data->id_user',
+    'type' => 'raw',
+    'htmlOptions' => ['style'=>'width:2%']
   ];
   //
   if($service!='api')
@@ -46,7 +69,7 @@
       'htmlOptions' => ['style'=>'width:10%']
     ];
   }
-  if(in_array($service,['vacancy','upvacancy']))
+  if(in_array($service,['vacancy','upvacancy','creation-vacancy','all_by_vacancy']))
   {
     $arColumns[] = [
       'header' => 'ID вакансии',
@@ -57,7 +80,7 @@
     ];
   }
   //
-  if(in_array($service,['vacancy','email','sms','upvacancy','personal-invitation'])) // платные услуги
+  if(in_array($service,['vacancy','email','sms','upvacancy','personal-invitation','creation-vacancy','all_by_vacancy'])) // платные услуги
   {
     if($service=='vacancy') // только для премиум
     {
@@ -154,6 +177,18 @@
     ];
   }
   //
+  if($service=='all_by_vacancy')
+  {
+    $arColumns[] = [
+      'header' => 'Дата',
+      'name' => 'date',
+      'value' => 'Share::getDate(strtotime($data->date),"d.m.Y")',
+      'type' => 'raw',
+      'filter' => false,
+      'htmlOptions' => ['style'=>'width:5%']
+    ];
+  }
+  //
   $arColumns[] = [
     'header'=>'Статус',
     'filter' => CHtml::dropDownList(
@@ -196,7 +231,7 @@
         'enablePagination' => true,
         'rowCssClassExpression' => function($row, $data)
         {
-          return ($data->is_new ? 'new-row' : '');
+          return ($data->is_new ? 'new-row '.$data->type : ''.$data->type);
         },
         'columns' => $arColumns
       )

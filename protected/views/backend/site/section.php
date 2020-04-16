@@ -123,6 +123,12 @@
 					<span>Брошенные</span>
 				</a>
 			</li>
+      <li>
+        <a href="<?=$hUrl?>cost_vacancy">
+          <i class="glyphicon glyphicon-rub"></i>
+          <span>Платные/бесплатные</span>
+        </a>
+      </li>
 
 		<?php elseif($section=='service'): //Услуги ?>
 			<?php $title = 'Услуги'; ?>

@@ -2234,15 +2234,21 @@ class UserController extends AppController
      */
     public function actionLegal_entity_receipt()
     {
-      if(Yii::app()->getRequest()->getParam('pdf')==1)
-      {
-        Yexcel::makePDF();
-      }
       $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
       $model = new PrommuOrder();
       $data = $model->getLegalEntityReceipt($id);
       !$data && $this->redirect(DS);
-      $this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]);
+
+      if(Yii::app()->getRequest()->getParam('pdf')==1)
+      {
+        $mPDF1 = Yii::app()->ePdf->mpdf();
+        $mPDF1->WriteHTML($this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]));
+        $mPDF1->Output();
+      }
+      else
+      {
+        $this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]);
+      }
     }
     /**
      *  Страница с ГТМ после регистрации

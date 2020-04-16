@@ -2169,7 +2169,7 @@ class SiteController extends Controller
     }
   }
   /**
-   *
+   *  AB тестирование
    */
   public function actionAb_testing()
   {
@@ -2187,5 +2187,16 @@ class SiteController extends Controller
     {
       $this->render('seo/ab_testing', $data);
     }
+  }
+  /**
+   *  Платные/бесплатные вакансии
+   */
+  public function actionCost_vacancy()
+  {
+    $this->checkAccess();
+    $title = 'Платные/бесплатные вакансии';
+    $this->setPageTitle($title);
+    $this->breadcrumbs = array('Вакансии'=>['sect?p=vac'], '1'=>$title,);
+    $this->render('vacancy/cost_vacancy');
   }
 }

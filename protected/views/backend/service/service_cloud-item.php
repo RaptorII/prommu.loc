@@ -1,11 +1,11 @@
 <?php
   $id = Yii::app()->getRequest()->getParam('id');
   $service = Yii::app()->getRequest()->getParam('service');
+  $backLink = '/service/service_cloud/'.$service;
   $service=='creation_vacancy' && $service='creation-vacancy';
   $serviceTitle = Services::getServiceName($service);
   $title = 'Заказ #' . $id;
   $this->setPageTitle($title);
-  $backLink = '/service/service_cloud/'.$service;
   $this->breadcrumbs = ['Все услуги'=>['/service'], $serviceTitle=>[$backLink], $title];
   $model = new Service();
   $model->setAdminViewed($id);
@@ -146,5 +146,6 @@
     </div>
     <input type="checkbox" value="1" name="Service_cloud[start_service]" class="hide" id="start_service-input">
     <input type="hidden" name="Service_cloud[service]" value="<?=$service?>">
+    <input type="hidden" name="Service_cloud[legal]" value="<?=$order->legal?>">
   </form>
 <? endif; ?>

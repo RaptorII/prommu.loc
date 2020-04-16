@@ -241,6 +241,18 @@ return array(
             ),
         ),
       'crawlerDetect' => ['class' => 'ext.yiiCrawlerDetect.yiiCrawlerDetect'],
+      'ePdf' => array(
+        'class'         => 'ext.yii-pdf.EYiiPdf',
+        'params'        => array(
+          'mpdf'     => array(
+            'librarySourcePath' => 'application.vendor.mpdf.*',
+            'constants'         => array(
+              '_MPDF_TEMP_PATH' => Yii::getPathOfAlias('application.runtime'),
+            ),
+            'class'=>'mpdf',
+          ),
+        ),
+      ),
     ),
 
     'params' => array(

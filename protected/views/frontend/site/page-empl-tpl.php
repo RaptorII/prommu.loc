@@ -336,7 +336,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page.js
                                         <a href="<?='/user' . MainConfig::$PAGE_SERVICES_PUSH?>">Push - уведомления</a>
                                     </li>
                                 </ul>
-                            </div>
+                            <?/*</div>*/?>
                         <? elseif(Share::isApplicant()): ?>
                             <a class="applicant_service" href="javascript:void(0)">Приглашение персонала на вакансии</a>
                         <? else: ?>

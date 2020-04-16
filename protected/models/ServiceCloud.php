@@ -323,13 +323,28 @@ class ServiceCloud
     {
       if ($v['legal']) // юр.лицо
       {
-        $result->creation_vacancy->legal_links[] = MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $v['legal'];
-      } else {
+        if(!in_array($v['legal'], $result->creation_vacancy->legal_links)) // делаем чтобы счета не повторялись
+        {
+          $result->creation_vacancy->legal_links[] = $v['legal'];
+        }
+      }
+      else
+      {
         $arId[] = $v['id'];
         $cost += $v['sum'];
       }
       $result->creation_vacancy->cities[] = $v['city'];
     }
+
+    if(count($result->creation_vacancy->legal_links))
+    {
+      foreach ($result->creation_vacancy->legal_links as &$v)
+      {
+        $v = MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $v;
+      }
+      unset($v);
+    }
+
     if(count($arId))
     {
       $result->creation_vacancy->individual_link = (new PrommuOrder())->createPayLink(

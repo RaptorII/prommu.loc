@@ -61,7 +61,8 @@ class ServiceController extends Controller
             'sms',
             'repost',
             'api',
-            'personal-invitation'
+            'personal-invitation',
+            'all_by_vacancy' // все оплаты по конкретной вакансии
         ]))
     {
       $this->redirect('/admin/service');

@@ -422,7 +422,7 @@
                 <? $serviceCnt++; ?>
               <? endif; ?>
             </label>
-            <a href="/admin/services?Service[name]=<?=$viData['id']?>" target="_blank">Транзакции по вакансии</a>
+            <a href="/admin/service/service_cloud/all_by_vacancy?Service[name]=<?=$viData['id']?>" target="_blank">Транзакции по вакансии</a>
           </div>
           <?
           // SEO

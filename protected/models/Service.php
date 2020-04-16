@@ -19,6 +19,7 @@ class Service extends CActiveRecord
 {
   public $company_search;
   public $vacancy_search;
+  public $type_custom;
     /**
      * @return string the associated database table name
      */
@@ -577,71 +578,79 @@ class Service extends CActiveRecord
       ['status'=>$arParam['status'], 'key'=>$arParam['key']]
     );
     $message = 'Данные успешно сохранены';
-    if($arParam['start_service'])
+    if($arParam['start_service'] && !empty($arParam['legal']))
     {
       $stack = time();
-      $this::model()->updateByPk(
-        $arParam['id'],
-        ['status'=>1, 'key'=>'Запустил администратор', 'stack'=>$stack]
+      $ree = $this::model()->updateAll(
+        ['status'=>1, 'key'=>'Запустил администратор', 'stack'=>$stack],
+        'legal=:legal',
+        [':legal'=>$arParam['legal']]
       );
-      if($arParam['service']=='vacancy') // premium
-      {
-        $model = new Vacancy();
-        $model->updateParam($arParam['vacancy'],['ispremium'=>1]);
-      }
-      if(in_array($arParam['service'],['email','sms'])) // email, sms
-      {
-        $model = new PrommuOrder();
-        $model->autoOrder(
-          $arParam['service'],
-          $stack,
-          $arParam['id_user'],
-          $arParam['vacancy']
-        );
-      }
 
-      if($arParam['service']=='personal-invitation') // personal-invitation
+      $arServices = Yii::app()->db->createCommand()
+        ->from($this->tableName())
+        ->where('legal=:legal', [':legal'=>$arParam['legal']])
+        ->queryAll();
+
+      foreach ($arServices as $v)
       {
+        if($v['type']=='vacancy') // premium
+        {
+          $model = new Vacancy();
+          $model->updateParam($v['name'],['ispremium'=>1]);
+        }
+        if(in_array($v['type'],['email','sms'])) // email, sms
+        {
+          $model = new PrommuOrder();
+          $model->autoOrder(
+            $v['type'],
+            $stack,
+            $v['id_user'],
+            $v['name']
+          );
+        }
+
+        if($v['type']=='personal-invitation') // personal-invitation
+        {
           // set invite after send moneypay-service unitpay
           $arRes = Yii::app()->db->createCommand()
-              ->select('id, id_user, name, user')
-              ->from('service_cloud')
-              ->where(
-                  'id_user=:idp and id=:id',
-                  [
-                      ':idp'=>$arParam['id_user'],
-                      ':id' =>$arParam['id']
-                  ])
-              ->queryRow();
+            ->select('id, id_user, name, user')
+            ->from('service_cloud')
+            ->where(
+              'id_user=:idp and id=:id',
+              [
+                ':idp'=>$v['id_user'],
+                ':id' =>$v['id']
+              ])
+            ->queryRow();
 
-          $props = [];
-          $props['idvac'] = $arRes['name'];
+          $props = ['idvac'=>$v['name']];
 
-          if (explode(',',$arRes['user'])) {
-              $users = explode(',', $arRes['user']);
+          if (explode(',',$v['user'])) {
+            $users = explode(',', $v['user']);
           } else {
-              $users = $arRes['user'];
+            $users = $v['user'];
           }
 
           for($i=0; $i<=count($users); ++$i)
           {
-              $props['id'] = Yii::app()->db->createCommand()
-                  ->select('id')
-                  ->from('resume')
-                  ->where(
-                      'id_user=:idp',
-                      [':idp'=>$users[$i]]
-                  )
-                  ->queryScalar();
+            $props['id'] = Yii::app()->db->createCommand()
+              ->select('id')
+              ->from('resume')
+              ->where(
+                'id_user=:idp',
+                [':idp'=>$users[$i]]
+              )
+              ->queryScalar();
 
-              if ($props['id']) {
-                  (new ResponsesApplic())->invitePersonal($props);
+            if ($props['id']) {
+              (new ResponsesApplic())->invitePersonal($props);
 
-              }
+            }
           }
 
+        }
       }
-
       $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';
     }
     Yii::app()->user->setFlash('success', $message);
