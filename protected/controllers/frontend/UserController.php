@@ -2242,7 +2242,7 @@ class UserController extends AppController
       if(Yii::app()->getRequest()->getParam('pdf')==1)
       {
         $mPDF1 = Yii::app()->ePdf->mpdf();
-        $mPDF1->WriteHTML($this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]));
+        $mPDF1->WriteHTML($this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data],true));
         $mPDF1->Output();
       }
       else
