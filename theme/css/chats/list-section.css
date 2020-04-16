@@ -292,7 +292,7 @@
   max-width: 400px;
   width: 100%;
   text-align: center;
-  margin-left: -200px !important;
+  /*margin-left: -200px !important;*/
   border-radius: 10px;
 }
 

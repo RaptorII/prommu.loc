@@ -597,12 +597,29 @@ class PrommuOrder {
         $cntVacStat = ResponsesApplic::getCntVacStat($vacancy);
         $cntUsers   = count(explode(',',$users));
 
-        if (($cntVacStat < 10) && ($cntVacStat + $cntUsers ) > 10) {
-            $arRes['cost'] = ($cntVacStat + $cntUsers - 10) * $price;
-        } elseif (($cntVacStat + $cntUsers) < 10) {
+        $sql = "
+            SELECT 
+                status
+            FROM
+                service_cloud
+            WHERE 
+                name = {$vacancy}
+            AND 
+                type = 'personal-invitation'        
+            ";
+
+        $sql = Yii::app()->db->createCommand($sql)->queryRow();
+
+        if($sql['status'] == (int) 1){
             $arRes['cost'] = -2;
-        } elseif ($cntVacStat > 10) {
-            $arRes['cost'] = $cntUsers * $price;
+        } else {
+            if (($cntVacStat <= 10) && ($cntVacStat + $cntUsers ) > 10) {
+                $arRes['cost'] = $price;
+            } elseif (($cntVacStat + $cntUsers) <= 10) {
+                $arRes['cost'] = -2;
+            } elseif ($cntVacStat > 10) {
+                $arRes['cost'] = $price;
+            }
         }
 
         $date = date("Y-m-d h-i-s");

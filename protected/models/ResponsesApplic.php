@@ -874,7 +874,7 @@ class ResponsesApplic extends Responses
     if(!$id_vacancy || !$idPromo)
       return [
         'error' => -101,
-        'message' => 'Ошибка запроса. Пожалуйста обновите страницу!'
+        'message' => 'Ошибка запроса. Пожалуйста обновите страницу!',
       ];
 
     $query = Yii::app()->db->createCommand()
@@ -887,8 +887,44 @@ class ResponsesApplic extends Responses
       )
       ->queryRow();
 
+    $arEmployer = Yii::app()->db->createCommand()
+      ->select('e.id, e.id_user, u.login, e.title, er.name')
+      ->from('empl_vacations e')
+      ->leftJoin('user u', 'u.id_user=e.id_user')
+      ->leftJoin('employer er', 'er.id_user=e.id_user')
+      ->where('e.id=:id', [':id' => $id_vacancy])
+      ->queryRow();
+
+    $sql = "
+        SELECT 
+            status
+        FROM
+            service_cloud
+        WHERE 
+            name = {$id_vacancy}
+        AND 
+            type = 'personal-invitation'        
+        ";
+
+    $sql = Yii::app()->db->createCommand($sql)->queryRow();
+
+
+      $cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
+      // проверяем лимит приглашений на вакансию
+      if (($cntInv >= 10) && $sql['status'] != (int) 1)
+      {
+        return [
+          'error' => -101,
+          'message' => '<p>Уважаемый '. $arEmployer['name'] . '!<p>'.
+              '<p>Для данной вакансии Вы уже использовали лимит 10 бесплатный приглашений, '.
+              'для получения безлимитного доступа, на приглашения соискателей по вакансии ' .
+              $arEmployer['title'] . ' необходимо внести единоразовую оплату.</p>'.
+            '<a href='.MainConfig::$PAGE_ORDER_SERVICE.'?id='.$id_vacancy.'&service=personal-invitation '.
+          'class="personal-invitation-btn">Пригласить персонал</a>',
+        ];
+      }
     // Добавляем приглашение на вакансию
-    if( isset($query['id']) )
+    elseif( isset($query['id']) )
     {
       return [
         'error' => -101,
@@ -987,16 +1023,6 @@ class ResponsesApplic extends Responses
                 [':idp'=>$idPromo, ':idvac'=>$id_vacancy]
             )
             ->queryRow();
-
-        //$cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
-
-        /* if ($cntInv >= 10) {
-             return [
-                 'error' => -101,
-                 'message' => 'Вы исчерпали лимит в 10 бесплатных приглашений. '.
-                              'Воспользуйтесь услугой "Приглашение на вакансию"',
-             ];
-         }*/
 
         // Добавляем приглашение на вакансию
         if( isset($query['id']) )

@@ -1813,6 +1813,23 @@ class UserController extends AppController
                     $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
                     $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
                     isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];
+
+                    if ($vac) {
+                        $sql = "
+                            SELECT 
+                                status
+                            FROM
+                                service_cloud
+                            WHERE 
+                                name = {$vac}
+                            AND 
+                                type = 'personal-invitation'        
+                        ";
+                        $sql = Yii::app()->db->createCommand($sql)->queryRow();
+
+                        $data['is_pay'] = $sql['status'];
+                    }
+
                     $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
                 }
                 elseif(Yii::app()->request->isAjaxRequest)
@@ -1826,10 +1843,12 @@ class UserController extends AppController
                     return;
                 }
                 else{
+
                     $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy')
                         ? (new Services())->prepareFilterData()
                         : (new Vacancy())->getModerVacs());
+
                     $data = array_merge($data,$data2);
                 }
                 break;

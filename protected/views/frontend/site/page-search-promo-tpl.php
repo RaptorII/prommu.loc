@@ -7,8 +7,11 @@ foreach ($viData['posts'] as $p)
         break;
     }
 
+//display($viData);
+
 Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-promo-search.min.js', CClientScript::POS_END);
 $this->renderPartial('../site/page-search-promo-tpl_css');
+Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAsset['modalwindow.css']);
 ?>
 <div class='row page-search-ankety'>
     <div class="psa__veil"></div>
@@ -341,6 +344,17 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
                                     <h2>
                                         <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'><?= $val['firstname'] . ' ' . $val['lastname'] . ', ' . $val['age'] ?></a>
                                     </h2>
+
+                                    <div class="personal__invite">
+                                        <div class='js-btn-invite btn-white-green-wr'>
+                                            <a href='#' onclick="var idPromo = <?=$val['id']?>; myfunc(idPromo);" >
+                                                Пригласить на вакансию
+                                            </a>
+                                        </div>
+                                    </div>
+
+
+
                                     <div class='charac clearfix'>
                                         <div class='rate'>
                                             Рейтинг:
@@ -522,3 +536,31 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
             echo $seo['meta_keywords'];
         ?></div>
 </div>
+
+<?php ?>
+    <script type="text/javascript">
+        function myfunc(id) {
+            G_VARS.App.customProps.idPromo = id;
+        }
+    </script>
+    <script id="TplInvVacs" type="text/template" data-btn="Пригласить">
+        <div class="vac-form">
+            <p>Выберите вакансию на которую вы хотите пригласить соискателя </p>
+            <label for="CbVacs">
+                <b></b>
+                <select id="CbVacs">
+                </select>
+            </label>
+        </div>
+    </script>
+
+    <script id="TplInvSuccess" type="text/template">
+        <p class="message"></p>
+    </script>
+
+    <script id="TplInvNoVacs" type="text/template">
+        <p class="message">У вас нет активных вакансий. Для создания вакансии перейдите на <a href="<?= MainConfig::$PAGE_VACPUB ?>">эту страницу</a></p>
+    </script>
+    <template id='TPLAddComment'></template>
+
+<?php ?>

@@ -107,12 +107,16 @@ if(!$rq->getParam('vacancy')):?>
         $cntUsers = 0;
     }
 
-    if (($cntVacStat < 10) && ($cntVacStat + $cntUsers ) > 10) {
-        $price = ($cntVacStat + $cntUsers - 10) * $viData['price'];
-    } elseif (($cntVacStat + $cntUsers ) < 10){
+    if ($viData['is_pay']) {
         $price = 0;
-    } elseif($cntVacStat > 10) {
-        $price = $cntUsers * $viData['price'];
+    } else {
+        if (($cntVacStat <= 10) && ($cntVacStat + $cntUsers) > 10) {
+            $price = $viData['price'];
+        } elseif (($cntVacStat + $cntUsers) <= 10) {
+            $price = 0;
+        } elseif ($cntVacStat > 10) {
+            $price = $viData['price'];
+        }
     }
 
     ?>
@@ -121,9 +125,15 @@ if(!$rq->getParam('vacancy')):?>
             <form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
                 </br></br>
                 <h1 class="smss-result__title">Услуга </br> "Персональное приглашение"</h1>
-                <p>
-                    Помните - первые 10 приглашений - <b>бесплатно</b>!
-                </p>
+                <? if (!$viData['is_pay']): ?>
+                    <p>
+                        Помните - первые 10 приглашений для каждой вакансии - <b>бесплатно</b>!
+                    </p>
+                <? else:?>
+                    <p>
+                        Услуга <b>оплачена</b>!
+                    </p>
+                <? endif; ?>
                 <table class="smss-result__table">
                     <tr>
                         <td>Количество ранее приглашённых</td>
@@ -134,12 +144,12 @@ if(!$rq->getParam('vacancy')):?>
                         <td><?=$cntUsers?></td>
                     </tr>
                     <tr>
-                        <td>Стоимость приглашения</td>
+                        <td>К оплате</td>
                         <td> <?= $price ?> руб.</td>
                     </tr>
                 </table>
                 <span class="smss-result__result"></span>
-                <? if(($cntVacStat + $appCount - 10) > 0):
+                <? if((($cntVacStat + $cntUsers) >= 10) && (!$viData['is_pay'])):
                     $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]);
                 endif; ?>
                 <br>
