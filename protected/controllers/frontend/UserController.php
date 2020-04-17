@@ -1152,6 +1152,14 @@ class UserController extends AppController
 
                     $data = $model->orderPersonalInvitation($vac, $users, $emp, $price);
 
+                    if (!$users){
+                        Yii::app()->user->setFlash(
+                            'prommu_flash',
+                            "Выбраны пользователи, которые уже получили приглашения"
+                        );
+                        $this->redirect(MainConfig::$PAGE_SERVICES);
+                    }
+
                     if ($data['cost'] > 0 ) {
 
                         if ($rq->getParam('personal') === 'individual') // people
@@ -1822,8 +1830,12 @@ class UserController extends AppController
                                 service_cloud
                             WHERE 
                                 name = {$vac}
+                            AND
+                                status = 1    
                             AND 
-                                type = 'personal-invitation'        
+                                type = 'personal-invitation'  
+                            GROUP BY
+                                status         
                         ";
                         $sql = Yii::app()->db->createCommand($sql)->queryRow();
 
@@ -1840,7 +1852,7 @@ class UserController extends AppController
                         false,
                         true
                     );
-                    return;
+//                    return;
                 }
                 else{
 

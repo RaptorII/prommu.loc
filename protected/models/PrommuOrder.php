@@ -595,7 +595,10 @@ class PrommuOrder {
         $arRes = [];
 
         $cntVacStat = ResponsesApplic::getCntVacStat($vacancy);
-        $cntUsers   = count(explode(',',$users));
+
+        if ($users) {
+            $cntUsers = count(explode(',', $users));
+        }
 
         $sql = "
             SELECT 
@@ -604,13 +607,17 @@ class PrommuOrder {
                 service_cloud
             WHERE 
                 name = {$vacancy}
+            AND
+                status = 1    
             AND 
-                type = 'personal-invitation'        
+                type = 'personal-invitation'  
+            GROUP BY
+                status      
             ";
 
         $sql = Yii::app()->db->createCommand($sql)->queryRow();
 
-        if($sql['status'] == (int) 1){
+        if(($sql['status'] == (int) 1)){
             $arRes['cost'] = -2;
         } else {
             if (($cntVacStat <= 10) && ($cntVacStat + $cntUsers ) > 10) {

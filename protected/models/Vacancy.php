@@ -485,7 +485,9 @@ class Vacancy extends ARModel
             LEFT JOIN emplv_loc_times t ON l.id = t.id_loc
             LEFT JOIN employer e ON e.id_user = v.id_user
             WHERE v.id_user = {$idus}
-            AND v.status=1 AND v.in_archive=0
+              AND v.status=1 
+              AND v.in_archive=0 
+              AND v.ismoder=100 # vacancy is need to was moderate 
             ORDER BY v.id DESC
             ";
         

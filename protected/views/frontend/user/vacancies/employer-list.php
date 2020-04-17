@@ -90,11 +90,11 @@
 											><?=$viData['termostat'][$v['id']]['count']?></a>
 									</span>
                                     <span>
-                                        <? if ($v['ismoder']): ?>
+                                        <? /*if ($v['ismoder']): ?>
                                         Промодерировано
                                         <? else: ?>
                                         На модерации
-                                        <? endif; ?>
+                                        <? endif; */?>
                                     </span>
 								</div>
 								<? if($isActiveVacs): ?>

@@ -345,15 +345,18 @@ Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAss
                                         <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'><?= $val['firstname'] . ' ' . $val['lastname'] . ', ' . $val['age'] ?></a>
                                     </h2>
 
+                                    <?php
+                                    $sql = "SELECT ismoder FROM user WHERE id_user = " . $val['id'];
+                                    $ismoder = Yii::app()->db->createCommand($sql)->queryScalar();
+                                    if( Share::$UserProfile->type == 3 && $ismoder): ?>
                                     <div class="personal__invite">
                                         <div class='js-btn-invite btn-white-green-wr'>
                                             <a href='#' onclick="var idPromo = <?=$val['id']?>; myfunc(idPromo);" >
-                                                Пригласить на вакансию
+                                                Пригласить на вакансию 2
                                             </a>
                                         </div>
                                     </div>
-
-
+                                    <?php endif; ?>
 
                                     <div class='charac clearfix'>
                                         <div class='rate'>
@@ -541,6 +544,7 @@ Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAss
     <script type="text/javascript">
         function myfunc(id) {
             G_VARS.App.customProps.idPromo = id;
+            console.log(G_VARS.App.customProps.idPromo);
         }
     </script>
     <script id="TplInvVacs" type="text/template" data-btn="Пригласить">

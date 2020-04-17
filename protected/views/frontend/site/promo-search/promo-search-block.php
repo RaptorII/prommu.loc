@@ -73,6 +73,20 @@
                             <h2>
                                 <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'><?= $val['firstname'] . ' ' . $val['lastname'] . ', ' . $val['age'] ?></a>
                             </h2>
+
+                            <?php
+                            $sql = "SELECT ismoder FROM user WHERE id_user = " . $val['id'];
+                            $ismoder = Yii::app()->db->createCommand($sql)->queryScalar();
+                            if( Share::$UserProfile->type == 3 && $ismoder): ?>
+                                <div class="personal__invite">
+                                    <div class='js-btn-invite btn-white-green-wr'>
+                                        <a href='#' onclick="var idPromo = <?=$val['id']?>; myfunc(idPromo);" >
+                                            Пригласить на вакансию 1
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
                             <div class='charac clearfix'>
                                 <div class='rate'>
                                     Рейтинг:
@@ -236,3 +250,31 @@
         )) ?>
     </div>
 <?php endif; ?>
+
+<?php /*?>
+<script type="text/javascript">
+    function myfunc(id) {
+        G_VARS.App.customProps.idPromo = id;
+    }
+</script>
+<script id="TplInvVacs" type="text/template" data-btn="Пригласить">
+    <div class="vac-form">
+        <p>Выберите вакансию на которую вы хотите пригласить соискателя </p>
+        <label for="CbVacs">
+            <b></b>
+            <select id="CbVacs">
+            </select>
+        </label>
+    </div>
+</script>
+
+<script id="TplInvSuccess" type="text/template">
+    <p class="message"></p>
+</script>
+
+<script id="TplInvNoVacs" type="text/template">
+    <p class="message">У вас нет активных вакансий. Для создания вакансии перейдите на <a href="<?= MainConfig::$PAGE_VACPUB ?>">эту страницу</a></p>
+</script>
+<template id='TPLAddComment'></template>
+
+<?php */?>

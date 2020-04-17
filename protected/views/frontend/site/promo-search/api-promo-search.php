@@ -53,6 +53,7 @@
                             <h2>
                                 <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'><?= $val['firstname'] . ' ' . $val['lastname'] . ', ' . $val['age'] ?></a>
                             </h2>
+
                             <div class='charac clearfix'>
                                 <div class='rate' title="положительный / отрицательный">
                                     Рейтинг: <b class="green"><?= $val['rate'] ?></b> / <b class="red"><?= $val['rate_neg'] ?></b>

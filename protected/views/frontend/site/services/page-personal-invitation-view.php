@@ -92,11 +92,9 @@ if(!$rq->getParam('vacancy')):?>
         for ($j=0; $j<=count($arUsr); ++$j) {
             if ($usrVS[$i]['id_user'] == $arUsr[$j]) {
                 //выпилить из строки данных $users
-                if ($cntUsers == 1){
+                $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
+                if (count($users) == 1)
                     $users = str_replace($usrVS[$i]['id_user'], '', $users );
-                } else {
-                    $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
-                }
             }
         }
     }
@@ -119,6 +117,7 @@ if(!$rq->getParam('vacancy')):?>
         }
     }
 
+    display($viData['is_pay']);
     ?>
     <div class="row">
         <div class="col-xs-12">
@@ -149,7 +148,7 @@ if(!$rq->getParam('vacancy')):?>
                     </tr>
                 </table>
                 <span class="smss-result__result"></span>
-                <? if((($cntVacStat + $cntUsers) >= 10) && (!$viData['is_pay'])):
+                <? if((($cntVacStat + $cntUsers) > 10) && (!$viData['is_pay'])):
                     $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]);
                 endif; ?>
                 <br>
