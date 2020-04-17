@@ -905,23 +905,23 @@ class Auth
                 'status' => $inData['type']
             ), 1);
             
-            ///create mailing event
-            $Mailing = new Mailing();
-            $template = new MailingTemplate;
-            $template = $template->getActiveTemplate();
+            // ///create mailing event
+            // $Mailing = new Mailing();
+            // $template = new MailingTemplate;
+            // $template = $template->getActiveTemplate();
         
-            $receiver = $inData['inputData']['email'];
-            $title = 'Активация аккаунта';
-            for($i = 10; $i < 15; $i = $i + 5){
-                $rdate = date('Y-m-d H:i', strtotime(" +{$i} minutes"));
-                $body = str_replace(
-                        MailingTemplate::$CONTENT,
-                        'Активируйте профиль',
-                        $template->body
-                    );
-                $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
-            }
-             ///create mailing event
+            // $receiver = $inData['inputData']['email'];
+            // $title = 'Активация аккаунта';
+            // for($i = 10; $i < 15; $i = $i + 5){
+            //     $rdate = date('Y-m-d H:i', strtotime(" +{$i} minutes"));
+            //     $body = str_replace(
+            //             MailingTemplate::$CONTENT,
+            //             'Активируйте профиль',
+            //             $template->body
+            //         );
+            //     $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
+            // }
+            //  ///create mailing event
 
 
             $idUser = 0;
