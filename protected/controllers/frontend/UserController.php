@@ -1196,6 +1196,10 @@ class UserController extends AppController
                                 (new ResponsesApplic())->invitePersonal($props);
                             }
                         }
+                        Yii::app()->user->setFlash(
+                            'prommu_flash',
+                            "Приглашения успешно отправлены!"
+                        );
                         $this->redirect(MainConfig::$PAGE_SERVICES);
                     }
 

@@ -87,6 +87,7 @@ if(!$rq->getParam('vacancy')):?>
     $cntUsers   = count($arUsr);
     $usrVS = ResponsesApplic::getInvitedUsrFromVacStat($vacancy);
 
+    $cntInvtUsr = 0;
     for ($i=0; $i<count($usrVS); ++$i)
     {
         for ($j=0; $j<=count($arUsr); ++$j) {
@@ -95,6 +96,7 @@ if(!$rq->getParam('vacancy')):?>
                 $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
                 if (count($users) == 1)
                     $users = str_replace($usrVS[$i]['id_user'], '', $users );
+                $cntInvtUsr++;
             }
         }
     }
@@ -117,14 +119,18 @@ if(!$rq->getParam('vacancy')):?>
         }
     }
 
-    display($viData['is_pay']);
+    //display($viData['is_pay']);
     ?>
     <div class="row">
         <div class="col-xs-12">
             <form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
                 </br></br>
                 <h1 class="smss-result__title">Услуга </br> "Персональное приглашение"</h1>
-                <? if (!$viData['is_pay']): ?>
+                <? if  ((!$viData['is_pay'])&&(($cntVacStat <= 10) && ($cntVacStat + $cntUsers) > 10)): ?>
+                    <p>
+                        Превышен лимит бесплатных приглашений! Оплатите услугу.
+                    </p>
+                <? elseif   (!$viData['is_pay']):?>
                     <p>
                         Помните - первые 10 приглашений для каждой вакансии - <b>бесплатно</b>!
                     </p>
@@ -135,13 +141,19 @@ if(!$rq->getParam('vacancy')):?>
                 <? endif; ?>
                 <table class="smss-result__table">
                     <tr>
-                        <td>Количество ранее приглашённых</td>
+                        <td>Всего приглашённых</td>
                         <td><?=$cntVacStat?></td>
                     </tr>
                     <tr>
                         <td>Количество уникальных получателей</td>
                         <td><?=$cntUsers?></td>
                     </tr>
+                    <? if ($cntInvtUsr):?>
+                    <tr>
+                        <td>Из выбранных уже приглашено</td>
+                        <td><?=$cntInvtUsr?></td>
+                    </tr>
+                    <? endif; ?>
                     <tr>
                         <td>К оплате</td>
                         <td> <?= $price ?> руб.</td>
@@ -158,7 +170,7 @@ if(!$rq->getParam('vacancy')):?>
                         <? if($price > 0 ):?>
                             <span>Перейти к оплате</span>
                         <? else: ?>
-                            <span>Отправить</span>
+                            <span>Пригласить</span>
                         <? endif; ?>
                     </button>
                 </div>

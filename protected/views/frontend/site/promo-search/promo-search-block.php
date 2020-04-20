@@ -80,7 +80,7 @@
                             if( Share::$UserProfile->type == 3 && $ismoder): ?>
                                 <div class="personal__invite">
                                     <div class='js-btn-invite btn-white-green-wr'>
-                                        <a href='#' onclick="var idPromo = <?=$val['id']?>; myfunc(idPromo);" >
+                                        <a href='#' onclick="myfunc(<?=$val['id']?>);" >
                                             Пригласить на вакансию 1
                                         </a>
                                     </div>
