@@ -81,7 +81,7 @@
                                 <div class="personal__invite">
                                     <div class='js-btn-invite btn-white-green-wr'>
                                         <a href='#' onclick="myfunc(<?=$val['id']?>);" >
-                                            Пригласить на вакансию 1
+                                            Пригласить на вакансию
                                         </a>
                                     </div>
                                 </div>

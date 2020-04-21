@@ -352,7 +352,7 @@ Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAss
                                     <div class="personal__invite">
                                         <div class='js-btn-invite btn-white-green-wr'>
                                             <a href='#' onclick="myfunc(<?=$val['id']?>);" >
-                                                Пригласить на вакансию 2
+                                                Пригласить на вакансию
                                             </a>
                                         </div>
                                     </div>
