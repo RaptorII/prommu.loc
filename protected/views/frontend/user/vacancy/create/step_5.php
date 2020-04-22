@@ -1,6 +1,6 @@
 <div class="form form-medium">
   <a
-    class="form__tutorial form__tutorial-hint"
+    class="form__tutorial tooltip"
     href="/theme/pdf/Instruction-PROMMU-com-vac.pdf"
     target="_blank"
     title="Инструкция по созданию вакансии">

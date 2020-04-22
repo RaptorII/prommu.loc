@@ -288,6 +288,10 @@
 /*
 capacity blocks
 */
+.vacancy__module{
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
 .personal__area--capacity {
     position: relative;
     border: 2px solid var(--color-green);
@@ -299,7 +303,9 @@ capacity blocks
     margin-top: 20px;
     padding-bottom: 20px;
 }
-
+.personal__area--capacity.module{
+    margin: 0 0 20px;
+}
 @media screen and (min-width: 767px) {
     .personal__area--capacity {
         margin-top: 0;
@@ -884,7 +890,6 @@ try google material design
 .fancybox-close-small:after {
     /*color: var(--color-white)!important;*/
 }
-#activate-block{ margin-bottom: 20px }
 /* end popup
 */
 
@@ -1176,6 +1181,32 @@ try google material design
     content: '\e94c';
     font-family: "PrommuFont";
 }
+#salary_time_add-btn,
+#salary_time_del-btn{
+    background: var(--color-green);
+    color: var(--color-dark);
+    font-size: 20px;
+    opacity: 1;
+}
+#salary_time_add-btn:after{ content: "\e93e"; }
+#salary_time_del-btn:after{ content: "\e97d"; }
+.form__field-disable{
+    position: relative;
+}
+.form__field-disable:before{
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+    background: rgba(235, 235, 235, 0.7);
+    z-index: 2;
+    cursor: no-drop;
+}
+.module .form__field-disable:before{
+    background: rgba(255, 255, 255, 0.7);
+}
 /*
 *   Errors
 */
@@ -1218,6 +1249,12 @@ try google material design
 /*
 *   Calendar
 */
+#location, #location-edit{
+    margin: 0 -15px;
+}
+.location__item{
+    padding: 0 15px;
+}
 .location__city-name, .location__city-date{
     position: relative;
     margin-bottom: 5px;

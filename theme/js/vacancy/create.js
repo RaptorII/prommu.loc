@@ -24,8 +24,8 @@ var CreateVacancy = (function () {
 
     if(step==='1')
     {
-      new InitSelect({selector:'#posts',search:true});
-      new InitSelect({selector:'#cities',ajax:'/ajax/GetCitiesByName'});
+      $('#posts').initSelect({search:true});
+      $('#cities').initSelect({ajax:'/ajax/GetCitiesByName'});
       new InitPeriod({
         selector:'#period',
         minDate:'0',
@@ -35,14 +35,47 @@ var CreateVacancy = (function () {
     }
     else if(step==='2')
     {
-      new InitSelect({selector:'#work_type'});
-      new InitSelect({selector:'#experience'});
-      new InitSelect({selector:'#self_employed'});
+      $('#work_type').initSelect();
+      $('#experience').initSelect();
+      $('#self_employed').initSelect();
     }
     else if(step==='3')
     {
-      new InitSelect({selector:'#salary'});
-      new InitSelect({selector:'#salary_time'});
+      $('#salary').initSelect();
+      $('#salary_time').initSelect();
+      // Добавление кастомного срока оплаты
+      $(document).on('click','#salary_time_add-btn',function(e){
+          if($(e.target).hasClass('form__field-disable'))
+          {
+            return;
+          }
+
+          let parent = $(e.target).parent(),
+              select = $(parent).find('.form__field-content'),
+              content = '<div id="salary_time_add-block" class="form__field">'
+                  + '<label class="form__field-label">Свой вариант</label>'
+                  + '<div class="form__field-content form__content-indent form__content-hint">'
+                    + '<input '
+                      + 'type="text" '
+                      + 'name="salary_time_custom" '
+                      + 'class="form__field-input prmu-required prmu-check" '
+                      + 'data-params=\'{"limit":"70","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}\' autocomplete="off">'
+                  + '</div>'
+                  + '<div id="salary_time_del-btn" class="form__field-hint tooltip" title="Удалить"></div>'
+                + '</div>';
+
+          $(parent).after(content);
+          $(select).addClass('form__field-disable');
+          $(e.target).addClass('form__field-disable');
+          self.changeLabelWidth();
+          Hinter.bind('.tooltip');
+          new CheckInputFields();
+        })
+        .on('click','#salary_time_del-btn',function(e){
+          $('#salary_time_add-btn').prev().removeClass('form__field-disable');
+          $('#salary_time_add-btn').removeClass('form__field-disable');
+          $('#salary_time_add-block').remove();
+      });
     }
     else if(step==='4')
     {
@@ -70,8 +103,7 @@ var CreateVacancy = (function () {
       });
     }
     // инициализация подсказок
-    Hinter.bind('.tooltip', { side: 'right' });
-    Hinter.bind('.form__tutorial-hint', { side: 'right' });
+    Hinter.bind('.tooltip');
     // выравниваем лейблы
     self.changeLabelWidth();
     $( window ).on('resize',function() {
@@ -304,14 +336,17 @@ var Hinter = (function () {
   Hinter.prototype.init = function () { };
   Hinter.bind = function (inSel, inOpts) {
     if (inOpts === void 0) { inOpts = {}; }
-    var defUserOpts = { side: 'bottom', animation: 'fade'};
+    var defUserOpts = { side: 'right', animation: 'fade'};
     var opts = this.options;
     if (this.hintSide[inOpts.side])
       defUserOpts.side = this.hintSide[inOpts.side];
     if (this.hintAnimation[inOpts.animation])
       defUserOpts.animation = this.hintAnimation[inOpts.animation];
     $.extend(opts, defUserOpts);
-    $(inSel).tooltipster(opts);
+    $.each($(inSel),function(){
+      if(!$(this).hasClass('tooltipstered'))
+      { $(this).tooltipster(opts); }
+    });
   };
   Hinter.hintSide = { 'top': 'top', 'bottom': 'bottom', 'right': 'right', 'left': 'left' };
   Hinter.hintAnimation = { 'fade': 'fade', 'swing': 'swing' };
@@ -329,3 +364,5 @@ var Hinter = (function () {
 $(document).ready(function () {
   new CreateVacancy();
 });
+
+

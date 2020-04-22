@@ -215,19 +215,39 @@ class VacancyEdit
         $object->data->svisit = $type==3 ? $salary : 0;
       }
       // Сроки оплаты
-      $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
-      if($value===false)
+      if(!empty($rq->getParam('salary_time_custom')))
       {
-        $object->errors['salary_time']=true;
+        $value = VacancyCheckFields::checkTextField($rq->getParam('salary_time_custom'));
+        if($value===false)
+        {
+          $object->errors['salary_time_custom']=true;
+        }
+        else
+        {
+          $object->data->properties['cpaylims'] = [
+            'id' => $object->attributes->items['cpaylims']['id'],
+            'key' => 'cpaylims',
+            'name' => $object->attributes->items['cpaylims']['name'],
+            'value' => $value
+          ];
+        }
       }
       else
       {
-        $object->data->properties['paylims'] = [
-          'id' => $value,
-          'key' => 'paylims',
-          'name' => Vacancy::getAllAttributes()->items['paylims']['name'],
-          'value' => Vacancy::getAllAttributes()->lists['paylims'][$value]
-        ];
+        $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
+        if($value===false)
+        {
+          $object->errors['salary_time']=true;
+        }
+        else
+        {
+          $object->data->properties['paylims'] = [
+            'id' => $value,
+            'key' => 'paylims',
+            'name' => Vacancy::getAllAttributes()->items['paylims']['name'],
+            'value' => Vacancy::getAllAttributes()->lists['paylims'][$value]
+          ];
+        }
       }
       // Комментарии по оплате
       $value = VacancyCheckFields::checkTextarea($rq->getParam('salary_comment'));
@@ -245,7 +265,7 @@ class VacancyEdit
     {
       $object->data->ismed = $rq->getParam('medbook')==1;
       $object->data->isavto = $rq->getParam('car')==1;
-      $object->data->smart = $rq->getParam('smart')==1;
+      $object->data->smart = $rq->getParam('smartphone')==1;
       $object->data->cardPrommu = $rq->getParam('card_prommu')==1;
       $object->data->card = $rq->getParam('card')==1;
       $object->data->additional = $object->data->ismed
@@ -269,5 +289,117 @@ class VacancyEdit
       $result = (new PrommuOrder())->orderInEditVac($id_vacancy, $city);
     }
     return $result;
+  }
+  /**
+   * @param $id - integer
+   * @param $id_user - integer
+   * @param $module - integer
+   * @param $data - object
+   * Редактирование вакансии
+   */
+  public static function setVacancy($id, $id_user, $module, $data=false)
+  {
+    $arUpdate = [];
+    $model = new Vacancy();
+    if($module==1) // активация вакансии
+    {
+      $services = (new ServiceCloud())->getCreateVacancyPaidService($id);
+      if(!count($services->items)) // активируем только если оплачено создание вакансии
+      {
+        $arUpdate = ['status'=>Vacancy::$STATUS_ACTIVE];
+      }
+    }
+    if($module==2)
+    {
+      $arUpdate = [
+        'title' => $data->title,
+        'exp' => (integer)$data->exp,
+        'agefrom' => (integer)$data->agefrom,
+        'ageto' => $data->ageto>0?intval($data->ageto):null,
+        'isman' => (integer)$data->isman,
+        'iswoman' => (integer)$data->iswoman,
+        'istemp' => (integer)$data->istemp
+      ];
+      $model->saveVacancyPosts($id, $data->post);
+    }
+    if($module==4)
+    {
+      $arUpdate = [
+        'exp' => (integer)$data->exp,
+        'agefrom' => (integer)$data->agefrom,
+        'ageto' => $data->ageto>0?intval($data->ageto):null,
+        'isman' => (integer)$data->isman,
+        'iswoman' => (integer)$data->iswoman,
+        'istemp' => (integer)$data->istemp
+      ];
+      $model->saveVacancyPosts($id, $data->post);
+      $arAttr = [];
+      foreach ($data->properties as $key => $v)
+      {
+        if(in_array($key,$model::getAllAttributes()->additional_lists))
+        {
+          if($key=='manh' || $key=='weig')
+          {
+            $arAttr[$key]=$v['value'];
+          }
+          else
+          {
+            $arAttr[$key]=$v['id'];
+          }
+        }
+      }
+      $model->saveVacancyAttributes($id, $arAttr);
+    }
+    if($module==5)
+    {
+      $arUpdate = [
+        'requirements' => $data->requirements,
+        'duties' => $data->duties,
+        'conditions' => $data->conditions
+      ];
+    }
+    if($module==6)
+    {
+      $arUpdate = ['self_employed' => (integer)$data->self_employed];
+    }
+    if($module==7)
+    {
+      $arUpdate = [
+        'shour' => $data->shour,
+        'sweek' => $data->sweek,
+        'smonth' => $data->smonth,
+        'svisit' => $data->svisit
+      ];
+      $arAttr = ['salary-comment' => $data->properties['salary-comment']['value']];
+      if(isset($data->properties['cpaylims']))
+      {
+        $arAttr['cpaylims'] = $data->properties['cpaylims']['value'];
+      }
+      else
+      {
+        $arAttr['paylims'] = $data->properties['paylims']['id'];
+      }
+      $model->saveVacancyAttributes($id, $arAttr);
+    }
+    if($module==8)
+    {
+      $arUpdate = [
+        'ismed' => (integer)$data->ismed,
+        'isavto' => (integer)$data->isavto,
+        'smart' => (integer)$data->smart,
+        'cardPrommu' => (integer)$data->cardPrommu,
+        'card' => (integer)$data->card
+      ];
+    }
+    if($module==9)
+    {
+      $model = new City();
+      $model->changeVacancyLocations($id, $id_user);
+    }
+
+    if(count($arUpdate))
+    {
+      $model->updateUserVacancy($id, $id_user, $arUpdate);
+    }
   }
 }

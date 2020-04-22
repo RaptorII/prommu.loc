@@ -1,6 +1,6 @@
 <div class="form form-medium">
   <a
-    class="form__tutorial form__tutorial-hint"
+    class="form__tutorial tooltip"
     href="/theme/pdf/Instruction-PROMMU-com-vac.pdf"
     target="_blank"
     title="Инструкция по созданию вакансии">
@@ -53,19 +53,40 @@
     ?>
     <div class="form__field">
       <label class="form__field-label text__nowrap">Сроки оплаты</label>
-      <div class="form__field-content form__content-indent">
+      <div class="form__field-content form__content-indent<?=!empty($model->data->salary_time_custom)?' form__field-disable':''?>">
         <? if($model->errors['salary_time']): ?>
           <span class="prmu-error-mess">Поле обязательно к заполнению</span>
         <? endif; ?>
-        <div class="form__field-input form__field-select prmu-required<?=($model->errors['salary_time']?' prmu-error':'')?>" id="salary_time">
-          <select name="salary_time">
-            <? foreach ($arSalary as $key => $v): ?>
-              <option value="<?=$key?>"<?=$model->data->salary_time==$key?' selected="selected"':''?>><?=$v?></option>
-            <? endforeach; ?>
-          </select>
+        <div class="form__content-hint">
+          <div class="form__field-input form__field-select prmu-required <?=($model->errors['salary_time']?' prmu-error':'')?>" id="salary_time">
+            <select name="salary_time">
+              <? foreach ($arSalary as $key => $v): ?>
+                <option value="<?=$key?>"<?=$model->data->salary_time==$key?' selected="selected"':''?>><?=$v?></option>
+              <? endforeach; ?>
+            </select>
+          </div>
         </div>
       </div>
+      <div id="salary_time_add-btn" class="form__field-hint tooltip<?=!empty($model->data->salary_time_custom)?' form__field-disable':''?>" title="Свой вариант срока оплаты"></div>
     </div>
+    <? if(!empty($model->data->salary_time_custom)): ?>
+      <? if($model->errors['salary_time_custom']): ?>
+        <span class="prmu-error-mess">Поле обязательно к заполнению</span>
+      <? endif; ?>
+      <div id="salary_time_add-block" class="form__field">
+        <label class="form__field-label">Свой вариант</label>
+        <div class="form__field-content form__content-indent form__content-hint">
+          <input
+            type="text"
+            value="<?=$model->data->salary_time_custom?>"
+            name="salary_time_custom"
+            class="form__field-input prmu-required prmu-check"
+            data-params='{"limit":"70","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}'
+            autocomplete="off">
+        </div>
+        <div id="salary_time_del-btn" class="form__field-hint tooltip" title="Удалить"></div>
+      </div>
+    <? endif; ?>
     <?
     //
     ?>

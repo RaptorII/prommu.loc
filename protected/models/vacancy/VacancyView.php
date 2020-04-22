@@ -8,18 +8,12 @@
 
 class VacancyView
 {
-  const AR_PAYMENT_HINT = [
-    0 => 'Средняя оплата по регионам<br> <b>150</b> руб/час<br> <b>2400</b> руб/неделя<br> <b>9600</b> руб/месяц<br> <b>500</b> руб/посещение', // регионы
-    1307 => 'Средняя оплата по Москве<br> <b>280</b> руб/час<br> <b>4480</b> руб/неделя<br> <b>17920</b> руб/месяц<br> <b>1000</b> руб/посещение', // МСК
-    1838 => 'Средняя оплата по Санкт-Петербургу<br> <b>200</b> руб/час<br> <b>3200</b> руб/неделя<br> <b>12800</b> руб/месяц<br> <b>700</b> руб/посещение' // СПБ
-  ];
-
   public static function getAge($from, $to)
   {
     $result = 'от ' . $from . ' ';
     if($to)
     {
-      return $result . $to . ' ' . Share::endingYears($to);
+      return $result . ' до ' . $to . ' ' . Share::endingYears($to);
     }
     else
     {
@@ -104,11 +98,11 @@ class VacancyView
     $result = [];
     if(in_array(1307, $arCities)) // МСК
     {
-      $result[] = self::AR_PAYMENT_HINT[1307];
+      $result[] = 'Средняя оплата по Москве<br> <b>280</b> руб/час<br> <b>4480</b> руб/неделя<br> <b>17920</b> руб/месяц<br> <b>1000</b> руб/посещение';
     }
     if(in_array(1838, $arCities)) // СПБ
     {
-      $result[] = self::AR_PAYMENT_HINT[1838];
+      $result[] = 'Средняя оплата по Санкт-Петербургу<br> <b>200</b> руб/час<br> <b>3200</b> руб/неделя<br> <b>12800</b> руб/месяц<br> <b>700</b> руб/посещение';
     }
 
     $cnt = 0;
@@ -119,7 +113,7 @@ class VacancyView
 
     if(count($arCities)>$cnt) // Регионы
     {
-      $result[] = self::AR_PAYMENT_HINT[0];
+      $result[] = 'Средняя оплата по регионам<br> <b>150</b> руб/час<br> <b>2400</b> руб/неделя<br> <b>9600</b> руб/месяц<br> <b>500</b> руб/посещение';
     }
 
     return implode('<br>',$result);

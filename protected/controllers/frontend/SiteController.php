@@ -474,7 +474,7 @@ class SiteController extends AppController
           if($rq->isAjaxRequest && in_array($event,$arEvents)) // локации редактируем не так, как остальные модули
           {
             $module = ($event=='activate' ? 1 : 9);
-            $model->setVacancy($id, Share::$UserProfile->id, $module);
+            VacancyEdit::setVacancy($id, Share::$UserProfile->id, $module);
           }
           $viData = $model->getVacancy($id);
           if($viData->is_owner)
@@ -490,7 +490,7 @@ class SiteController extends AppController
                 new VacancyEdit($viData);
                 if(!count($viData->errors) && !in_array($event,$arEvents)) // ошибок нет и отменяем повторную запись для событий
                 {
-                  $model->setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
+                  VacancyEdit::setVacancy($id, Share::$UserProfile->id, $module, $viData->data);
                 }
                 else
                 {

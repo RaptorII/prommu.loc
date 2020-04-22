@@ -396,10 +396,17 @@ var CheckInputFields = (function () {
   return CheckInputFields;
 }());
 /*
-*
-* @param 1 - селектор, к которому нужно формировать селект. Обязательно должен содержать тег select
-*
- */
+* Объект селекта
+* Указывается объект DOM, в котором требуется отображать список.
+*   В этом объекте обязательно наличие тега select. Если у select установлен атрибут multiple
+*   - можно будет выбрать несколько значений одновременно. Имитерует события изменения значения select
+*   Возвращает себя
+*  Описание параметров в объекте
+* 'search' : true - добавить поисковую строку по списку
+* 'selectedValsInOtherSelect' : [] - массив значений value,
+*   которые нельзя устанавливать в этом селекте(например чтобы нельзя было выбрать города, которые подтягиваются аяксом)
+* 'ajax' : string - урл, на который нужно обращаться при фокусе
+*/
 var InitSelect = (function () {
   //
   function InitSelect() {
@@ -416,9 +423,10 @@ var InitSelect = (function () {
 
     if(!$(self.main).is('*') || !$(self.select).is('*'))
     {
-      console.log('error in init',params);
+      console.log('error in init ',params.selector);
       return;
     }
+    params = (typeof params.params=='object' ? params.params : {});
 
     $(self.select).hide();
 
@@ -850,3 +858,16 @@ var InitNicEditor = (function () {
   //
   return InitNicEditor;
 }());
+/*
+*
+*   Jquery методы
+*
+*/
+$(function(){
+  $.fn.initSelect = (function(){
+    return new InitSelect({
+      selector : this.selector,
+      params : arguments[0]
+    });
+  });
+});

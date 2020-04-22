@@ -937,7 +937,7 @@ class Vacancy extends ARModel
         if( $inIdVac )
         {
             // получение данных вакансии
-            $sql = "SELECT e.id,e.city, e.ismoder, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,e.cardPrommu, e.card, e.repost,e.index, e.meta_h1, e.meta_title, e.meta_description,e.comment, e.in_archive,
+            $sql = "SELECT e.id, e.ismoder, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,e.cardPrommu, e.card, e.repost,e.index, e.meta_h1, e.meta_title, e.meta_description,e.comment, e.in_archive,
                        DATE_FORMAT(e.bdate, '%d.%m.%Y') bdate,
                        DATE_FORMAT(e.edate, '%d.%m.%Y') edate,
                        e.shour, e.sweek, e.smart, e.self_employed, e.smonth, e.svisit, e.isman, e.iswoman, e.exp, e.id_user idus, e.iscontshow,
@@ -1885,7 +1885,7 @@ class Vacancy extends ARModel
      * @param $arPostsId - array - массив ID должностей
      * @return bool
      */
-    private function saveVacancyPosts($id, $arPostsId)
+    public function saveVacancyPosts($id, $arPostsId)
     {
       if(!count($arPostsId))
       {
@@ -1931,7 +1931,7 @@ class Vacancy extends ARModel
      * @param $arAttributes - array - ассоциативный массив атрибутов [key => [id, key, name, value]]
      * @return bool
      */
-    private function saveVacancyAttributes($id, $arAttributes)
+    public function saveVacancyAttributes($id, $arAttributes)
     {
       if(!count($arAttributes))
       {
@@ -4887,20 +4887,20 @@ class Vacancy extends ARModel
       'smonth' => ($objData->salary_type==2 ? $objData->salary : 0),
       'svisit' => ($objData->salary_type==3 ? $objData->salary : 0),
       'exp' => $objData->exp,
-      'isman' => in_array('man',$objData->gender),
-      'iswoman' => in_array('woman',$objData->gender),
-      'ismed' => isset($objData->medbook),
-      'isavto' => isset($objData->car),
-      'agefrom' => $objData->age_from,
-      'ageto' => $objData->age_to,
+      'isman' => (integer)in_array('man',$objData->gender),
+      'iswoman' => (integer)in_array('woman',$objData->gender),
+      'ismed' => (integer)isset($objData->medbook),
+      'isavto' => (integer)isset($objData->car),
+      'agefrom' => (integer)$objData->age_from,
+      'ageto' => (integer)$objData->age_to,
       'status' => self::$STATUS_NO_ACTIVE,
       'ismoder' => self::$ISMODER_NEW,
       'crdate' => $date,
       'mdate' => $date,
-      'smart' => isset($objData->smartphone),
+      'smart' => (integer)isset($objData->smartphone),
       'repost' => $repost,
-      'card' => isset($objData->card),
-      'cardPrommu' => isset($objData->card_prommu),
+      'card' => (integer)isset($objData->card),
+      'cardPrommu' => (integer)isset($objData->card_prommu),
       'self_employed' => $objData->self_employed
     ];
     Yii::app()->db->createCommand()->insert(self::tableName(), $arInsert);
@@ -4927,7 +4927,14 @@ class Vacancy extends ARModel
     // Сохранение должностей
     self::saveVacancyPosts($vacancy, $objData->post); // должность
     // Сохранение атрибутов
-    $arInsert = ['paylims' => $objData->salary_time];
+    if(!empty($objData->salary_time_custom))
+    {
+      $arInsert = ['cpaylims' => $objData->salary_time_custom];
+    }
+    else
+    {
+      $arInsert = ['paylims' => $objData->salary_time];
+    }
     if(!empty($objData->salary_comment)) // Комментарии по оплате
     {
       $arInsert['salary-comment'] = $objData->salary_comment;
@@ -4955,112 +4962,17 @@ class Vacancy extends ARModel
   /**
    * @param $id - integer
    * @param $id_user - integer
-   * @param $module - integer
-   * @param $data - object
-   * Редактирование вакансии
+   * @param $arUpdate - array
+   * @return int
    */
-  public function setVacancy($id, $id_user, $module, $data=false)
+  public function updateUserVacancy($id, $id_user, $arUpdate)
   {
-    $arUpdate = [];
-    if($module==1) // активация вакансии
-    {
-      $services = (new ServiceCloud())->getCreateVacancyPaidService($id);
-      if(!count($services->items)) // активируем только если оплачено создание вакансии
-      {
-        $arUpdate = ['status'=>self::$STATUS_ACTIVE];
-      }
-    }
-    if($module==2)
-    {
-      $arUpdate = [
-        'title' => $data->title,
-        'exp' => $data->exp,
-        'agefrom' => $data->agefrom,
-        'ageto' => $data->ageto,
-        'isman' => $data->isman,
-        'iswoman' => $data->iswoman,
-        'istemp' => $data->istemp
-      ];
-      self::saveVacancyPosts($id, $data->post);
-    }
-    if($module==4)
-    {
-      $arUpdate = [
-        'exp' => $data->exp,
-        'agefrom' => $data->agefrom,
-        'ageto' => $data->ageto,
-        'isman' => $data->isman,
-        'iswoman' => $data->iswoman,
-        'istemp' => $data->istemp
-      ];
-      self::saveVacancyPosts($id, $data->post);
-      $arAttr = [];
-      foreach ($data->properties as $key => $v)
-      {
-        if(in_array($key,self::getAllAttributes()->additional_lists))
-        {
-          if($key=='manh' || $key=='weig')
-          {
-            $arAttr[$key]=$v['value'];
-          }
-          else
-          {
-            $arAttr[$key]=$v['id'];
-          }
-        }
-      }
-      self::saveVacancyAttributes($id, $arAttr);
-    }
-    if($module==5)
-    {
-      $arUpdate = [
-        'requirements' => $data->requirements,
-        'duties' => $data->duties,
-        'conditions' => $data->conditions
-      ];
-    }
-    if($module==6)
-    {
-      $arUpdate = ['self_employed' => $data->self_employed];
-    }
-    if($module==7)
-    {
-      $arUpdate = [
-        'shour' => $data->shour,
-        'sweek' => $data->sweek,
-        'smonth' => $data->smonth,
-        'svisit' => $data->svisit
-      ];
-      self::saveVacancyAttributes($id, [
-        'paylims' => $data->properties['paylims']['id'],
-        'salary-comment' => $data->properties['salary-comment']['value']
-      ]);
-    }
-    if($module==8)
-    {
-      $arUpdate = [
-        'ismed' => $data->ismed,
-        'isavto' => $data->isavto,
-        'smart' => $data->smart,
-        'cardPrommu' => $data->cardPrommu,
-        'card' => $data->card
-      ];
-    }
-    if($module==9)
-    {
-      $model = new City();
-      $model->changeVacancyLocations($id, $id_user);
-    }
-
-    if(count($arUpdate))
-    {
-      Yii::app()->db->createCommand()->update(
-        self::tableName(),
-        $arUpdate,
-        'id=:id AND id_user=:id_user',
-        [':id'=>$id, ':id_user'=>$id_user]
-      );
-    }
+    return Yii::app()->db->createCommand()->update(
+      self::tableName(),
+      $arUpdate,
+      'id=:id AND id_user=:id_user',
+      [':id'=>$id, ':id_user'=>$id_user]
+    );
   }
   /**
    * @param $id
@@ -5103,7 +5015,7 @@ class Vacancy extends ARModel
     $result->data->crdate_unix = strtotime($query['crdate']);
     $result->data->mdate_unix = strtotime($query['mdate']);
     $result->data->remdate_unix = strtotime($query['remdate']);
-    $result->data->ageto=0 && $result->data->ageto = '';
+    $result->data->ageto==0 && $result->data->ageto = '';
     ($query['duties']=="<br>" || $query['duties']=="&lt;br&gt;") && $result->data->duties = '';
     ($query['conditions']=="<br>" || $query['conditions']=="&lt;br&gt;") && $result->data->conditions = '';
     // Актуальная вакансия - активная, промодерированая, подходящая по дате
@@ -5164,6 +5076,11 @@ class Vacancy extends ARModel
     }
     // Города, локации, периоды
     $result->data->cities = $this->getCities($id);
+    $result->data->citiesId = [];
+    foreach ($result->data->cities as $v)
+    {
+      $result->data->citiesId[] = $v['id_city'];
+    }
     $result->data->locations = $this->getLocations($id);
     $result->data->dates = $this->getRealDates(
       $result->data->cities,

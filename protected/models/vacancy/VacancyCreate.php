@@ -50,6 +50,7 @@ class VacancyCreate
           'post' => [],
           'city' => [],
           'salary_time' => '',
+          'salary_time_custom' => '',
           'salary_comment' => '',
           'salary_type' => 0,
           'salary' => 0,
@@ -145,6 +146,7 @@ class VacancyCreate
       if(in_array($changeStep,[1,2,3,4,5]))
       {
         $this->step = $changeStep; // Делаем возврат на предыдущую ступень
+        $this->setData();
       }
       else
       {
@@ -291,8 +293,16 @@ class VacancyCreate
       $value = VacancyCheckFields::checkList($rq->getParam('salary_type'), 'salary_type');
       $value===false ? $this->errors['salary_type']=true : $this->data->salary_type=$value;
       // Сроки оплаты
-      $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
-      $value===false ? $this->errors['salary_time']=true : $this->data->salary_time=$value;
+      if(!empty($rq->getParam('salary_time_custom')))
+      {
+        $value = VacancyCheckFields::checkTextField($rq->getParam('salary_time_custom'));
+        $value===false ? $this->errors['salary_time_custom']=true : $this->data->salary_time_custom=$value;
+      }
+      else
+      {
+        $value = VacancyCheckFields::checkList($rq->getParam('salary_time'),'salary_time');
+        $value===false ? $this->errors['salary_time']=true : $this->data->salary_time=$value;
+      }
       // Комментарии по оплате
       $this->data->salary_comment = VacancyCheckFields::checkTextarea($rq->getParam('salary_comment'));
     }

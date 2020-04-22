@@ -1224,7 +1224,13 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                    <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 131)]): ?>
+                    <?php if (isset($viData['vacAttribs'][164])): ?>
+                      <div class="sv__attributes-item ico12">
+                        <div class="sv__attributes-name"><b>Сроки оплаты:</b></div>
+                        <div class="sv__attributes-val"><span><?=$viData['vacAttribs'][164]['val']?></span></div>
+                        <div class="clearfix"></div>
+                      </div>
+                    <?php elseif ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 131)]): ?>
                         <div class="sv__attributes-item ico12">
                             <div class="sv__attributes-name"><b>Сроки оплаты:</b></div>
                             <div class="sv__attributes-val"><span><?= $data['name'] ?></span></div>

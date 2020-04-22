@@ -15,38 +15,36 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
       <div class="personal__area--separator"></div>
     </div>
   <? endif; ?>
-  <div class="col-xs-12 col-sm-6">
+  <div class="vacancy__masonry">
     <? //if(!($viData->data->status==Vacancy::$STATUS_NO_ACTIVE && count($viData->services->creation_vacancy->items))): ?>
-    <div id="activate-block">
+    <div class="vacancy__module" id="activate_module">
       <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
     </div>
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_2',['viData'=>$viData]) ?>
     </div>
     <? if($viData->data->is_actual): ?>
-      <div class="personal__area--capacity module">
+      <div class="vacancy__module">
         <? $this->renderPartial('../user/vacancy/edit/module_3',['viData'=>$viData]) ?>
       </div>
     <? endif; ?>
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_4',['viData'=>$viData]) ?>
     </div>
-  </div>
-  <div class="col-xs-12 col-sm-6">
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_5',['viData'=>$viData]) ?>
     </div>
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_6',['viData'=>$viData]) ?>
     </div>
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_7',['viData'=>$viData]) ?>
     </div>
-    <div class="personal__area--capacity module">
+    <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_8',['viData'=>$viData]) ?>
     </div>
-    <div class="personal__area--capacity module">
-      <? $this->renderPartial('../user/vacancy/edit/module_9',['viData'=>$viData]) ?>
-    </div>
+  </div>
+  <div class="vacancy__module" id="geo_module">
+    <? $this->renderPartial('../user/vacancy/edit/module_9',['viData'=>$viData]) ?>
   </div>
 </div>

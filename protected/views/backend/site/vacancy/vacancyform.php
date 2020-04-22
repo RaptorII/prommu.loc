@@ -150,7 +150,11 @@
                   </div>
                 </div>
                 <div class="d-indent">
-                  <span>Сроки оплаты: <b><?=$viData['properties']['paylims']['dname']?></b></span>
+                  <? if(isset($viData['properties']['cpaylims'])): ?>
+                    <span>Свой срок оплаты: <b><?=$viData['properties']['cpaylims']['val']?></b></span>
+                  <? else: ?>
+                    <span>Сроки оплаты: <b><?=$viData['properties']['paylims']['dname']?></b></span>
+                  <? endif; ?>
                 </div>
               </div>
               <?

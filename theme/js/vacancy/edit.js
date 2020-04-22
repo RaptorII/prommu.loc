@@ -15,7 +15,7 @@ var EditVacancy = (function () {
 
     if(arguments.length) // инициализация после аякс запроса
     {
-      let module = $(arguments[0]).closest('.module');
+      let module = $(arguments[0]).closest('.vacancy__module');
       $(module).html(arguments[1]);
     }
 
@@ -30,8 +30,8 @@ var EditVacancy = (function () {
       }
     });
     // переключение на форму редактирования
-    $('.module').on('click','.personal__area--capacity-edit',function(){
-      let main = $(this).closest('.module'),
+    $('.vacancy__module').on('click','.personal__area--capacity-edit',function(){
+      let main = $(this).closest('.vacancy__module'),
           info = $(main).find('.module_info'),
           form = $(main).find('.module_form');
 
@@ -40,8 +40,8 @@ var EditVacancy = (function () {
       self.changeLabelWidth();
     });
     // переключаем обратно на информацию
-    $('.module').on('click','.personal__area--capacity-cancel',function(){
-      let main = $(this).closest('.module'),
+    $('.vacancy__module').on('click','.personal__area--capacity-cancel',function(){
+      let main = $(this).closest('.vacancy__module'),
         info = $(main).find('.module_info'),
         form = $(main).find('.module_form');
 
@@ -50,31 +50,69 @@ var EditVacancy = (function () {
     });
     // Проверка ввода полей
     new CheckInputFields();
-    // выравниваем лейблы
-    self.changeLabelWidth();
-    $( window ).on('resize',function() {
-      self.changeLabelWidth();
-    });
 
-    new InitSelect({selector:'#posts',search:true});
-    new InitSelect({selector:'#experience'});
-    new InitSelect({selector:'#work_type'});
-    new InitSelect({selector:'#posts2',search:true});
-    new InitSelect({selector:'#experience2'});
-    new InitSelect({selector:'#work_type2'});
-    new InitSelect({selector:'#hcolor'});
-    new InitSelect({selector:'#hlen'});
-    new InitSelect({selector:'#ycolor'});
-    new InitSelect({selector:'#chest'});
-    new InitSelect({selector:'#waist'});
-    new InitSelect({selector:'#thigh'});
-    new InitSelect({selector:'#self_employed'});
-    new InitSelect({selector:'#salary'});
-    new InitSelect({selector:'#salary_time'});
+    $('#posts').initSelect({search:true});
+    $('#experience').initSelect();
+    $('#work_type').initSelect();
+    $('#posts2').initSelect({search:true});
+    $('#experience2').initSelect();
+    $('#work_type2').initSelect();
+    $('#hcolor').initSelect();
+    $('#hlen').initSelect();
+    $('#ycolor').initSelect();
+    $('#chest').initSelect();
+    $('#waist').initSelect();
+    $('#thigh').initSelect();
+    $('#self_employed').initSelect();
+    $('#salary').initSelect();
+    $('#salary_time').initSelect();
 
     new InitNicEditor('#requirements','#requirements_panel');
     new InitNicEditor('#duties','#duties_panel');
     new InitNicEditor('#conditions','#conditions_panel');
+    // Добавление кастомного срока оплаты
+    $(document).on('click','#salary_time_add-btn',function(e){
+        if($(e.target).hasClass('form__field-disable'))
+        {
+          return;
+        }
+
+        let parent = $(e.target).parent(),
+          select = $(parent).find('.form__field-content'),
+          content = '<div id="salary_time_add-block" class="form__field">'
+            + '<label class="form__field-label">Свой вариант</label>'
+            + '<div class="form__field-content form__content-indent form__content-hint">'
+            + '<input '
+            + 'type="text" '
+            + 'name="salary_time_custom" '
+            + 'class="form__field-input prmu-required prmu-check" '
+            + 'data-params=\'{"limit":"70","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}\' autocomplete="off">'
+            + '</div>'
+            + '<div id="salary_time_del-btn" class="form__field-hint tooltip" title="Удалить"></div>'
+            + '</div>';
+
+        $(parent).after(content);
+        $(select).addClass('form__field-disable');
+        $(e.target).addClass('form__field-disable');
+        self.changeLabelWidth();
+        $.each($('.tooltip'),function(){
+          if(!$(this).hasClass('tooltipstered'))
+          {
+            $(this).tooltipster({
+              contentAsHTML:true,
+              side:'right',
+              theme:['tooltipster-noir', 'tooltipster-noir-customized']
+            });
+          }
+        });
+        new CheckInputFields();
+      })
+      .on('click','#salary_time_del-btn',function(e){
+        $('#salary_time_add-btn').prev().removeClass('form__field-disable');
+        $('#salary_time_add-btn').removeClass('form__field-disable');
+        $('#salary_time_add-block').remove();
+      });
+
     // генерируем локации
     new VacancyGeo({
       'cities':window.arVacCities,
@@ -88,12 +126,10 @@ var EditVacancy = (function () {
       'selector':'#location-edit',
       'state':'edit'
     });
-
-
     // Прячем блок, если в нем нет данных
-    if(!$('#activate-block').text().trim().length)
+    if(!$('#activate_module').text().trim().length)
     {
-      $('#activate-block').addClass('block__hide');
+      $('#activate_module').addClass('block__hide');
     }
     // событие активации вакансии
     $(document).on('click','#activate',function(){
@@ -106,9 +142,9 @@ var EditVacancy = (function () {
           console.log(result.length);
           if(!result.length)
           {
-            $('#activate-block').addClass('block__hide');
+            $('#activate_module').addClass('block__hide');
           }
-          $('#activate-block').html(result);
+          $('#activate_module').html(result);
 
           MainScript.stateLoading(false);
         },
@@ -118,6 +154,13 @@ var EditVacancy = (function () {
           MainScript.stateLoading(false);
         }
       });
+    });
+
+    self.changeLabelWidth(); // выравниваем лейблы
+    self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
+    $( window ).on('resize',function() {
+      self.changeLabelWidth(); // выравниваем лейблы
+      self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
     });
     // проверяем обязательные поля
     new CheckRequiredFields(self);
@@ -143,6 +186,34 @@ var EditVacancy = (function () {
       }
     });
     $(arLabels).css('minWidth',max+'px');
+  };
+  //
+  EditVacancy.prototype.changeModuleWidth = function ()
+  {
+    if ($(window).width() <= '767')
+    {
+      $('#geo_module').css({'width':'100%'});
+      $('.location__item').css({'width':'100%'});
+      $('.vacancy__module').css({'float':'none','width':'100%'});
+    }
+    else
+    {
+      $('.vacancy__module').css({'width':'50%'});
+      $.each($('.vacancy__module'), function(i,e){
+        let logic = (i+1)%2==0 && i>0;
+        logic ?  $(this).css({'float':'right'}) :  $(this).css({'float':'left'});
+      });
+      if($('.location__item').length==2) // если по одному блоку
+      {
+        $('#geo_module').css({'float':'left','width':'50%'});
+        $('.location__item').css({'width':'100%'});
+      }
+      else
+      {
+        $('#geo_module').css({'float':'left','width':'100%'});
+        $('.location__item').css({'width':'50%'});
+      }
+    }
   };
   //
   return EditVacancy;
@@ -196,6 +267,7 @@ var VacancyGeo = (function () {
 
     $.each(self.arCities,function(){
       let oD = self.getCityDates(this.id);
+
       self.buildCityData(this); // рисуем данные по городу
       self.buildCalendar(this.id, oD.start.year, oD.start.month); // Рисуем календарь
     });
@@ -248,11 +320,8 @@ var VacancyGeo = (function () {
         $.each(self.arCities,function(){
           arCities.push(this.id_city);
         });
-        new InitSelect({
-          selector:'#city-input',
-          ajax:'/ajax/GetCitiesByName',
-          selectedValsInOtherSelect:arCities
-        });
+        console.log(1);
+        $('#city-input').initSelect({ajax:'/ajax/GetCitiesByName', selectedValsInOtherSelect:arCities});
       })
       .on('click','#city-create',function(e){ // Сохранение города
           let option = $('#city-input select option:selected'),
@@ -469,7 +538,7 @@ var VacancyGeo = (function () {
     }
     else
     {
-      $(self.main).append(calendar);
+      $(self.main).find('.location__item:eq(-1)').append(calendar);
     }
 
     let parent = $(self.main).find('.location__calendar[data-id="' + city + '"]'),
@@ -567,17 +636,19 @@ var VacancyGeo = (function () {
                   + '</div>'
                   + (manyCities ? '<div title="Удалить город и все его данные" class="city__delete-btn js-g-hashint" data-id="' + city.id_city + '"></div>' : '')
                 + '</div>';
+
+      if($('#city_' + city.id_city).length)
+      {
+        return;
+      }
+
       // Выводим
-      $(self.main).append(content);
+      $(self.main).append('<div class="location__item">'+content+'</div>');
       let arCities = [];
       $.each(self.arCities,function(){
         arCities.push(this.id_city);
       });
-      let objCitySelect = new InitSelect({
-        selector:'#city_' + city.id_city,
-        ajax:'/ajax/GetCitiesByName',
-        selectedValsInOtherSelect:arCities
-      });
+      let objCitySelect = $('#city_' + city.id_city).initSelect({ajax:'/ajax/GetCitiesByName', selectedValsInOtherSelect:arCities});
       // событие изменения города
       $('#city_' + city.id_city).change(function(e){
         let option = $(e.target).find('option:selected'),
@@ -670,7 +741,7 @@ var VacancyGeo = (function () {
       });
       if(!bCityExist)
       {
-        $(self.main).append(content);
+        $(self.main).append('<div class="location__item">'+content+'</div>');
       }
     }
   };
@@ -970,9 +1041,9 @@ var VacancyGeo = (function () {
     $(arLabels).css('minWidth',max+'px');
     // инициализируем datepicker
     new InitPeriod({selector:periodParent, minDate:oD.oBdate, maxDate:oD.oEdate});
-    // инициализируем временные паериоды
-    var objSelectFrom = new InitSelect({selector:$(form).find('.location__event-time').eq(0)});
-    var objSelectTo = new InitSelect({selector:$(form).find('.location__event-time').eq(1)});
+    // инициализируем временные периоды
+    var objSelectFrom = $($(form).find('.location__event-time').eq(0)).initSelect();
+    var objSelectTo = $($(form).find('.location__event-time').eq(1)).initSelect();
 
     $('.location__event-time').change(function(){
       let selectFrom = $('.location__event-time').eq(0),
