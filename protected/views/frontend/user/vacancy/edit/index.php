@@ -15,8 +15,24 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
       <div class="personal__area--separator"></div>
     </div>
   <? endif; ?>
-  <div class="vacancy__masonry">
+  <div class="vacancy__masonry personal__area personal__area-flex">
     <? //if(!($viData->data->status==Vacancy::$STATUS_NO_ACTIVE && count($viData->services->creation_vacancy->items))): ?>
+
+      <col-xs-12 class="col-sm-6 personal__area--flex-column">
+          <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_2',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_3',['viData'=>$viData]) ?>
+      </col-xs-12>
+
+      <col-xs-12 class="col-sm-6 personal__area--flex-column">
+          <? $this->renderPartial('../user/vacancy/edit/module_4',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_5',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_6',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_7',['viData'=>$viData]) ?>
+          <? $this->renderPartial('../user/vacancy/edit/module_8',['viData'=>$viData]) ?>
+      </col-xs-12>
+
+      <?/*?>
     <div class="vacancy__module" id="activate_module">
       <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
     </div>
@@ -43,7 +59,9 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScr
     <div class="vacancy__module">
       <? $this->renderPartial('../user/vacancy/edit/module_8',['viData'=>$viData]) ?>
     </div>
+    <?*/?>
   </div>
+    <br>
   <div class="vacancy__module" id="geo_module">
     <? $this->renderPartial('../user/vacancy/edit/module_9',['viData'=>$viData]) ?>
   </div>
