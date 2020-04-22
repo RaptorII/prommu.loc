@@ -1,4 +1,4 @@
-<? $cookieView = Yii::app()->request->cookies['srch_a_view']->value; ?>
+<? $cookieView = Yii::app()->request->cookies['srch_a_view']->value;?>
 <script type="text/javascript">
     var arSeo = <?=json_encode($seo)?>;
     var redirect = "<?=$redirect?>";
@@ -75,7 +75,7 @@
                             </h2>
 
                             <?php
-                            $sql = "SELECT ismoder FROM user WHERE id_user = " . $val['id'];
+                            $sql = "SELECT ismoder FROM user WHERE id_user = " . $id = Share::$UserProfile->id;
                             $ismoder = Yii::app()->db->createCommand($sql)->queryScalar();
                             if( Share::$UserProfile->type == 3 && $ismoder): ?>
                                 <div class="personal__invite">

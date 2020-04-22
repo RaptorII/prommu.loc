@@ -920,7 +920,7 @@ class ResponsesApplic extends Responses
               'для получения безлимитного доступа, на приглашения соискателей по вакансии ' .
               $arEmployer['title'] . ' необходимо внести единоразовую оплату.</p>'.
             '<a href='.MainConfig::$PAGE_ORDER_SERVICE.'?id='.$id_vacancy.'&service=personal-invitation '.
-          'class="personal-invitation-btn">Пригласить персонал</a>',
+          'class="personal-invitation-btn btn__orange">Пригласить персонал</a>',
         ];
       }
     // Добавляем приглашение на вакансию

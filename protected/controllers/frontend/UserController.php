@@ -1852,14 +1852,16 @@ class UserController extends AppController
                 {
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                        array('viData' => (new Services())->getFilteredPromos()),
+                        [
+                            'viData' => (new Services())->getFilteredPromos(),
+                            'data' => ResponsesApplic::getInvitedUsrFromVacStat($vac),
+                        ],
                         false,
                         true
                     );
 //                    return;
                 }
                 else{
-
                     $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy')
                         ? (new Services())->prepareFilterData()

@@ -5,6 +5,9 @@
 		<?=$this->ViewModel->declOfNum($viData['app_count'], array('Анкета', 'Анкеты', 'Анкет'))?>
 	</div>
 </div>
+<?
+display($data);
+?>
 <div class='row vacancy table-view'>
 	<?if( $viData['workers']['promo'] ):?>
 		<?$i=1;?>

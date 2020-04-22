@@ -135,7 +135,7 @@ if (!share::isApplicant()):
 //start
 ?>
 
-<div class="private-profile-page <?=(!$flagOwnProfile?'for-guest':'')?>">
+<div class="private-profile-page <?=(!$flagOwnProfile?'for-guest':'')?>" id="content">
   <?php if( $viData['error'] ): ?>
     <div class="comm-mess-box"><?= $viData['message'] ?></div>
   <?php else: ?>
@@ -243,7 +243,7 @@ if (!share::isApplicant()):
         <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
         <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'>Мои сообщения</a>
       <?php ?>
-      <?php elseif( Share::$UserProfile->type == 3 && $ismoder): ?>
+      <?php elseif( Share::$UserProfile->type == 3 && $ismoder):?>
         <div class='js-btn-invite btn-white-green-wr'>
           <a href='#'>Пригласить на вакансию</a>
         </div>

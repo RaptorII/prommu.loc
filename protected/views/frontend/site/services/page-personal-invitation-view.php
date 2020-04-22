@@ -49,6 +49,7 @@ if(!$rq->getParam('vacancy')):?>
         <?
         //		CONTENT
         ?>
+
         <div class='col-xs-12 col-sm-8 col-md-9'>
             <div class='view-radio clearfix'>
                 <h1 class="main-h1">Выбрать персонал для приглашения</h1>
