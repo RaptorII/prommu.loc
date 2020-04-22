@@ -17,7 +17,6 @@
       <a href="javascript:void(0)" class="personal__area--capacity-edit js-g-hashint" title="Редактировать"></a>
     <? endif; ?>
     <div id="location"></div>
-    <br>
   </div>
   <?
   //

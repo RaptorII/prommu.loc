@@ -291,6 +291,10 @@ capacity blocks
 .vacancy__module{
     margin-bottom: 20px;
     padding: 0 15px;
+    display: flex;
+}
+.vacancy__module .personal__area--capacity{
+    width: 100%;
 }
 .personal__area--capacity {
     position: relative;
@@ -302,9 +306,6 @@ capacity blocks
 .personal__area--capacity {
     margin-top: 20px;
     padding-bottom: 20px;
-}
-.personal__area--capacity.module{
-    margin: 0 0 20px;
 }
 @media screen and (min-width: 767px) {
     .personal__area--capacity {
@@ -1154,6 +1155,7 @@ try google material design
     opacity: .5;
     position: relative;
     transition: var(--main-trans);
+    z-index:1;
 }
 .form__field-hint:hover{
     opacity: .7;
@@ -1204,7 +1206,7 @@ try google material design
     z-index: 2;
     cursor: no-drop;
 }
-.module .form__field-disable:before{
+.vacancy__module .form__field-disable:before{
     background: rgba(255, 255, 255, 0.7);
 }
 /*
@@ -1251,6 +1253,8 @@ try google material design
 */
 #location, #location-edit{
     margin: 0 -15px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .location__item{
     padding: 0 15px;
@@ -1565,6 +1569,7 @@ try google material design
         font-size: 24px;
         line-height: 24px;
     }
+    #city-block{ padding-right: 15px }
 }
 @media (min-width: 992px)
 {

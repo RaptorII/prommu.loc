@@ -36,8 +36,9 @@ var EditVacancy = (function () {
           form = $(main).find('.module_form');
 
       $(info).hide();
-      $(form).fadeIn();
+      $(form).show();
       self.changeLabelWidth();
+      self.changeModuleWidth();
     });
     // переключаем обратно на информацию
     $('.vacancy__module').on('click','.personal__area--capacity-cancel',function(){
@@ -46,7 +47,8 @@ var EditVacancy = (function () {
         form = $(main).find('.module_form');
 
       $(form).hide();
-      $(info).fadeIn();
+      $(info).show();
+      self.changeModuleWidth();
     });
     // Проверка ввода полей
     new CheckInputFields();
@@ -113,6 +115,12 @@ var EditVacancy = (function () {
         $('#salary_time_add-block').remove();
       });
 
+    self.changeLabelWidth(); // выравниваем лейблы
+    self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
+    $( window ).on('resize',function() {
+      self.changeLabelWidth(); // выравниваем лейблы
+      self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
+    });
     // генерируем локации
     new VacancyGeo({
       'cities':window.arVacCities,
@@ -139,7 +147,6 @@ var EditVacancy = (function () {
         type: 'POST',
         data: {event:'activate'},
         success: function(result){
-          console.log(result.length);
           if(!result.length)
           {
             $('#activate_module').addClass('block__hide');
@@ -147,6 +154,7 @@ var EditVacancy = (function () {
           $('#activate_module').html(result);
 
           MainScript.stateLoading(false);
+          self.changeModuleWidth();
         },
         error: function()
         {
@@ -154,13 +162,6 @@ var EditVacancy = (function () {
           MainScript.stateLoading(false);
         }
       });
-    });
-
-    self.changeLabelWidth(); // выравниваем лейблы
-    self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
-    $( window ).on('resize',function() {
-      self.changeLabelWidth(); // выравниваем лейблы
-      self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
     });
     // проверяем обязательные поля
     new CheckRequiredFields(self);
@@ -187,31 +188,81 @@ var EditVacancy = (function () {
     });
     $(arLabels).css('minWidth',max+'px');
   };
-  //
+  // Исправление расположения блоков
   EditVacancy.prototype.changeModuleWidth = function ()
   {
+    let arItems = $('.vacancy__masonry .vacancy__module');
+
+    arItems.css({width:'50%',height:'initial'});
     if ($(window).width() <= '767')
     {
-      $('#geo_module').css({'width':'100%'});
-      $('.location__item').css({'width':'100%'});
-      $('.vacancy__module').css({'float':'none','width':'100%'});
+      arItems.css({float:'none',width:'100%'});
     }
     else
     {
-      $('.vacancy__module').css({'width':'50%'});
-      $.each($('.vacancy__module'), function(i,e){
-        let logic = (i+1)%2==0 && i>0;
-        logic ?  $(this).css({'float':'right'}) :  $(this).css({'float':'left'});
+      $.each(arItems, function(i,e){
+        if(i==0)
+        {
+          $(this).css({float:'left'});
+        }
+        else if(i==1)
+        {
+          $(this).css({float:'right'});
+        }
+        else
+        {
+          let oF = $(arItems[i-1]).css('float'),
+              nF = oF==='right' ? 'left' : 'right',
+              arr = [], result;
+
+          $(this).css({float:'right'});
+          arr.push({value:$(this).offset().top, parent:oF, float:'right'});
+          $(this).css({float:'left'});
+          arr.push({value:$(this).offset().top, parent:oF, float:'left'});
+          $(arItems[i-1]).css('float',nF);
+          $(this).css({float:'right'});
+          arr.push({value:$(this).offset().top, parent:nF, float:'right'});
+          $(this).css({float:'left'});
+          arr.push({value:$(this).offset().top, parent:nF, float:'left'});
+
+          $.each(arr, function(){
+            if(typeof result!='object')
+            {
+              result = this;
+            }
+            else if(this.value<result.value)
+            {
+              result = this;
+            }
+          });
+
+          $(arItems[i-1]).css('float', result.parent);
+          $(this).css('float', result.float);
+        }
       });
-      if($('.location__item').length==2) // если по одному блоку
+      // сортируем по самому нижнему блоку
+      arItems.sort(function (a, b) {
+        let v1 = $(a).offset().top + $(a).outerHeight(),
+            v2 = $(b).offset().top + $(b).outerHeight();
+
+        if (v1 > v2){ return -1; }
+        if (v1 < v2){ return 1; }
+        return 0;
+      });
+
+      if(arItems.length>=2) // выравниваем высоту предпоследнего блока
       {
-        $('#geo_module').css({'float':'left','width':'50%'});
-        $('.location__item').css({'width':'100%'});
-      }
-      else
-      {
-        $('#geo_module').css({'float':'left','width':'100%'});
-        $('.location__item').css({'width':'50%'});
+        setTimeout(function(){
+          let o1 = $(arItems[1]).offset().top,
+            o2 = $(arItems[0]).offset().top,
+            h1 = $(arItems[1]).outerHeight(),
+            h2 = $(arItems[0]).outerHeight();
+
+          if((o1+h1)<(o2+h2)) // если не хватает высоты у предпоследнего блока
+          {
+            $(arItems[1]).height((h1 + (o2+h2) - (o1+h1)));
+          }
+        },50);
       }
     }
   };
@@ -242,7 +293,7 @@ var VacancyGeo = (function () {
       typeof arguments[0].selector!=='string'
     )
     {
-      console.log('error in init Geo' + arguments[0].selector);
+      console.log('error in init Geo: ' + arguments[0].selector);
       return;
     }
 
@@ -320,84 +371,90 @@ var VacancyGeo = (function () {
         $.each(self.arCities,function(){
           arCities.push(this.id_city);
         });
-        console.log(1);
+
         $('#city-input').initSelect({ajax:'/ajax/GetCitiesByName', selectedValsInOtherSelect:arCities});
+        self.changeModuleWidth();
       })
       .on('click','#city-create',function(e){ // Сохранение города
-          let option = $('#city-input select option:selected'),
-              value = $(option).val(),
-              costCity = false;
+        let option = $('#city-input select option:selected'),
+            value = $(option).val(),
+            costCity = false;
 
-          if(!option.length)
-          {
-            $('#city-input').addClass('prmu-error');
-            return;
-          }
-          else
-          {
-            $('#city-input').removeClass('prmu-error');
-          }
+        if(!option.length)
+        {
+          $('#city-input').addClass('prmu-error');
+          return;
+        }
+        else
+        {
+          $('#city-input').removeClass('prmu-error');
+        }
 
-          // проход по стандарту оплаты
-          $.each(arPaymentMain, function(){
-            if(this.id_city==Number(value))
+        // проход по стандарту оплаты
+        $.each(arPaymentMain, function(){
+          if(this.id_city==Number(value))
+          {
+            costCity = this.price;
+          }
+        });
+        //
+        if(costCity==false) // выбор бесплатного города
+        {
+          self.ajax({event:'create_city', id_city:value}, e.target);
+        }
+        else // выбор платного города
+        {
+          let payment = 0,
+            message = '';
+          // проход по выбранным ранее городам
+          $.each(arCitiesNotPaid, function(){
+            if(this==value)
             {
-              costCity = this.price;
+              payment = 1;
             }
           });
-          //
-          if(costCity==false) // выбор бесплатного города
-          {
-            self.ajax({event:'create_city', id_city:value}, e.target);
-          }
-          else // выбор платного города
-          {
-            let payment = 0,
-              message = '';
-            // проход по выбранным ранее городам
-            $.each(arCitiesNotPaid, function(){
-              if(this==value)
-              {
-                payment = 1;
-              }
-            });
 
-            if(payment==0) // этот город ранее не выбирался
-            {
-              let link = '?event=pay_create_city&new_id_city=' + value;
-              message = 'Данное изменение является платным. Оплата за этот город составит: ' + costCity + 'руб.<br><a href="' + link + '" class="btn__orange">Продолжить</a>';
-            }
-            if(payment==1) // этот город выбирался, но оплата не прошла
-            {
-              message = 'Для изменения на этот город необходимо произвести оплату. Ссылка для оплаты в блоке "Важно"';
-            }
-            /*else if(payment>0) // этот город уже выбирался и оплачен
-            {
-              self.ajax({event:'change_city', old_id_city:city.id_city, new_id_city:value},e.target);
-            }*/
-            //
-            if(message.length)
-            {
-              $("body").append('<div class="prmu__popup"><p>' + message + "</p></div>");
-              $.fancybox.open({
-                src: "body>div.prmu__popup",
-                type: "inline",
-                touch: !1,
-                afterClose: function () {
-                  $("body>div.prmu__popup").remove();
-                }
-              })
-            }
+          if(payment==0) // этот город ранее не выбирался
+          {
+            let link = '?event=pay_create_city&new_id_city=' + value;
+            message = 'Данное изменение является платным. Оплата за этот город составит: ' + costCity + 'руб.<br><a href="' + link + '" class="btn__orange">Продолжить</a>';
           }
-        })
-        .on('click','#city-break',function(e){ // Отмена добавления города
-          $('#city-block').remove();
-          $('#city-add').show();
+          if(payment==1) // этот город выбирался, но оплата не прошла
+          {
+            message = 'Для изменения на этот город необходимо произвести оплату. Ссылка для оплаты в блоке "Важно"';
+          }
+          /*else if(payment>0) // этот город уже выбирался и оплачен
+          {
+            self.ajax({event:'change_city', old_id_city:city.id_city, new_id_city:value},e.target);
+          }*/
+          //
+          if(message.length)
+          {
+            $("body").append('<div class="prmu__popup"><p>' + message + "</p></div>");
+            $.fancybox.open({
+              src: "body>div.prmu__popup",
+              type: "inline",
+              touch: !1,
+              afterClose: function () {
+                $("body>div.prmu__popup").remove();
+              }
+            })
+          }
+        };
+        self.changeModuleWidth();
+      })
+      .on('click','#city-break',function(e){ // Отмена добавления города
+        $('#city-block').remove();
+        $('#city-add').show();
+        self.changeModuleWidth();
       })
       .on('click','.city__delete-btn',function(e){ // Удаление города
         let result = {event:'delete_city', id_city:$(e.target).data('id')};
         self.ajax(result,e.target);
+        self.changeModuleWidth();
     });
+    self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
+    $( window ).on('resize',function() { self.changeModuleWidth() }); // устанавливаем ширину полей в ГЕО
   };
   // разница двух unix дат
   VacancyGeo.prototype.diffDate = function ()
@@ -956,7 +1013,7 @@ var VacancyGeo = (function () {
   // аякс редактирование локаций
   VacancyGeo.prototype.ajax = function (obj, target)
   {
-    let module = $(target).closest('.personal__area--capacity');
+    let module = $(target).closest('#geo_module');
 
     MainScript.stateLoading(true);
 
@@ -1042,8 +1099,8 @@ var VacancyGeo = (function () {
     // инициализируем datepicker
     new InitPeriod({selector:periodParent, minDate:oD.oBdate, maxDate:oD.oEdate});
     // инициализируем временные периоды
-    var objSelectFrom = $($(form).find('.location__event-time').eq(0)).initSelect();
-    var objSelectTo = $($(form).find('.location__event-time').eq(1)).initSelect();
+    var objSelectFrom = $('.location__event-time:eq(0)').initSelect();
+    var objSelectTo = $('.location__event-time:eq(1)').initSelect();
 
     $('.location__event-time').change(function(){
       let selectFrom = $('.location__event-time').eq(0),
@@ -1108,6 +1165,31 @@ var VacancyGeo = (function () {
         $(this).tooltipster({contentAsHTML:true, theme:['tooltipster-calendar']});
       }
     });
+  };
+  // Исправление расположения блоков
+  VacancyGeo.prototype.changeModuleWidth = function ()
+  {
+    if ($(window).width() <= '767')
+    {
+      $('#geo_module').css({'width':'100%'});
+      $('.location__item').css({'width':'100%'});
+      $('#city-block').css({'width':'100%'});
+    }
+    else
+    {
+      if($('.location__item').length==2) // если по одному блоку
+      {
+        $('#geo_module').css({'float':'left','width':'50%'});
+        $('.location__item').css({'width':'100%'});
+        $('#city-block').css({'width':'100%'});
+      }
+      else
+      {
+        $('#geo_module').css({'float':'left','width':'100%'});
+        $('.location__item').css({'width':'50%'});
+        $('#city-block').css({'width':'50%'});
+      }
+    }
   };
   //
   return VacancyGeo;
