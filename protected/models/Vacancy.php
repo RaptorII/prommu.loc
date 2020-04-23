@@ -471,7 +471,6 @@ class Vacancy extends ARModel
 
         $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
 
-
         // читаем вакансии
         $sql = "SELECT v.id, v.title, v.status, v.count, v.vk_link, v.fb_link, v.tl_link
                   , DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate, t.bdate, t.edate
@@ -489,9 +488,9 @@ class Vacancy extends ARModel
               AND v.in_archive=0 
               AND v.ismoder=100 # vacancy is need to was moderate 
               AND remdate >= CURRENT_DATE()
+            GROUP BY v.title
             ORDER BY v.id DESC
             ";
-
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         foreach ($res as $key => $val)
         {
@@ -3236,7 +3235,8 @@ class Vacancy extends ARModel
             SELECT 
                 v.id, 
                 v.title, 
-                v.repost
+                v.repost,
+                DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate
             FROM 
                 empl_vacations v
             INNER JOIN ( 
@@ -3250,7 +3250,8 @@ class Vacancy extends ARModel
                 v.id_user = {$idus} 
                 AND (v.status=1) 
                 AND (v.ismoder=100) 
-                AND v.in_archive=0
+                #AND v.in_archive=0
+                AND v.remdate >= CURRENT_DATE 
             ORDER BY v.id DESC
         ";
 
@@ -3945,6 +3946,9 @@ class Vacancy extends ARModel
         unset($v);
 
         $arRes['termostat'] = Termostat::getTermostatVacanciesViews($arRes[$type]);
+
+
+        display($arRes[$type] );
 
         return $arRes;
     }
