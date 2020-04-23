@@ -50,6 +50,66 @@ class VacancyEdit
       // Тип работы
       $value = VacancyCheckFields::checkList($rq->getParam('istemp'),'work_type');
       $value===false ? $object->errors['istemp']=true : $object->data->istemp=$value;
+      // Даты начала и завершения
+      $bDate = Yii::app()->getRequest()->getParam('bdate'); // Дата начала
+      $eDate = Yii::app()->getRequest()->getParam('edate'); // Дата завершения
+      if(!Share::checkFormatDate($bDate))
+      {
+        $object->errors['bdate'] = true;
+      }
+      elseif(!Share::checkFormatDate($eDate))
+      {
+        $object->errors['edate'] = true;
+      }
+      elseif(
+        (strtotime($bDate)>strtotime($eDate)) // если даты отличаются
+        ||
+        ((strtotime($eDate)-strtotime($bDate)) > (30*86400)) // период сильно большой(больше 30 дней)
+      )
+      {
+        $object->errors['bdate'] = true;
+        $object->errors['edate'] = true;
+      }
+      else
+      {
+        if(count($object->data->locations))
+        {
+          foreach ($object->data->locations as $location)
+          {
+            foreach ($location as $period)
+            {
+              if($bDate > $period['bdate'])
+              {
+                $object->errors['bdate'] = true;
+              }
+              if($bDate < $period['edate'])
+              {
+                $object->errors['edate'] = true;
+              }
+            }
+          }
+        }
+        if(strtotime($eDate) < strtotime('today'))
+        {
+          $object->errors['edate'] = true;
+        }
+        if(!isset($object->errors['bdate']) && !isset($object->errors['edate']))
+        {
+          if(
+            (date('d.m.Y',$object->data->crdate_unix) != $bDate)
+            ||
+            (date('d.m.Y',$object->data->remdate_unix) != $eDate)
+          )
+          {
+            (new City())->updateVacCityDates($object->data->id, strtotime($bDate), strtotime($eDate));
+          }
+
+          $object->data->crdate = $bDate;
+          $object->data->remdate = $eDate;
+          $object->data->crdate_unix = strtotime($bDate);
+          $object->data->remdate_unix = strtotime($eDate);
+        }
+      }
     }
     if($module==4)
     {
@@ -318,7 +378,9 @@ class VacancyEdit
         'ageto' => $data->ageto>0?intval($data->ageto):null,
         'isman' => (integer)$data->isman,
         'iswoman' => (integer)$data->iswoman,
-        'istemp' => (integer)$data->istemp
+        'istemp' => (integer)$data->istemp,
+        'crdate' => date('Y-m-d H:i:s', $data->crdate_unix),
+        'remdate' => date('Y-m-d', $data->remdate_unix)
       ];
       $model->saveVacancyPosts($id, $data->post);
     }

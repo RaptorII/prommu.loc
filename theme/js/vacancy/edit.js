@@ -15,8 +15,17 @@ var EditVacancy = (function () {
 
     if(arguments.length) // инициализация после аякс запроса
     {
-      let module = $(arguments[0]).closest('.vacancy__module');
-      $(module).html(arguments[1]);
+      let module = $(arguments[0]).closest('.vacancy__module'),
+          moduleNum = $(arguments[0]).find('[name="module"]').val();
+
+      if(moduleNum==='2' || moduleNum==='4') // Для 2го и 4го блока нужно обновлять все блоки
+      {
+        $('#edit_vacancy').replaceWith(arguments[1]);
+      }
+      else
+      {
+        $(module).html(arguments[1]);
+      }
     }
 
     $.each($('.tooltip'),function(){
@@ -69,51 +78,17 @@ var EditVacancy = (function () {
     $('#salary').initSelect();
     $('#salary_time').initSelect();
 
+    new InitPeriod({
+      selector:'#period',
+      minDate:new Date(vacancyBeginDate*1000),
+      maxDate:new Date(vacancyEndDate*1000)
+    });
+
     new InitNicEditor('#requirements','#requirements_panel');
     new InitNicEditor('#duties','#duties_panel');
     new InitNicEditor('#conditions','#conditions_panel');
     // Добавление кастомного срока оплаты
-    $(document).on('click','#salary_time_add-btn',function(e){
-        if($(e.target).hasClass('form__field-disable'))
-        {
-          return;
-        }
-
-        let parent = $(e.target).parent(),
-          select = $(parent).find('.form__field-content'),
-          content = '<div id="salary_time_add-block" class="form__field">'
-            + '<label class="form__field-label">Свой вариант</label>'
-            + '<div class="form__field-content form__content-indent form__content-hint">'
-            + '<input '
-            + 'type="text" '
-            + 'name="salary_time_custom" '
-            + 'class="form__field-input prmu-required prmu-check" '
-            + 'data-params=\'{"limit":"70","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}\' autocomplete="off">'
-            + '</div>'
-            + '<div id="salary_time_del-btn" class="form__field-hint tooltip" title="Удалить"></div>'
-            + '</div>';
-
-        $(parent).after(content);
-        $(select).addClass('form__field-disable');
-        $(e.target).addClass('form__field-disable');
-        self.changeLabelWidth();
-        $.each($('.tooltip'),function(){
-          if(!$(this).hasClass('tooltipstered'))
-          {
-            $(this).tooltipster({
-              contentAsHTML:true,
-              side:'right',
-              theme:['tooltipster-noir', 'tooltipster-noir-customized']
-            });
-          }
-        });
-        new CheckInputFields();
-      })
-      .on('click','#salary_time_del-btn',function(e){
-        $('#salary_time_add-btn').prev().removeClass('form__field-disable');
-        $('#salary_time_add-btn').removeClass('form__field-disable');
-        $('#salary_time_add-block').remove();
-      });
+    new CustomSalaryTime(self);
 
     self.changeLabelWidth(); // выравниваем лейблы
     self.changeModuleWidth();  // устанавливаем ширину полей в ГЕО
@@ -1193,6 +1168,63 @@ var VacancyGeo = (function () {
   };
   //
   return VacancyGeo;
+}());
+/**
+ *  Кастомный срок оплаты
+ */
+var CustomSalaryTime = (function () {
+  //
+  function CustomSalaryTime() {
+    this.init(arguments[0]);
+  }
+  //
+  CustomSalaryTime.prototype.init = function ()
+  {
+    let objEditVacancy = arguments[0];
+    $(document).on('click','#salary_time_add-btn',function(e){
+      if($(e.target).hasClass('form__field-disable'))
+      {
+        return;
+      }
+
+      let parent = $(e.target).parent(),
+        select = $(parent).find('.form__field-content'),
+        content = '<div id="salary_time_add-block" class="form__field">'
+          + '<label class="form__field-label">Свой вариант</label>'
+          + '<div class="form__field-content form__content-indent form__content-hint">'
+          + '<input '
+          + 'type="text" '
+          + 'name="salary_time_custom" '
+          + 'class="form__field-input prmu-required prmu-check" '
+          + 'data-params=\'{"limit":"70","parent_tag":".form__field-content","message":"Поле обязательно к заполнению"}\' autocomplete="off">'
+          + '</div>'
+          + '<div id="salary_time_del-btn" class="form__field-hint tooltip" title="Удалить"></div>'
+          + '</div>';
+
+      $(parent).after(content);
+      $(select).addClass('form__field-disable');
+      $(e.target).addClass('form__field-disable');
+      objEditVacancy.changeLabelWidth();
+      $.each($('.tooltip'),function(){
+        if(!$(this).hasClass('tooltipstered'))
+        {
+          $(this).tooltipster({
+            contentAsHTML:true,
+            side:'right',
+            theme:['tooltipster-noir', 'tooltipster-noir-customized']
+          });
+        }
+      });
+      new CheckInputFields();
+    })
+    .on('click','#salary_time_del-btn',function(e){
+      $('#salary_time_add-btn').prev().removeClass('form__field-disable');
+      $('#salary_time_add-btn').removeClass('form__field-disable');
+      $('#salary_time_add-block').remove();
+    });
+  };
+  //
+  return CustomSalaryTime;
 }());
 /**
  *

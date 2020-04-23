@@ -49,11 +49,13 @@ var CheckRequiredFields = (function () {
       $(arForms[i]).off();
       $(arForms[i]).on('submit',function(e){
         let bText = self.checkTextFields(arForms[i]),
-          bSelect = self.checkSelectFields(arForms[i]),
-          bCheckbox = self.checkCheckboxFields(arForms[i]),
-          bNicEditor = self.checkNicEditorFields(arForms[i]);
+            bSelect = self.checkSelectFields(arForms[i]),
+            bCheckbox = self.checkCheckboxFields(arForms[i]),
+            bNicEditor = self.checkNicEditorFields(arForms[i]),
+            bEditVacancyPeriod = self.checkEditVacancyPeriod(arForms[i]);
+
         // если хотя бы один false - отмена отправки
-        if(bText || bSelect || bCheckbox || bNicEditor)
+        if(bText || bSelect || bCheckbox || bNicEditor || bEditVacancyPeriod)
         {
           return false;
         }
@@ -336,6 +338,79 @@ var CheckRequiredFields = (function () {
       hasMessage = params!=undefined && params.parent_tag!=undefined && params.message!=undefined;
 
     return {params:params, hasMessage:hasMessage};
+  };
+  // проверка только для страницы редактирования вакансии
+  CheckRequiredFields.prototype.checkEditVacancyPeriod = function ()
+  {
+    let form = arguments[0],
+        arCalendars = $(form).find('#period input');
+
+    if(typeof arVacLocations!=='object' || !arCalendars.length)
+    {
+      return false;
+    }
+
+    let bDate = $(arCalendars[0]).datepicker('getDate').getTime(),
+        eDate = $(arCalendars[1]).datepicker('getDate').getTime(),
+        minDate = $(arCalendars[0]).datepicker('option', 'minDate').getTime(),
+        maxDate = $(arCalendars[0]).datepicker('option', 'maxDate').getTime(),
+        curDate = new Date(),
+        bError1 = false, bError2 = false, message = '';
+
+    curDate.setHours(0,0,0,0); // сегодняшняя дата, но время будет ровно 00:00:00.
+
+    $.each(arVacLocations, function(i, location)
+    {
+      $.each(location.periods, function(j, period)
+      {
+        let periodBDate = Number(period.bdate) * 1000,
+            periodEDate = Number(period.edate) * 1000;
+
+        if(bDate > periodBDate)
+        {
+          bError1 = true;
+        }
+        if(eDate < periodEDate)
+        {
+          bError2 = true;
+        }
+      });
+    });
+
+    if(eDate < curDate.getTime())
+    {
+      message = 'Дата завершения не может быть меньше текущей даты';
+      $(arCalendars[1]).addClass('prmu-error');
+    }
+    else if(bError1 && bError2)
+    {
+      message = 'Новые даты должны соответствовать установленным датам в событиях городов. Проверьте корректность ввода!';
+      $(arCalendars[0]).addClass('prmu-error');
+      $(arCalendars[1]).addClass('prmu-error');
+    }
+    else if(bError1)
+    {
+      message = 'Дата начала должна соответствовать установленным датам в событиях выбранных городов. Проверьте корректность ввода!';
+      $(arCalendars[0]).addClass('prmu-error');
+    }
+    else if(bError2)
+    {
+      message = 'Дата завершения должна соответствовать установленным датам в событиях выбранных городов. Проверьте корректность ввода!';
+      $(arCalendars[1]).addClass('prmu-error');
+    }
+
+    if(message.length)
+    {
+      $("body").append('<div class="prmu__popup"><p>' + message + "</p></div>");
+      $.fancybox.open({
+        src: "body>div.prmu__popup",
+        type: "inline",
+        touch: !1,
+        afterClose: function () { $("body>div.prmu__popup").remove(); }
+      })
+    }
+
+    return message.length;
   };
   //
   return CheckRequiredFields;

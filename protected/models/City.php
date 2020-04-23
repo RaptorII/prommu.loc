@@ -1013,4 +1013,22 @@ class City extends CActiveRecord
     }
     return false;
   }
+  /**
+   * @param $id_vacancy integer - empl_vacations.id
+   * @param $bDate integer - unix timestamp
+   * @param $eDate integer - unix timestamp
+   */
+  public function updateVacCityDates($id_vacancy, $bDate, $eDate)
+  {
+    Yii::app()->db->createCommand()
+      ->update(
+        'empl_city',
+        [
+          'bdate'=>date('Y-m-d 00:00:00', $bDate),
+          'edate'=>date('Y-m-d 00:00:00', $eDate)
+        ],
+        'id_vac=:id',
+        [':id'=>$id_vacancy]
+      );
+  }
 }

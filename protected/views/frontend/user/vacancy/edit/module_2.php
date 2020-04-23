@@ -34,7 +34,7 @@
     </div>
     <div class="group ppe__field">
       <div class="group__about">Дата публикации</div>
-      <div class="group__info"><?=Share::getDate($viData->data->crdate_unix)?></div>
+      <div class="group__info"><?=Share::getDate($viData->data->crdate_unix,'d.m.Y') . ' - ' . Share::getDate($viData->data->remdate_unix,'d.m.Y')?></div>
     </div>
     <br>
   </div>
@@ -167,8 +167,40 @@
           </div>
         </div>
       </div>
+      <div class="form__field">
+        <label class="form__field-label text__nowrap">Дата <span class="text__red">*</span></label>
+        <div class="form__field-content form__content-flex form__content-hint" id="period">
+          <div class="form__content-2 form__content-indent">
+            <label class="form__field-date">
+              <input
+                type="text"
+                name="bdate"
+                value="<?=Share::getDate($viData->data->crdate_unix,'d.m.Y')?>"
+                class="form__field-input form__field-input-date prmu-required<?=($viData->errors['bdate']?' prmu-error':'')?>"
+                data-params='{"parent_tag":".form__content-2","message":"Поле обязательно к заполнению"}'
+                autocomplete="off">
+            </label>
+          </div>
+          <div class="form__field-dash">-</div>
+          <div class="form__content-2 form__content-indent">
+            <label class="form__field-date">
+              <input
+                type="text"
+                name="edate"
+                value="<?=Share::getDate($viData->data->remdate_unix,'d.m.Y')?>"
+                class="form__field-input form__field-input-date prmu-required<?=($viData->errors['edate']?' prmu-error':'')?>"
+                data-params='{"parent_tag":".form__content-2","message":"Поле обязательно к заполнению"}'
+                autocomplete="off">
+            </label>
+          </div>
+        </div>
+      </div>
       <button type="submit" class="btn__orange">Сохранить</button>
     </div>
     <input type="hidden" name="module" value="<?=$module?>">
   </form>
 </div>
+<script>
+  var vacancyBeginDate = <?=$viData->data->crdate_unix?>;
+  var vacancyEndDate = <?=$viData->data->remdate_unix?>;
+</script>

@@ -320,6 +320,10 @@ capacity blocks
     .personal__area--capacity.personal__area--capacity-height {
         height: 100%;
     }
+    .vacancy__module{
+        width: 50%;
+        float: left;
+    }
 }
 
 .personal__area--capacity-name {
@@ -967,6 +971,9 @@ try google material design
     background: var(--color-white) !important;
     border-color: #bbb;
     color: #555;
+}
+.vacancy__module .form__field-input{
+    font-size: 14px;
 }
 .form__textarea{
     min-height: 80px;

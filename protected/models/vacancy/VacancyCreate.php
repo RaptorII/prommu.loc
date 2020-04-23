@@ -109,6 +109,10 @@ class VacancyCreate
             {
               $this->data->salary_time = $v['id_attr'];
             }
+            if($v['key']=='cpaylims')
+            {
+              $this->data->salary_time_custom = $v['val'];
+            }
             if($v['key']=='salary-comment')
             {
               $this->data->salary_comment = $v['val'];

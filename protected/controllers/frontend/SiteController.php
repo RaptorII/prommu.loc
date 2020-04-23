@@ -496,10 +496,11 @@ class SiteController extends AppController
                 {
                   $viData->error_moodule = $module;
                 }
-                $this->renderPartial(
-                  '../user/vacancy/edit/module_' . $module,
-                  ['viData'=>$viData]
-                );
+
+                $view = '../user/vacancy/edit/'
+                  . (in_array($module,[2,4]) ? 'index' : 'module_' . $module); // Для 2го и 4го блока нужно обновлять все блоки
+
+                $this->renderPartial($view, ['viData'=>$viData]);
                 Yii::app()->end();
               }
             }

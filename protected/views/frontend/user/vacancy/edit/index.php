@@ -8,7 +8,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
 ?>
-<div class="row">
+<div class="row" id="edit_vacancy">
   <? if(!$viData->data->is_actual_remdate): ?>
     <div class="col-xs-12">
       <a href="<?=MainConfig::$PAGE_VACPUB . "?duplicate=Y&id={$viData->data->id}"?>" class="btn__orange">Дублировать вакансию</a>
