@@ -1869,7 +1869,7 @@ class UserController extends AppController
 
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy')
                         ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs());
+                        : (new Vacancy())->getModerCurrentVacs());
 
                     $data = array_merge($data,$data2);
                 }
@@ -1903,7 +1903,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEWS_SERVICE_EMAIL;
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
                         ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs());
+                        : (new Vacancy())->getModerCurrentVacs());
                     $data = array_merge($data,$data2);
                 }
                 break;
@@ -1927,7 +1927,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
                         ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs());
+                        : (new Vacancy())->getModerCurrentVacs());
                     $data = array_merge($data,$data2);
                 }
                 break;
@@ -1964,7 +1964,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
                     $data2 = $vacancy
                         ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs();
+                        : (new Vacancy())->getModerCurrentVacs();
 
                     $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
 

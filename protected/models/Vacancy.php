@@ -3250,6 +3250,45 @@ class Vacancy extends ARModel
                 v.id_user = {$idus} 
                 AND (v.status=1) 
                 AND (v.ismoder=100) 
+                AND v.in_archive=0
+            ORDER BY v.id DESC
+        ";
+
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
+        $arRes = array();
+        foreach ($data as $v) $arRes[$v['id']] = $v;
+
+        return array('vacs'=>$arRes);
+    }
+
+    /**
+     * Get current actual vacancies
+     * @return array
+     */
+    public function getModerCurrentVacs(){
+        $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
+
+        $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
+
+        $sql = "
+            SELECT 
+                v.id, 
+                v.title, 
+                v.repost,
+                DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate
+            FROM 
+                empl_vacations v
+            INNER JOIN ( 
+                    SELECT v.id FROM empl_vacations v
+                    WHERE v.id_user = {$idus} ORDER BY v.id DESC 
+                    {$limit} 
+                ) t1
+            ON 
+                t1.id = v.id
+            WHERE 
+                v.id_user = {$idus} 
+                AND (v.status=1) 
+                AND (v.ismoder=100) 
                 #AND v.in_archive=0
                 AND v.remdate >= CURRENT_DATE 
             ORDER BY v.id DESC
@@ -3261,6 +3300,7 @@ class Vacancy extends ARModel
 
         return array('vacs'=>$arRes);
     }
+
 
     /**
      * Get Moderating Vacansions For Pay-Services
