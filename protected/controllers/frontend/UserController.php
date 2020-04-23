@@ -1867,8 +1867,6 @@ class UserController extends AppController
                 else{
                     $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;
 
-                    display((new Vacancy())->getModerVacs());
-
                     $data2 = (Yii::app()->getRequest()->getParam('vacancy')
                         ? (new Services())->prepareFilterData()
                         : (new Vacancy())->getModerVacs());
