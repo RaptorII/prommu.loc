@@ -187,6 +187,8 @@ $(function(){
     }
     $load.show(); // процесс загрузки
 
+    console.log(params);
+
     $.ajax({
       type: 'GET',
       url: AJAX_GET_PROMO,

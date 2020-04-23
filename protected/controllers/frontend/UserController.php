@@ -1850,16 +1850,19 @@ class UserController extends AppController
                 }
                 elseif(Yii::app()->request->isAjaxRequest)
                 {
+                    display($vac);
+//                    die();
+                    display($_GET);
+                    display($_POST);
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
                         [
                             'viData' => (new Services())->getFilteredPromos(),
-                            'data' => ResponsesApplic::getInvitedUsrFromVacStat($vac),
                         ],
                         false,
                         true
                     );
-//                    return;
+                    return;
                 }
                 else{
                     $view = MainConfig::$VIEWS_SERVICES_PERSONAL_INVITATION;

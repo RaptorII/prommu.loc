@@ -32,6 +32,7 @@ if(!$rq->getParam('vacancy')):?>
     <?
     //    Выбор соискателей
     //
+    $vacancy = $rq->getParam('vacancy');
     ?>
     <script type="text/javascript">
         var arSelectCity = <?=json_encode($viData['workers']['city'])?>;
@@ -44,7 +45,9 @@ if(!$rq->getParam('vacancy')):?>
         <div class="filter__veil"></div>
         <div class='col-xs-12 col-sm-4 col-md-3'>
             <div class="filter__vis hidden-sm hidden-md hidden-lg hidden-xl">ФИЛЬТР</div>
-            <form action="" id="promo-filter" method="get"><? require_once 'ankety-filter.php'; ?></form>
+            <form action="" id="promo-filter" method="get">
+                <? require_once 'ankety-filter.php'; ?>
+            </form>
         </div>
         <?
         //		CONTENT
@@ -72,7 +75,10 @@ if(!$rq->getParam('vacancy')):?>
                     <input type="hidden" name="vacancy" value="<?=$rq->getParam('vacancy')?>">
                 </form>
             </div>
-            <div id="promo-content"><? require_once 'ankety-ajax.php'; ?></div>
+<!--            <div id="promo-content">--><?// require_once 'ankety-ajax.php'; ?><!--</div>-->
+            <div id="promo-content">
+                <? $this->renderPartial(MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,['viData'=>$viData]) ?>
+            </div>
         </div>
     </div>
     <?
@@ -93,6 +99,8 @@ if(!$rq->getParam('vacancy')):?>
     {
         for ($j=0; $j<=count($arUsr); ++$j) {
             if ($usrVS[$i]['id_user'] == $arUsr[$j]) {
+                display($usrVS[$i]['id_user']);
+                display($arUsr[$j]);
                 //выпилить из строки данных $users
                 $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
                 if (count($users) == 1)

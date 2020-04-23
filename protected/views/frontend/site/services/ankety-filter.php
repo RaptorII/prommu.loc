@@ -3,6 +3,7 @@
 		<div class='filter__item-name opened'>Фамилия</div>
 		<div class='filter__item-content opened'>
 			<input name='qs' type='text' title="Введите фамилию" class="psa__input">
+            <input type="hidden" name="vacancy" value="<?=$vacancy?>">
 			<div class="filter__name-btn prmu-btn prmu-btn_small pull-right">
 				<span>ОК</span>
 			</div>

@@ -6,7 +6,6 @@
 	</div>
 </div>
 <?
-display($data);
 ?>
 <div class='row vacancy table-view'>
 	<?if( $viData['workers']['promo'] ):?>

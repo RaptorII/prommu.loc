@@ -600,21 +600,22 @@ class PrommuOrder {
             $cntUsers = count(explode(',', $users));
         }
 
-        $sql = "
-            SELECT 
-                status
-            FROM
-                service_cloud
-            WHERE 
-                name = {$vacancy}
-            AND
-                status = 1    
-            AND 
-                type = 'personal-invitation'  
-            GROUP BY
-                status      
-            ";
-
+        if ($vacancy) {
+            $sql = "
+                SELECT 
+                    status
+                FROM
+                    service_cloud
+                WHERE 
+                    name = {$vacancy}
+                AND
+                    status = 1    
+                AND 
+                    type = 'personal-invitation'  
+                GROUP BY
+                    status      
+                ";
+        }
         $sql = Yii::app()->db->createCommand($sql)->queryRow();
 
         if(($sql['status'] == (int) 1)){
