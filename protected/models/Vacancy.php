@@ -488,9 +488,10 @@ class Vacancy extends ARModel
               AND v.status=1 
               AND v.in_archive=0 
               AND v.ismoder=100 # vacancy is need to was moderate 
+              AND remdate >= CURRENT_DATE()
             ORDER BY v.id DESC
             ";
-        
+
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         foreach ($res as $key => $val)
         {

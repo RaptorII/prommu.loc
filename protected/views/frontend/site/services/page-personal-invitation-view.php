@@ -97,8 +97,6 @@ if(!$rq->getParam('vacancy')):?>
     {
         for ($j=0; $j<=count($arUsr); ++$j) {
             if ($usrVS[$i]['id_user'] == $arUsr[$j]) {
-                display($usrVS[$i]['id_user']);
-                display($arUsr[$j]);
                 //выпилить из строки данных $users
                 $users = str_replace($usrVS[$i]['id_user'] . ',', '', $users);
                 if (count($users) == 1)
@@ -126,7 +124,6 @@ if(!$rq->getParam('vacancy')):?>
         }
     }
 
-    //display($viData['is_pay']);
     ?>
     <div class="row">
         <div class="col-xs-12">
