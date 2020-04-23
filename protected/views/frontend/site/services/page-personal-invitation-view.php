@@ -75,10 +75,8 @@ if(!$rq->getParam('vacancy')):?>
                     <input type="hidden" name="vacancy" value="<?=$rq->getParam('vacancy')?>">
                 </form>
             </div>
-<!--            <div id="promo-content">--><?// require_once 'ankety-ajax.php'; ?><!--</div>-->
-            <div id="promo-content">
-                <? $this->renderPartial(MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,['viData'=>$viData]) ?>
-            </div>
+            <div id="promo-content"><? require_once 'ankety-ajax.php'; ?></div>
+<!--            <div id="promo-content">--><?// $this->renderPartial(MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,['viData'=>$viData])?><!--</div>-->
         </div>
     </div>
     <?

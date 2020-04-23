@@ -1850,10 +1850,10 @@ class UserController extends AppController
                 }
                 elseif(Yii::app()->request->isAjaxRequest)
                 {
-                    display($vac);
+//                    display($vac);
 //                    die();
-                    display($_GET);
-                    display($_POST);
+//                    display($_GET);
+//                    display($_POST);
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
                         [

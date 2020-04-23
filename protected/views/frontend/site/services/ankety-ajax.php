@@ -6,6 +6,7 @@
 	</div>
 </div>
 <?
+//display($rq->getParam('vacancy'));
 ?>
 <div class='row vacancy table-view'>
 	<?if( $viData['workers']['promo'] ):?>
