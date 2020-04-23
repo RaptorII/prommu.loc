@@ -3262,7 +3262,7 @@ class Vacancy extends ARModel
     }
 
     /**
-     * Get current actual vacancies
+     * Get current actual moderate vacancies
      * @return array
      */
     public function getModerCurrentVacs(){
