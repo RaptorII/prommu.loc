@@ -3987,9 +3987,6 @@ class Vacancy extends ARModel
 
         $arRes['termostat'] = Termostat::getTermostatVacanciesViews($arRes[$type]);
 
-
-        display($arRes[$type] );
-
         return $arRes;
     }
     /**
