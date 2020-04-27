@@ -211,8 +211,8 @@ class PrommuOrder {
           ->where('e.id_user=:id', [':id' => $id_user])
           ->queryRow();
       // Письмо для С о том, что его приглашают на работу
-      //   $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
-      $arEmails[] = 'mikekarpenko@gmail.com'; // Добавляем в рассылку Мих
+         $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
+      //$arEmails[] = 'mikekarpenko@gmail.com'; // Добавляем в рассылку Мих
 
       Mailing::set(34,
           [
@@ -650,10 +650,8 @@ class PrommuOrder {
             );
         }
 
-        //die('qwe');
         $arRes['account'] = $employer . '.' . $vacancy . '.personal-invitation.' . time();
         return $arRes;
-
     }
         /**
      * @param $arServices

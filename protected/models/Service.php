@@ -581,7 +581,7 @@ class Service extends CActiveRecord
     if($arParam['start_service'] && !empty($arParam['legal']))
     {
       $stack = time();
-      $ree = $this::model()->updateAll(
+      $this::model()->updateAll(
         ['status'=>1, 'key'=>'Запустил администратор', 'stack'=>$stack],
         'legal=:legal',
         [':legal'=>$arParam['legal']]
@@ -645,10 +645,8 @@ class Service extends CActiveRecord
 
             if ($props['id']) {
               (new ResponsesApplic())->invitePersonal($props);
-
             }
           }
-
         }
       }
       $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';
