@@ -117,19 +117,31 @@ var EditVacancy = (function () {
     // событие активации вакансии
     $(document).on('click','#activate',function(){
       MainScript.stateLoading(true);
-
       $.ajax({
         type: 'POST',
         data: {event:'activate'},
         success: function(result){
-          if(!result.length)
-          {
-            $('#activate_module').addClass('block__hide');
-          }
-          $('#activate_module').html(result);
-
+          $('#edit_vacancy').html(result);
+          self.init();
           MainScript.stateLoading(false);
-          self.changeModuleWidth();
+        },
+        error: function()
+        {
+          confirm('Системная ошибка');
+          MainScript.stateLoading(false);
+        }
+      });
+    });
+    // Событие деактивации
+    $(document).on('click','#deactivate',function(){
+      MainScript.stateLoading(true);
+      $.ajax({
+        type: 'POST',
+        data: {event:'deactivate'},
+        success: function(result){
+          $('#edit_vacancy').html(result);
+          self.init();
+          MainScript.stateLoading(false);
         },
         error: function()
         {

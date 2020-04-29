@@ -1,7 +1,8 @@
 <?
 $rq = Yii::app()->getRequest();
 $module = $rq->getParam('module');
-$showEditBlock = $rq->isAjaxRequest && !in_array($module,[2,4])
+$event = $rq->getParam('event');
+$showEditBlock = $rq->isAjaxRequest && !in_array($module,[2,4]) && !in_array($event,['activate','deactivate']);
 ?>
 <div class="personal__area--capacity">
   <div class="personal__area--capacity-name">Город, адрес, дата и время работы</div>

@@ -468,11 +468,11 @@ class SiteController extends AppController
           $section = $rq->getParam('section');
           $module = $rq->getParam('module');
           $event = $rq->getParam('event');
-          $arEvents = ['activate','create_city','delete_city','change_city','create_loc','edit_loc'];
+          $arEvents = ['activate','deactivate','create_city','delete_city','change_city','create_loc','edit_loc'];
           $model = new Vacancy;
           if($rq->isAjaxRequest && in_array($event,$arEvents)) // локации редактируем не так, как остальные модули
           {
-            $module = ($event=='activate' ? 1 : 9);
+            $module = (in_array($event,['activate','deactivate']) ? 1 : 9);
             VacancyEdit::setVacancy($id, Share::$UserProfile->id, $module);
           }
           $viData = $model->getVacancy($id);
@@ -497,7 +497,7 @@ class SiteController extends AppController
                 }
 
                 $view = '../user/vacancy/edit/'
-                  . (in_array($module,[2,4]) ? 'index' : 'module_' . $module); // Для 2го и 4го блока нужно обновлять все блоки
+                  . (in_array($module,[1,2,4]) ? 'index' : 'module_' . $module); // Для 2го и 4го блока нужно обновлять все блоки
 
                 $this->renderPartial($view, ['viData'=>$viData]);
                 Yii::app()->end();

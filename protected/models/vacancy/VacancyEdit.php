@@ -363,10 +363,18 @@ class VacancyEdit
     $model = new Vacancy();
     if($module==1) // активация вакансии
     {
+      $event = Yii::app()->getRequest()->getParam('event');
       $services = (new ServiceCloud())->getServicesByVacancy($id);
       if(!count($services['creation_vacancy']->legal_links) && empty($services['creation_vacancy']->individual_link)) // активируем только если оплачено создание вакансии
       {
-        $arUpdate = ['status'=>Vacancy::$STATUS_ACTIVE, 'bdate'=>date('Y-m-d H:i:s')];
+        if($event=='activate')
+        {
+          $arUpdate = ['status'=>Vacancy::$STATUS_ACTIVE, 'bdate'=>date('Y-m-d H:i:s')];
+        }
+        if($event=='deactivate')
+        {
+          $arUpdate = ['status'=>Vacancy::$STATUS_NO_ACTIVE];
+        }
       }
     }
     if($module==2)
