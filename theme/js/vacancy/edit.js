@@ -1134,7 +1134,7 @@ var VacancyGeo = (function () {
   // включаем подсказки
   VacancyGeo.prototype.initHints = function ()
   {
-    $.each($(this.main).find('.hint'),function(){
+    $.each($('#edit_vacancy').find('.hint'),function(){
       if(!$(this).hasClass('tooltipstered'))
       {
         $(this).tooltipster({contentAsHTML:true, theme:['tooltipster-calendar']});

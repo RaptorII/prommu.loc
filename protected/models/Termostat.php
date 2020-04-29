@@ -545,5 +545,25 @@
 			
 			return $arRes;
 		}
+    /**
+     * @param $type string
+     * @param $id integer
+     * @param $user integer|false
+     * Счетчики (пока только для вакансии)
+     */
+		public static function getDataCouters($type, $id, $user=false)
+    {
+      if($type=='vacancy')
+      {
+        return (integer)Yii::app()->db->createCommand()
+          ->select('COUNT(*)')
+          ->from('termostat_analytic')
+          ->where(
+            'id=:id AND type=:type',
+            [':id'=>$id, ':type'=>$type]
+          )
+          ->queryScalar();
+      }
+    }
 	}
 ?>

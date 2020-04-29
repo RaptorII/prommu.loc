@@ -12,7 +12,6 @@
       <div class="group__about">Статус специалиста, которого ищете</div>
       <div class="group__info"><?=Vacancy::SELF_EMPLOYED[$viData->data->self_employed]?></div>
     </div>
-    <br>
   </div>
   <?
   //

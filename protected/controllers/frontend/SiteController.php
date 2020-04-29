@@ -469,7 +469,6 @@ class SiteController extends AppController
           $module = $rq->getParam('module');
           $event = $rq->getParam('event');
           $arEvents = ['activate','create_city','delete_city','change_city','create_loc','edit_loc'];
-          $view = '/user/vacancy/edit/index';//$this->ViewModel->pageVacancy;
           $model = new Vacancy;
           if($rq->isAjaxRequest && in_array($event,$arEvents)) // локации редактируем не так, как остальные модули
           {
@@ -516,16 +515,54 @@ class SiteController extends AppController
                 $this->redirect(MainConfig::$PAGE_VACANCY . DS . $id);
               }
             }
+            if(in_array(
+              $section,
+              [
+                MainConfig::$VACANCY_APPROVED,
+                MainConfig::$VACANCY_INVITED,
+                MainConfig::$VACANCY_RESPONDED,
+                MainConfig::$VACANCY_DEFERRED,
+                MainConfig::$VACANCY_REJECTED,
+                MainConfig::$VACANCY_REFUSED
+              ]
+            )) // секции конкретной вакансии
+            {
+              Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+              $data = $model->getVacancyView($id);
+              if($data['error']==1 || $data['vac']['in_archive'])
+                throw new CHttpException(404, 'Error');
+
+              $viData = $model->getInfo($id, false);
+              // сбрасываем счетчики при наличии
+              $arCounters = [];
+              if($section==MainConfig::$VACANCY_RESPONDED)
+              {
+                $arCounters[] = UserNotifications::$EMP_RESPONSES;
+              }
+              if($section==MainConfig::$VACANCY_APPROVED)
+              {
+                $arCounters[] = UserNotifications::$EMP_APPROVAL;
+              }
+              if($section==MainConfig::$VACANCY_REFUSED)
+              {
+                $arCounters[] = UserNotifications::$EMP_REFUSALS;
+              }
+              if(count($arCounters))
+              {
+                UserNotifications::resetCounters($arCounters, $id);
+              }
+              $this->render('../user/vacancy/section', ['viData'=>$viData]);
+              Yii::app()->end();
+            }
             else
             {
               $this->breadcrumbs = [
                 "Мои вакансии" => MainConfig::PAGE_USER_VACANCIES_LIST,
                 $viData->data->title
               ];
-              $this->render($view, ['viData'=>$viData], ['htmlTitle'=>$viData->data->title]);
+              $this->render('/user/vacancy/edit/index', ['viData'=>$viData]);
               Yii::app()->end();
             }
-
           }
 
           //

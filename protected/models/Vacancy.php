@@ -5030,9 +5030,11 @@ class Vacancy extends ARModel
       'employer' => [],
       'posts' => $this->getPostsSortList(),
       'attributes' => $this->getAllAttributes(),
-      'services' => [],
+      'services' => ['vkontakte'=>'', 'facebook'=>'', 'telegram'=>'', 'premium'=>false, 'info'=>[]],
       'is_owner' => false,
-      'error_moodule' => false
+      'error_moodule' => false,
+      'counters' => [],
+      'chat' => []
     ];
 
     if(!$id)
@@ -5057,6 +5059,18 @@ class Vacancy extends ARModel
     $result->data->crdate_unix = strtotime($query['crdate']);
     $result->data->mdate_unix = strtotime($query['mdate']);
     $result->data->remdate_unix = strtotime($query['remdate']);
+    // вывод даты публикации
+    if($query['bdate']==null || $query['bdate']=='0000-00-00 00:00:00')
+    {
+      $result->data->date_public = '';
+      $result->data->date_public_unix = '';
+    }
+    else
+    {
+      $result->data->date_public_unix = strtotime($query['bdate']);
+      $result->data->date_public = Share::getDate($result->data->date_public_unix,'G:i d.m.Y');
+    }
+
     $result->data->ageto==0 && $result->data->ageto = '';
     ($query['duties']=="<br>" || $query['duties']=="&lt;br&gt;") && $result->data->duties = '';
     ($query['conditions']=="<br>" || $query['conditions']=="&lt;br&gt;") && $result->data->conditions = '';
@@ -5140,9 +5154,63 @@ class Vacancy extends ARModel
     {
       $result->is_owner = true;
     }
-    // Услуги ServiceCloud creation-vacancy
-    $result->services = (new ServiceCloud())->getCreateVacancyPaidService($id);
+    // Просмотры, отклики и прочее
+    $arCnt = ['views'  => Termostat::getDataCouters('vacancy', $id)];
+    if($result->is_owner) // только владельцу
+    {
+      $arCnt = array_merge($arCnt, $this->getInfo($id));
+    }
+    // Чат по вакансии
+    if($result->is_owner) // только владельцу
+    {
+      $query = Yii::app()->db->createCommand()
+        ->select("r.id_user, c.id chat")
+        ->from('vacation_stat vs')
+        ->leftjoin('chat_theme ct','ct.id_vac=vs.id_vac')
+        ->leftjoin('chat c','c.id_theme=ct.id')
+        ->leftjoin('resume r','r.id=vs.id_promo')
+        ->where(
+          'vs.id_vac=:id AND vs.status>:status',
+          [':id'=>$id, ':status'=>Responses::$STATUS_EMPLOYER_ACCEPT]
+        )
+        ->queryAll();
 
+      $arUId = $arChatId = [];
+      foreach($query as $v)
+      {
+        $arUId[] = $v['id_user'];
+        $arChatId[] = $v['chat'];
+      }
+      $result->chat = (object)[
+        'users' => Share::getUsers($arUId),
+        'chat_cnt' => count($arChatId),
+        'discuss_cnt' => (new VacDiscuss())->getDiscussCount($id)
+      ];
+    }
+    $result->counters = (object)$arCnt;
+    // Услуги
+    if(!empty($result->data->vk_link) && substr($result->data->repost, 0, 1)!=='0')
+    {
+      $result->services['vkontakte'] = $result->data->vk_link;
+    }
+    if(!empty($result->data->fb_link) && substr($result->data->repost, 1, 1)!=='0')
+    {
+      $result->services['facebook'] = $result->data->fb_link;
+    }
+    if(!empty($result->data->tl_link) && substr($result->data->repost, 2, 1)!=='0')
+    {
+      $result->services['telegram'] = $result->data->tl_link;
+    }
+    // Общие данные
+    $arInfo = (new Services())->getDataAll();
+    foreach ($arInfo as $v)
+    {
+      $v['icon'] = str_replace('/services/', '', $v['link']);
+      $result->services['info'][$v['link']] = $v;
+    }
+    $arServiceCloud = (new ServiceCloud())->getServicesByVacancy($id); // ServiceCloud and
+    $result->services = (object)array_merge($result->services, $arServiceCloud);
+    //
     return $result;
   }
 }

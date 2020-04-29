@@ -291,54 +291,77 @@ class ServiceCloud
     }
     return $cost;
   }
-
-  public function getCreateVacancyPaidService($id_vacancy)
+  /**
+   * @param $id_vacancy
+   * @return array
+   */
+  public function getServicesByVacancy($id_vacancy)
   {
-    $result = (object)[
+    $result = [
       'creation_vacancy' => (object)[
         'items' => [],
         'legal_links' => [],
         'cities' => [],
         'individual_link' => ''
-      ]
+      ],
+      'premium' => (object)[
+        'items' => [],
+        'cities' => [],
+      ],
+      'upvacancy' => (object)['items' => []],
+      'personal-invitation' => (object)['items' => []],
+      'email' => (object)['items' => []],
+      'sms' => (object)['items' => []],
+      'push' => (object)['items' => []],
+      'outsourcing' => (object)['items' => []],
+      'outstaffing' => (object)['items' => []],
     ];
 
     $query = Yii::app()->db->createCommand()
       ->from('service_cloud')
-      ->where(
-        "name=:id_vacancy AND type='creation-vacancy' AND status=0",
-        [':id_vacancy' => $id_vacancy]
-      )
+      ->where("name=:id_vacancy", [':id_vacancy' => $id_vacancy])
       ->queryAll();
 
     if(!$query)
     {
       return $result;
     }
-    $result->creation_vacancy->items = $query;
 
     $arId = [];
     $cost = 0;
     foreach ($query as $v)
     {
-      if ($v['legal']) // юр.лицо
+      if($v['type']==='creation-vacancy' && $v['status']==0)
       {
-        if(!in_array($v['legal'], $result->creation_vacancy->legal_links)) // делаем чтобы счета не повторялись
+        $result['creation_vacancy']->items[] = $v;
+        if ($v['legal']) // юр.лицо
         {
-          $result->creation_vacancy->legal_links[] = $v['legal'];
+          if(!in_array($v['legal'], $result['creation_vacancy']->legal_links)) // делаем чтобы счета не повторялись
+          {
+            $result['creation_vacancy']->legal_links[] = $v['legal'];
+          }
         }
+        else
+        {
+          $arId[] = $v['id'];
+          $cost += $v['sum'];
+        }
+        $result['creation_vacancy']->cities[] = $v['city'];
+      }
+      elseif($v['type']==='vacancy')
+      {
+        $result['premium']->items[] = $v;
+        $result['premium']->cities[] = $v['city'];
       }
       else
       {
-        $arId[] = $v['id'];
-        $cost += $v['sum'];
+        $result[$v['type']]->items[] = $v;
       }
-      $result->creation_vacancy->cities[] = $v['city'];
     }
 
-    if(count($result->creation_vacancy->legal_links))
+    if(count($result['creation_vacancy']->legal_links))
     {
-      foreach ($result->creation_vacancy->legal_links as &$v)
+      foreach ($result['creation_vacancy']->legal_links as &$v)
       {
         $v = MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $v;
       }
@@ -347,11 +370,23 @@ class ServiceCloud
 
     if(count($arId))
     {
-      $result->creation_vacancy->individual_link = (new PrommuOrder())->createPayLink(
+      $result['creation_vacancy']->individual_link = (new PrommuOrder())->createPayLink(
         Share::$UserProfile->id . '.' . implode('.', $arId) . '.creation-vacancy.' . time(),
         '',
         $cost
       );
+    }
+
+    $arOutstaffing = Outstaffing::model()->findAll(
+      "vacancy=:id AND type IN('outstaffing','outsourcing')",
+      [':id'=>$id_vacancy]
+    );
+    if(count($arOutstaffing))
+    {
+      foreach ($arOutstaffing as $v)
+      {
+        $result[$v->type]->items[] = $v->getAttributes();
+      }
     }
 
     return $result;

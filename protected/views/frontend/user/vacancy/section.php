@@ -4,6 +4,7 @@ Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig:
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vac-info/script.js', CClientScript::POS_END);
 
 $section = Yii::app()->getRequest()->getParam('section');
+$id = Yii::app()->getRequest()->getParam('id');
 $link = MainConfig::$PAGE_VACANCY . DS . $id;
 switch ($section)
 {

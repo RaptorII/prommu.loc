@@ -363,10 +363,10 @@ class VacancyEdit
     $model = new Vacancy();
     if($module==1) // активация вакансии
     {
-      $services = (new ServiceCloud())->getCreateVacancyPaidService($id);
-      if(!count($services->items)) // активируем только если оплачено создание вакансии
+      $services = (new ServiceCloud())->getServicesByVacancy($id);
+      if(!count($services['creation_vacancy']->legal_links) && empty($services['creation_vacancy']->individual_link)) // активируем только если оплачено создание вакансии
       {
-        $arUpdate = ['status'=>Vacancy::$STATUS_ACTIVE];
+        $arUpdate = ['status'=>Vacancy::$STATUS_ACTIVE, 'bdate'=>date('Y-m-d H:i:s')];
       }
     }
     if($module==2)

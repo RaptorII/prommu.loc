@@ -37,24 +37,24 @@ class Services extends Model
      */
     public function getDataAll()
     {
-      return Yii::app()->db->createCommand()
-        ->select(
-          'p.id,
-          p.link, 
-          pc.name, 
-          pc.anons, 
-          pc.html, 
-          pc.img, 
-          pc.imganons')
-        ->from('pages p')
-        ->join(
-          'pages_content pc',
-          'p.id = pc.page_id AND pc.lang=:lang',
-          [':lang'=>Yii::app()->session['lang']]
-        )
-        ->where('p.group_id=3')
-        ->order('npp')
-        ->queryAll();
+      $arRes = Cache::getData('/Services/getDataAll');
+      if($arRes['data']===false)
+      {
+        $arRes['data'] = Yii::app()->db->createCommand()
+          ->select('p.id, p.link, pc.name, pc.anons, pc.html, pc.img, pc.imganons')
+          ->from('pages p')
+          ->join(
+            'pages_content pc',
+            'p.id = pc.page_id AND pc.lang=:lang',
+            [':lang'=>Yii::app()->session['lang']]
+          )
+          ->where('p.group_id=3')
+          ->order('npp')
+          ->queryAll();
+
+        Cache::setData($arRes, 604800); // кеш на неделю
+      }
+      return $arRes['data'];
     }
     /**
      * получаем все услуги

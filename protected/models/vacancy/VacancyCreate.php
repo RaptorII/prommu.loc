@@ -199,7 +199,7 @@ class VacancyCreate
     $arData = [
       'id_user' => $this->id_user,
       'vacancy' => $this->vacancy,
-      'step' => $this->step,
+      'step' => ($this->step=='duplicate' ? 6 : $this->step),
       'data' => json_encode($this->data),
       'mdate' => time()
     ];

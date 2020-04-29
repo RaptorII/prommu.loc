@@ -320,7 +320,7 @@ class ResponsesEmpl extends Responses
             // получение данных вакансии
             $sql = "SELECT DISTINCT e.id, e.title, e.status vstatus
                   , DATE_FORMAT(e.crdate, '%d.%m.%Y') bdate
-                  , r.id_user idusr, r.firstname, r.lastname, r.photo
+                  , r.id_user idusr, r.firstname, r.lastname, r.photo, r.isman
                   , s.id sid, s.status, s.isresponse, DATE_FORMAT(s.date, '%d.%m.%Y') rdate
                 FROM empl_vacations e
                 INNER JOIN vacation_stat s ON e.id = s.id_vac AND s.isresponse IN(1,2) AND s.status IN (" . join(',', $inStatus) . ")
@@ -336,26 +336,40 @@ class ResponsesEmpl extends Responses
             $dataCounts = array_fill(0, 4, 0);
             foreach ($res as $key => $val)
             {
-                if( $val['status'] == 1 ) { 
-                    $data[1][$val['idusr']] = $val; 
-                    $data[1][$val['idusr']]['logo'] = (new ViewModel)->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC);
-                }
-                elseif( $val['status'] == 3 && $val['isresponse'] == 2 ) { 
-                    $data[5][$val['idusr']] = $val; 
-                    $data[5][$val['idusr']]['logo'] = (new ViewModel)->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC);
-                }
-                elseif( $val['status'] == 3 ) { 
-                    $data[3][$val['idusr']] = $val; 
-                    $data[3][$val['idusr']]['logo'] = (new ViewModel)->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC);
-                }
-                elseif( $val['status'] == 5 ) { 
-                    $data[8][$val['idusr']] = $val; 
-                    $data[8][$val['idusr']]['logo'] = (new ViewModel)->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC);
-                }
-                elseif( in_array($val['status'], [0,2,4,6,7]) ) { 
-                    $data[4][$val['idusr']] = $val;
-                    $data[4][$val['idusr']]['logo'] = (new ViewModel)->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC);
-                }
+              $arUser = $val;
+              $arUser['logo'] = Share::getPhoto(
+                $val['idusr'],
+                UserProfile::$APPLICANT,
+                $val['photo'],
+                'small',
+                $val['isman']
+              );
+
+              if( $val['status'] == static::$STATUS_VIEW )
+              {
+                $data[static::$STATUS_VIEW][$val['idusr']] = $arUser;
+              }
+              elseif( $val['status'] == static::$STATUS_REJECT && $val['isresponse'] == static::$STATE_INVITE )
+              {
+                $data[static::$STATUS_APPLICANT_ACCEPT][$val['idusr']] = $arUser;
+              }
+              elseif( $val['status'] == static::$STATUS_REJECT )
+              {
+                $data[static::$STATUS_REJECT][$val['idusr']] = $arUser;
+              }
+              elseif( $val['status'] == static::$STATUS_APPLICANT_ACCEPT )
+              {
+                $data[static::$STATUS_APPLICANT_RATED][$val['idusr']] = $arUser;
+              }
+              elseif( in_array($val['status'], [
+                  static::$STATUS_NEW,
+                  static::$STATUS_EMPLOYER_ACCEPT,
+                  static::$STATUS_BEFORE_RATING,
+                  static::$STATUS_EMPLOYER_RATED
+                ]))
+              {
+                $data[static::$STATUS_EMPLOYER_ACCEPT][$val['idusr']] = $arUser;
+              }
                 
             } // end foreach
 
@@ -904,8 +918,8 @@ class ResponsesEmpl extends Responses
                                 ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
                                 ->leftjoin('resume r','r.id=vs.id_promo')
                                 ->where(
-                                    "ev.id=:id AND vs.isresponse=2)",
-                                    [':id'=>$id_vacancy]
+                                    "ev.id=:id AND vs.isresponse=:isresponse",
+                                    [':id'=>$id_vacancy, ':isresponse'=>static::$STATE_INVITE]
                                 )
                                 ->order('vs.date asc')
                                 ->limit($this->limit)

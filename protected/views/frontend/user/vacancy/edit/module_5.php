@@ -24,7 +24,6 @@
         <div class="group__info group__info-normalize"><?echo html_entity_decode($viData->data->conditions)?></div>
       </div>
     <? endif; ?>
-    <br>
   </div>
   <?
   //

@@ -65,4 +65,12 @@
 		<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('id')?>">
 	</form>
 <?php endif; ?>
+<?php
+//	personal invitation
+?>
+<?php if($viData['service']=='personal-invitation'): ?>
+  <form action="<?='/user' . MainConfig::$PAGE_SERVICES_PERSONAL_INVITATION?>" method="POST" id="order-form">
+    <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('id')?>">
+  </form>
+<?php endif; ?>
 <script type="text/javascript">$(function(){ $('#order-form').submit() })</script>

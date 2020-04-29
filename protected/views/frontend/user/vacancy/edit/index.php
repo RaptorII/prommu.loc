@@ -7,16 +7,11 @@ $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/personal.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacancy/edit.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
+$this->pageTitle = $viData->data->title;
 ?>
 <div class="row" id="edit_vacancy">
-  <? if(!$viData->data->is_actual_remdate): ?>
-    <div class="col-xs-12">
-      <a href="<?=MainConfig::$PAGE_VACPUB . "?duplicate=Y&id={$viData->data->id}"?>" class="btn__orange">Дублировать вакансию</a>
-      <div class="personal__area--separator"></div>
-    </div>
-  <? endif; ?>
-  <div class="vacancy__masonry <?//personal__area personal__area-flex?>">
-    <? //if(!($viData->data->status==Vacancy::$STATUS_NO_ACTIVE && count($viData->services->creation_vacancy->items))): ?>
+  <? $this->renderPartial('../user/vacancy/edit/top',['viData'=>$viData]) ?>
+  <div class="vacancy__masonry">
     <div class="vacancy__module" id="activate_module">
       <? $this->renderPartial('../user/vacancy/edit/module_1',['viData'=>$viData]) ?>
     </div>

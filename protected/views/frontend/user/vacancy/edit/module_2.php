@@ -36,7 +36,6 @@
       <div class="group__about">Дата публикации</div>
       <div class="group__info"><?=Share::getDate($viData->data->crdate_unix,'d.m.Y') . ' - ' . Share::getDate($viData->data->remdate_unix,'d.m.Y')?></div>
     </div>
-    <br>
   </div>
   <?
   //

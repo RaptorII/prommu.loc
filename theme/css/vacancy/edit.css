@@ -14,6 +14,198 @@
 .module_form{ display: none }
 #DiContent .group__info.group__info-normalize{ font-weight: inherit }
 .form__field-niceditor{ max-width: inherit }
+
+
+.vacancy-top__list{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+.vacancy-top__item{
+  width: 33.3333%;
+  display: block;
+  text-align: center;
+  color: var(--color-green);
+  margin: 0 0 15px;
+  white-space: nowrap;
+}
+.prmu-icon:before{
+  font-family: "PrommuFont";
+}
+.vacancy-top__item .prmu-icon:before{
+  display: block;
+  text-align: center;
+  font-size: 30px;
+  line-height: 30px;
+}
+.vacancy-top__cnt{
+  text-align: center;
+  font-size: 20px;
+  line-height: 20px;
+}
+#chat_list{
+  position: relative;
+  cursor: pointer;
+}
+.vacancy-chat__list{
+  background: var(--color-white);
+  padding: 5px 0;
+  position: absolute;
+  border-radius: 4px;
+  border: 2px solid var(--color-green);
+  width: 250px;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  top: 110%;
+  transition: var(--main-trans);
+  z-index: -1;
+  -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+}
+.vacancy-chat__item{
+  display: block;
+}
+#chat_list:hover .vacancy-chat__list{
+  display: block;
+  top: 101%;
+  overflow: unset;
+  opacity: 1;
+  visibility: visible;
+  transition: var(--main-trans);
+  z-index: 10;
+}
+.vacancy-chat__item a{
+  display: flex;
+  align-items: center;
+  padding: 5px 10px 5px;
+}
+.vacancy-chat__item img{
+  width: 65px;
+  display: block;
+  border-radius: 50%;
+  border: 2px solid #CBD880;
+  margin-right: 10px;
+}
+#chat_list .vacancy-top__cnt{
+  position: relative;
+}
+#chat_list .vacancy-top__cnt:after{
+  content: '\e984';
+  position: absolute;
+  font-family: "PrommuFont";
+}
+
+.vacancy__services{
+
+}
+.vacancy__services-title{
+  font-weight: 600;
+  padding: 1px 6px 0 6px;
+  color: var(--color-dark);
+  cursor: default;
+}
+.vacancy__services-list{
+
+}
+.vacancy__services-item{
+  position: relative;
+  padding: 0 35px 5px 0;
+}
+.vacancy__services-item .form__field-hint{
+  position: absolute;
+  top: 2px;
+  right: 0;
+  margin: 0;
+}
+.vacancy__services-link{
+  display: block;
+  background-color: var(--color-green);
+  border-radius: 17px;
+  color: #ffffff;
+  border: 2px solid var(--color-green);
+}
+.vacancy__services-link:hover{
+  background-color: var(--color-orange);
+  border: 2px solid var(--color-orange);
+}
+.vacancy__services-link.vacancy__services-link-active{
+  background-color: var(--color-white);
+}
+.vacancy__services-link:before{
+  font-size: 30px;
+  vertical-align: middle;
+  width: 50px;
+  display: inline-block;
+  line-height: 30px;
+  padding-left: 10px;
+}
+.vacancy__services-link:before,
+.vacancy__services-link span{
+  color: var(--color-white);
+}
+.vacancy__services-link-active:before,
+.vacancy__services-link-active span{
+  color: var(--color-green);
+}
+.vacancy__services-link-active:hover:before,
+.vacancy__services-link-active:hover span{
+  color: var(--color-orange);
+}
+.vacancy__services-link span{
+  font-size: 16px;
+}
+.icon-views:before{ content: "\e904"; }
+.icon-responded:before{ content: "\e94e"; }
+.icon-invited:before{ content: "\e974"; }
+.icon-approved:before{ content: "\e970"; }
+.icon-deferred:before{ content: "\e975"; }
+.icon-rejected:before{ content: "\e96f"; }
+.icon-refused:before{ content: "\e971"; }
+.icon-chat:before{ content: "\e936"; }
+.icon-premium-vacancy:before{ content: "\e920"; }
+.icon-podnyatie-vacansyi-vverh:before{ content: "\e9cc"; }
+.icon-personal-invitation:before{ content: "\e9d4"; }
+.icon-sms-informing-staff:before{ content: "\e92f"; }
+.icon-email-invitation:before{ content: "\e923"; }
+.icon-personal-manager-outsourcing:before{ content: "\e927"; }
+.icon-push:before{ content: "\e91f"; }
+.icon-outstaffing:before{ content: "\e91e"; }
+.icon-vkontakte:before{ content: "\e9df"; }
+.icon-facebook:before{ content: "\e9dd"; }
+.icon-telegram:before{ content: "\e9de"; }
+.vacancy__buttons{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.vacancy__buttons .vacancy__buttons-item{
+  display: flex;
+  vertical-align: middle;
+}
+.vacancy__buttons .btn__orange{
+  line-height: 20px!important;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.vacancy__buttons .form__field-hint{
+  position: static;
+  margin: 0 0 0 6px;
+}
+.vacancy__date-public{
+  font-weight: 600;
+  cursor: default;
+  display: block;
+  line-height: 30px;
+}
+/**
+*   MEDIA
+ */
 @media (max-width: 991px) {
   .form__field{
     flex-wrap: wrap;
@@ -44,4 +236,32 @@
 }
 @media (max-width: 767px) {
   .form__content-mfull.form__content-mfull{ width:100%; }
+}
+@media (min-width: 768px) {
+  .vacancy-top__item{
+    width: 20%;
+  }
+  .vacancy-top__list-small{
+    flex-wrap: nowrap;
+  }
+}
+@media (min-width: 992px) {
+  .vacancy-top__list{
+    width: initial;
+    display: table;
+    margin: 0 -10px;
+  }
+  .vacancy-top__item{
+    width: 12%;
+    display: table-cell;
+    padding: 0 10px;
+  }
+}
+@media (min-width: 1200px) {
+  .vacancy-top__item{
+    min-width: 120px;
+  }
+  .vacancy-top__list-small .vacancy-top__item{
+    min-width: 150px;
+  }
 }

@@ -84,7 +84,6 @@
         <div class="group__info"><?=$viData->data->properties['thigh']['value']?></div>
       </div>
     <? endif; ?>
-    <br>
   </div>
   <?
   //
