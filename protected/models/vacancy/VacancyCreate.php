@@ -371,18 +371,10 @@ class VacancyCreate
       }
 
       $this->setData();
+
       if($step==6 || $step=='duplicate')
       {
-        $model = new Vacancy();
-        $this->id_vacancy = $model->createVacancy(
-          $this->data,
-          (object)[
-            'id_user' => Share::$UserProfile->id,
-            'id' => Share::$UserProfile->exInfo->eid,
-            'email' => Share::$UserProfile->exInfo->email,
-            'name' => empty(Share::$UserProfile->exInfo->name) ? 'пользователь' : Share::$UserProfile->exInfo->name
-          ]
-        );
+        $this->createVacancy();
       }
     }
   }
@@ -511,5 +503,92 @@ class VacancyCreate
       $this->data->bdate = $v1;
       $this->data->edate = $v2;
     }
+  }
+  /**
+   * Создание вакансии
+   */
+  private function createVacancy()
+  {
+    $repost = 0;
+    in_array('vk',$this->data->repost) && $repost|=1;
+    in_array('facebook',$this->data->repost) && $repost|=2;
+    in_array('telegram',$this->data->repost) && $repost|=4;
+    $repost = decbin($repost);
+    $repost = str_pad($repost, 3, "0", STR_PAD_LEFT);
+    // создание вакансии
+    $arVacancy = [
+      'id_user' => Share::$UserProfile->id,
+      'id_empl' => Share::$UserProfile->exInfo->eid,
+      'title' => $this->data->title,
+      'requirements' => $this->data->requirements,
+      'duties' => $this->data->duties,
+      'conditions' => $this->data->conditions,
+      'remdate' => Share::dateFormatToMySql($this->data->edate),
+      'istemp' => $this->data->istemp,
+      'shour' => ($this->data->salary_type==0 ? $this->data->salary : 0),
+      'sweek' => ($this->data->salary_type==1 ? $this->data->salary : 0),
+      'smonth' => ($this->data->salary_type==2 ? $this->data->salary : 0),
+      'svisit' => ($this->data->salary_type==3 ? $this->data->salary : 0),
+      'exp' => $this->data->exp,
+      'isman' => (integer)in_array('man',$this->data->gender),
+      'iswoman' => (integer)in_array('woman',$this->data->gender),
+      'ismed' => (integer)isset($this->data->medbook),
+      'isavto' => (integer)isset($this->data->car),
+      'agefrom' => (integer)$this->data->age_from,
+      'ageto' => (integer)$this->data->age_to,
+      'status' => Vacancy::$STATUS_NO_ACTIVE,
+      'ismoder' => Vacancy::$ISMODER_NEW,
+      'crdate' => date('Y-m-d H:i:s'),
+      'mdate' => date('Y-m-d H:i:s'),
+      'smart' => (integer)isset($this->data->smartphone),
+      'repost' => $repost,
+      'card' => (integer)isset($this->data->card),
+      'cardPrommu' => (integer)isset($this->data->card_prommu),
+      'self_employed' => $this->data->self_employed
+    ];
+
+    if(!empty($this->data->salary_time_custom)) // Сроки оплаты
+    {
+      $arAttributes = ['cpaylims' => $this->data->salary_time_custom];
+    }
+    else
+    {
+      $arAttributes = ['paylims' => $this->data->salary_time];
+    }
+    if(!empty($this->data->salary_comment)) // Комментарии по оплате
+    {
+      $arAttributes['salary-comment'] = $this->data->salary_comment;
+    }
+
+    $model = new Vacancy();
+    $this->id_vacancy = $model->createVacancy($arVacancy, $this->data->post, $arAttributes);
+    // добавление городов вакансии
+    $arInsert = [];
+    foreach ($this->data->city as $v)
+    {
+      $arInsert[] = [
+        'id_vac' => $this->id_vacancy,
+        'id_city' => $v,
+        'bdate' => Share::dateFormatToMySql($this->data->bdate),
+        'edate' => Share::dateFormatToMySql($this->data->edate)
+      ];
+    }
+    Share::multipleInsert(['empl_city'=>$arInsert]);
+        // email ведомление юзеру
+    Mailing::set(3,
+      [
+        'email_user' => Share::$UserProfile->exInfo->email,
+        'company_user' => empty(Share::$UserProfile->exInfo->name) ? 'пользователь' : Share::$UserProfile->exInfo->name,
+        'id_vacancy' => $this->id_vacancy
+      ]
+    );
+    // Изменяем в базе дату добавления платной вакансии
+    Yii::app()->db->createCommand()
+      ->update(
+        'employer',
+        ['vacancy_payment'=>strtotime('today')],
+        'id_user=:id_user',
+        [':id_user'=>Share::$UserProfile->id]
+      );
   }
 }

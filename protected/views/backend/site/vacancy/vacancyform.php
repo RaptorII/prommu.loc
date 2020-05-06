@@ -528,7 +528,6 @@
               // остальные вкладки
               ?>
               <? if (count($arResp['items'])): ?>
-                <? $model = new ResponsesEmpl(); ?>
                 <table class="responses__table">
                   <thead>
                   <tr><th>Соискатель<th>Дата отклика<th>Статус</tr>
@@ -544,7 +543,7 @@
                         </a>
                       </td>
                       <td><?=$v['rdate']?></td>
-                      <td><?=$model->getStatus($v['isresponse'],$v['status'])?></td>
+                      <td><?=ResponsesEmpl::getStatus($v['isresponse'],$v['status'])?></td>
                     </tr>
                   <? endforeach; ?>
                   <tr>

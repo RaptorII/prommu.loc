@@ -46,7 +46,7 @@ abstract class Responses extends Model
      * @param $status int status from vacancy_stat
      * получаем человекопонятный статус
      */
-    abstract public function getStatus($isResponse, $status);
+    abstract public static function getStatus($isResponse, $status);
 
     public static $STATE_RESPONSE = 1; // isresponse - отклик
     public static $STATE_INVITE = 2; // isresponse - приглашение

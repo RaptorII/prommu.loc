@@ -4052,12 +4052,11 @@ class Vacancy extends ARModel
         $arIdDisVacs = $this->checkAccessToResponse($arIdVacs);
 
         $arIdUser = array();
-        $responses = new ResponsesApplic();
         foreach ($arRes['items'] as &$v)
         {
             $arIdUser[] = $v['employer'];
             $v['pubdate']==='00.00.0000' && $v['pubdate'] = $v['crdate'];
-            $v['condition'] = $responses->getStatus($v['isresponse'], $v['status']);
+            $v['condition'] = ResponsesApplic::getStatus($v['isresponse'], $v['status']);
             $v['access_to_chat'] = $v['status']>Responses::$STATUS_EMPLOYER_ACCEPT; // доступ к чату
             $v['access_to_answer'] = ($v['isresponse']==2 && $v['status']==Responses::$STATUS_EMPLOYER_ACCEPT); // приглашение от работодателя сразу status=4
             $v['second_response'] = (
@@ -4114,8 +4113,7 @@ class Vacancy extends ARModel
 
         if($arRes['item']['pubdate']==='00.00.0000')
             $arRes['item']['pubdate'] = $arRes['item']['crdate'];
-        $responses = new ResponsesApplic();
-        $arRes['item']['condition'] = $responses->getStatus(
+        $arRes['item']['condition'] = ResponsesApplic::getStatus(
                 $arRes['item']['isresponse'],
                 $arRes['item']['status']
             );
@@ -4900,106 +4898,31 @@ class Vacancy extends ARModel
     }
     return $arRes['data'];
   }
+
   /**
-   * @param $objData
-   * @param $objUser
+   * @param $arVacancy array - empl_vacations.*
+   * @param $arPosts array - empl_attribs
+   * @param $arAttributes array - empl_attribs
+   * @return integer empl_vacations.id
    * Создание вакансии
    */
-  public function createVacancy($objData, $objUser)
+  public function createVacancy($arVacancy, $arPosts, $arAttributes)
   {
-    $date = date('Y-m-d H:i:s');
-    $repost = 0;
-    in_array('vk',$objData->repost) && $repost|=1;
-    in_array('facebook',$objData->repost) && $repost|=2;
-    in_array('telegram',$objData->repost) && $repost|=4;
-    $repost = decbin($repost);
-    $repost = str_pad($repost, 3, "0", STR_PAD_LEFT);
-    // создание вакансии
-    $arInsert = [
-      'id_user' => $objUser->id_user,
-      'id_empl' => $objUser->id,
-      'title' => $objData->title,
-      'requirements' => $objData->requirements,
-      'duties' => $objData->duties,
-      'conditions' => $objData->conditions,
-      'remdate' => Share::dateFormatToMySql($objData->edate),
-      'istemp' => $objData->istemp,
-      'shour' => ($objData->salary_type==0 ? $objData->salary : 0),
-      'sweek' => ($objData->salary_type==1 ? $objData->salary : 0),
-      'smonth' => ($objData->salary_type==2 ? $objData->salary : 0),
-      'svisit' => ($objData->salary_type==3 ? $objData->salary : 0),
-      'exp' => $objData->exp,
-      'isman' => (integer)in_array('man',$objData->gender),
-      'iswoman' => (integer)in_array('woman',$objData->gender),
-      'ismed' => (integer)isset($objData->medbook),
-      'isavto' => (integer)isset($objData->car),
-      'agefrom' => (integer)$objData->age_from,
-      'ageto' => (integer)$objData->age_to,
-      'status' => self::$STATUS_NO_ACTIVE,
-      'ismoder' => self::$ISMODER_NEW,
-      'crdate' => $date,
-      'mdate' => $date,
-      'smart' => (integer)isset($objData->smartphone),
-      'repost' => $repost,
-      'card' => (integer)isset($objData->card),
-      'cardPrommu' => (integer)isset($objData->card_prommu),
-      'self_employed' => $objData->self_employed
-    ];
-    Yii::app()->db->createCommand()->insert(self::tableName(), $arInsert);
-    $vacancy = Yii::app()->db->getLastInsertID();
+    Yii::app()->db->createCommand()->insert(self::tableName(), $arVacancy);
+    $id_vacancy = Yii::app()->db->getLastInsertID();
     // сортировка
     Yii::app()->db->createCommand()->update(
       self::tableName(),
-      ['sort'=>$vacancy],
+      ['sort'=>$id_vacancy],
       'id=:id',
-      [':id'=>$vacancy]
+      [':id'=>$id_vacancy]
     );
-    // добавление городов вакансии
-    $arInsert = [];
-    foreach ($objData->city as $v)
-    {
-      $arInsert[] = [
-        'id_vac' => $vacancy,
-        'id_city' => $v,
-        'bdate' => Share::dateFormatToMySql($objData->bdate),
-        'edate' => Share::dateFormatToMySql($objData->edate)
-      ];
-    }
-    Share::multipleInsert(['empl_city'=>$arInsert]);
     // Сохранение должностей
-    self::saveVacancyPosts($vacancy, $objData->post); // должность
+    self::saveVacancyPosts($id_vacancy, $arPosts);
     // Сохранение атрибутов
-    if(!empty($objData->salary_time_custom))
-    {
-      $arInsert = ['cpaylims' => $objData->salary_time_custom];
-    }
-    else
-    {
-      $arInsert = ['paylims' => $objData->salary_time];
-    }
-    if(!empty($objData->salary_comment)) // Комментарии по оплате
-    {
-      $arInsert['salary-comment'] = $objData->salary_comment;
-    }
-    self::saveVacancyAttributes($vacancy, $arInsert);
-    // email ведомление юзеру
-    Mailing::set(3,
-      [
-        'email_user' => $objUser->email,
-        'company_user' => $objUser->name,
-        'id_vacancy' => $vacancy
-      ]
-    );
-    // Изменяем в базе дату добавления платной вакансии
-    Yii::app()->db->createCommand()
-      ->update(
-        'employer',
-        ['vacancy_payment'=>strtotime('today')],
-        'id_user=:id_user',
-        [':id_user'=>$objUser->id_user]
-      );
-    //
-    return $vacancy;
+    self::saveVacancyAttributes($id_vacancy, $arAttributes);
+
+    return $id_vacancy;
   }
   /**
    * @param $id - integer
@@ -5017,10 +4940,11 @@ class Vacancy extends ARModel
     );
   }
   /**
-   * @param $id
+   * @param $id integer - empl_vacations.id
+   * @param $section bool - запрос для вкладок вакансии
    * @return object
    */
-  public function getVacancy($id)
+  public function getVacancy($id, $section=false)
   {
     $id = intval($id);
 
@@ -5030,63 +4954,64 @@ class Vacancy extends ARModel
       'employer' => [],
       'posts' => $this->getPostsSortList(),
       'attributes' => $this->getAllAttributes(),
-      'services' => ['vkontakte'=>'', 'facebook'=>'', 'telegram'=>'', 'premium'=>false, 'info'=>[]],
+      'services' => ['vkontakte' => '', 'facebook' => '', 'telegram' => '', 'info' => []],
       'is_owner' => false,
       'error_moodule' => false,
       'counters' => [],
+      'statements' => [],
       'chat' => []
     ];
 
-    if(!$id)
-    {
+    if (!$id) {
       $result->errors['system'] = true;
       return $result;
     }
     // Вакансия
     $query = Yii::app()->db->createCommand()
-                ->from(self::tableName())
-                ->where('id=:id',[':id'=>$id])
-                ->limit(1)
-                ->queryRow();
+      ->from(self::tableName())
+      ->where('id=:id', [':id' => $id])
+      ->limit(1)
+      ->queryRow();
 
-    if(!$query)
+    if (!$query || $query['in_archive']) {
+      $result->errors['system'] = true;
+      return $result;
+    }
+    // Работодатель
+    $arUser = Share::getUsers([$query['id_user']]);
+    if(!count($arUser))
     {
       $result->errors['system'] = true;
       return $result;
     }
-
+    $result->employer = (object)$arUser[$query['id_user']];
+    if(Share::$UserProfile->id==$query['id_user'])
+    {
+      $result->is_owner = true;
+    }
+    // Общие данные вакансии
     $result->data = (object)$query;
     $result->data->crdate_unix = strtotime($query['crdate']);
     $result->data->mdate_unix = strtotime($query['mdate']);
     $result->data->remdate_unix = strtotime($query['remdate']);
     // вывод даты публикации
-    if($query['bdate']==null || $query['bdate']=='0000-00-00 00:00:00')
-    {
+    if ($query['bdate'] == null || $query['bdate'] == '0000-00-00 00:00:00') {
       $result->data->date_public = '';
       $result->data->date_public_unix = '';
-    }
-    else
-    {
+    } else {
       $result->data->date_public_unix = strtotime($query['bdate']);
-      $result->data->date_public = Share::getDate($result->data->date_public_unix,'G:i d.m.Y');
+      $result->data->date_public = Share::getDate($result->data->date_public_unix, 'G:i d.m.Y');
     }
 
-    $result->data->ageto==0 && $result->data->ageto = '';
-    ($query['duties']=="<br>" || $query['duties']=="&lt;br&gt;") && $result->data->duties = '';
-    ($query['conditions']=="<br>" || $query['conditions']=="&lt;br&gt;") && $result->data->conditions = '';
+    $result->data->ageto == 0 && $result->data->ageto = '';
+    ($query['duties'] == "<br>" || $query['duties'] == "&lt;br&gt;") && $result->data->duties = '';
+    ($query['conditions'] == "<br>" || $query['conditions'] == "&lt;br&gt;") && $result->data->conditions = '';
     // Актуальная вакансия - активная, промодерированая, подходящая по дате
     $result->data->is_actual =
-      ($query['status']==self::$STATUS_ACTIVE)
+      ($query['status'] == self::$STATUS_ACTIVE)
       &&
-      ($query['ismoder']==self::$ISMODER_APPROVED);
+      ($query['ismoder'] == self::$ISMODER_APPROVED);
     $result->data->is_actual_remdate = strtotime('today') <= $result->data->remdate_unix;
-    // Атрибуты
-    $query = Yii::app()->db->createCommand()
-      ->from('empl_attribs')
-      ->where('id_vac=:id',[':id'=>$id])
-      ->queryAll();
-    $result->data->post = [];
-    $result->data->properties = [];
     // Собираем значения свойств
     $result->data->add_props = false;
     $result->data->additional = $result->data->ismed
@@ -5094,72 +5019,81 @@ class Vacancy extends ARModel
       || $result->data->smart
       || $result->data->card
       || $result->data->cardPrommu;
-    if(count($query))
+
+    if(!$section) // для секций эти данные ни к чему
     {
-      foreach ($query as $v)
-      {
-        $arProp = $result->attributes->items[$v['key']];
-        if($arProp['id_par']==self::ID_POSTS_ATTRIBUTE) // должность
-        {
-          $result->data->post[] = $v['key'];
-        }
-        else // прочие атрибуты
-        {
-          $arr = ['id' => $v['id_attr'], 'key' => $v['key']];
-          if(in_array($v['key'],$result->attributes->additional_lists))
+      // Атрибуты
+      $result->data->post = [];
+      $result->data->properties = [];
+      $query = Yii::app()->db->createCommand()
+        ->from('empl_attribs')
+        ->where('id_vac=:id', [':id' => $id])
+        ->queryAll();
+      if (count($query)) {
+        foreach ($query as $v) {
+          $arProp = $result->attributes->items[$v['key']];
+          if ($arProp['id_par'] == self::ID_POSTS_ATTRIBUTE) // должность
           {
-            $result->data->add_props = true;
-          }
-          if(in_array($v['key'],array_keys($result->attributes->lists)))
+            $result->data->post[] = $v['key'];
+          } else // прочие атрибуты
           {
-            foreach ($result->attributes->items as $p)
-            {
-              if($v['id_attr']==$p['id'])
-              {
-                $arr['name'] = $arProp['name'];
-                $arr['value'] = $p['name'];
-              }
+            $arr = ['id' => $v['id_attr'], 'key' => $v['key']];
+            if (in_array($v['key'], $result->attributes->additional_lists)) {
+              $result->data->add_props = true;
             }
+            if (in_array($v['key'], array_keys($result->attributes->lists))) {
+              foreach ($result->attributes->items as $p) {
+                if ($v['id_attr'] == $p['id']) {
+                  $arr['name'] = $arProp['name'];
+                  $arr['value'] = $p['name'];
+                }
+              }
+            } else {
+              $arr['name'] = $arProp['name'];
+              $arr['value'] = $v['val'];
+            }
+            $result->data->properties[$v['key']] = $arr;
           }
-          else
-          {
-            $arr['name'] = $arProp['name'];
-            $arr['value'] = $v['val'];
-          }
-          $result->data->properties[$v['key']] = $arr;
         }
       }
-    }
-    // Города, локации, периоды
-    $result->data->cities = $this->getCities($id);
-    $result->data->citiesId = [];
-    foreach ($result->data->cities as $v)
-    {
-      $result->data->citiesId[] = $v['id_city'];
-    }
-    $result->data->locations = $this->getLocations($id);
-    $result->data->dates = $this->getRealDates(
-      $result->data->cities,
-      $result->data->locations
-    );
-    // Работодатель
-    $arUser = Share::getUsers([$result->data->id_user]);
-    if(!count($arUser))
-    {
-      $result->errors['system'] = true;
-      return $result;
-    }
-    $result->employer = (object)$arUser[$result->data->id_user];
-    if(Share::$UserProfile->id==$result->data->id_user)
-    {
-      $result->is_owner = true;
+      // Города, локации, периоды
+      $result->data->cities = $this->getCities($id);
+      $result->data->citiesId = [];
+      foreach ($result->data->cities as $v) {
+        $result->data->citiesId[] = $v['id_city'];
+      }
+      $result->data->locations = $this->getLocations($id);
+      $result->data->dates = $this->getRealDates(
+        $result->data->cities,
+        $result->data->locations
+      );
     }
     // Просмотры, отклики и прочее
     $arCnt = ['views'  => Termostat::getDataCouters('vacancy', $id)];
     if($result->is_owner) // только владельцу
     {
-      $arCnt = array_merge($arCnt, $this->getInfo($id));
+      if($section) // счетчики и отзывы
+      {
+        $arr = $this->getInfo($id,false);
+        $arCnt[MainConfig::$VACANCY_APPROVED] = $arr['cnt'][MainConfig::$VACANCY_APPROVED]; // Утвержденные
+        $arCnt[MainConfig::$VACANCY_INVITED] = $arr['cnt'][MainConfig::$VACANCY_INVITED]; // Приглашенные
+        $arCnt[MainConfig::$VACANCY_RESPONDED] = $arr['cnt'][MainConfig::$VACANCY_RESPONDED]; // Откликнувшиеся
+        $arCnt[MainConfig::$VACANCY_DEFERRED] = $arr['cnt'][MainConfig::$VACANCY_DEFERRED]; // Отложенные
+        $arCnt[MainConfig::$VACANCY_REJECTED] = $arr['cnt'][MainConfig::$VACANCY_REJECTED]; // Отклоненные
+        $arCnt[MainConfig::$VACANCY_REFUSED] = $arr['cnt'][MainConfig::$VACANCY_REFUSED]; // Отказавшиеся
+        $arCnt['cnt'] = $arr['cnt']['cnt'];
+        $result->responses = (object)[
+          'items' => $arr['items'],
+          'pages' => $arr['pages'],
+          'users' => $arr['users']
+        ];
+      }
+      else // только счетчики
+      {
+        $arCnt = array_merge($arCnt, $this->getInfo($id));
+      }
     }
+    $result->counters = (object)$arCnt;
     // Чат по вакансии
     if($result->is_owner) // только владельцу
     {
@@ -5187,7 +5121,6 @@ class Vacancy extends ARModel
         'discuss_cnt' => (new VacDiscuss())->getDiscussCount($id)
       ];
     }
-    $result->counters = (object)$arCnt;
     // Услуги
     if(!empty($result->data->vk_link) && substr($result->data->repost, 0, 1)!=='0')
     {
@@ -5201,15 +5134,18 @@ class Vacancy extends ARModel
     {
       $result->services['telegram'] = $result->data->tl_link;
     }
-    // Общие данные
-    $arInfo = (new Services())->getDataAll();
+
+    $arInfo = (new Services())->getDataAll(); // Общие данные
     foreach ($arInfo as $v)
     {
       $v['icon'] = str_replace('/services/', '', $v['link']);
       $result->services['info'][$v['link']] = $v;
     }
-    $arServiceCloud = (new ServiceCloud())->getServicesByVacancy($id); // ServiceCloud and
-    $result->services = (object)array_merge($result->services, $arServiceCloud);
+    if($result->is_owner && !$section) // только владельцу
+    {
+      $arServiceCloud = (new ServiceCloud())->getServicesByVacancy($id); // ServiceCloud and
+      $result->services = (object)array_merge($result->services, $arServiceCloud);
+    }
     //
     return $result;
   }

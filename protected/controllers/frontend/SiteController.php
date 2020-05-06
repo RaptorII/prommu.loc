@@ -475,11 +475,21 @@ class SiteController extends AppController
             $module = (in_array($event,['activate','deactivate']) ? 1 : 9);
             VacancyEdit::setVacancy($id, Share::$UserProfile->id, $module);
           }
-          $viData = $model->getVacancy($id);
+          if(!empty($section) && $event=='change_statement') // изменение заявок
+          {
+            (new ResponsesEmpl())->setResponseStatus();
+          }
+          $viData = $model->getVacancy($id, isset($section));
+
           if($viData->is_owner)
           {
             if($rq->isAjaxRequest)
             {
+              if(!empty($section) && $event=='change_statement') // изменение заявок
+              {
+                $this->renderPartial('/user/vacancy/statements/index', ['viData'=>$viData]);
+                Yii::app()->end();
+              }
               if(!in_array($module,[1,2,3,4,5,6,7,8,9]))
               {
                 $viData->errors['access'] = true;
@@ -527,12 +537,6 @@ class SiteController extends AppController
               ]
             )) // секции конкретной вакансии
             {
-              Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-              $data = $model->getVacancyView($id);
-              if($data['error']==1 || $data['vac']['in_archive'])
-                throw new CHttpException(404, 'Error');
-
-              $viData = $model->getInfo($id, false);
               // сбрасываем счетчики при наличии
               $arCounters = [];
               if($section==MainConfig::$VACANCY_RESPONDED)
@@ -551,110 +555,59 @@ class SiteController extends AppController
               {
                 UserNotifications::resetCounters($arCounters, $id);
               }
-              $this->render('../user/vacancy/section', ['viData'=>$viData]);
+              $this->render(
+                '../user/vacancy/statements/index',
+                //'../user/vacancy/section',
+                ['viData'=>$viData, 'section'=>$section]
+              );
               Yii::app()->end();
             }
             else
             {
-              $this->breadcrumbs = [
-                "Мои вакансии" => MainConfig::PAGE_USER_VACANCIES_LIST,
-                $viData->data->title
-              ];
+              // сбрасываем счетчики при наличии
+              UserNotifications::resetCounters(
+                [UserNotifications::$EMP_START_VACANCY,UserNotifications::$EMP_END_VACANCY],
+                $id
+              );
               $this->render('/user/vacancy/edit/index', ['viData'=>$viData]);
               Yii::app()->end();
             }
           }
-
+          if(!empty($section) || $viData->errors['system'])
+          {
+            throw new CHttpException(404, 'Error');
+          }
           //
           //
           // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           //
           //
           $view = $this->ViewModel->pageVacancy;
-          $isOwner = Vacancy::hasAccess($id,$id_user);
+          $data = $model->getVacancyView($id);
 
-            if($isOwner){ Yii::app()->session['editVacId'] = $id; }
+          if(Share::isApplicant())
+          {
+            // сбрасываем счетчики для С при наличии
+            UserNotifications::resetCounters([UserNotifications::$APP_NEW_VACANCIES],$id);
+          }
 
-            if(in_array(
-                $section,
-                [
-                    MainConfig::$VACANCY_APPROVED,
-                    MainConfig::$VACANCY_INVITED,
-                    MainConfig::$VACANCY_RESPONDED,
-                    MainConfig::$VACANCY_DEFERRED,
-                    MainConfig::$VACANCY_REJECTED,
-                    MainConfig::$VACANCY_REFUSED
-                ]
-                )) // секции конкретной вакансии
-            {
-              Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-              $data = $model->getVacancyView($id);
-              if($data['error']==1 || $data['vac']['in_archive'])
-                throw new CHttpException(404, 'Error');
-              if($isOwner)
-              {
-                $data = $model->getInfo($id, false);
-                // сбрасываем счетчики при наличии
-                $arCounters = [];
-                if($section==MainConfig::$VACANCY_RESPONDED)
-                {
-                  $arCounters[] = UserNotifications::$EMP_RESPONSES;
-                }
-                if($section==MainConfig::$VACANCY_APPROVED)
-                {
-                  $arCounters[] = UserNotifications::$EMP_APPROVAL;
-                }
-                if($section==MainConfig::$VACANCY_REFUSED)
-                {
-                  $arCounters[] = UserNotifications::$EMP_REFUSALS;
-                }
-                if(count($arCounters))
-                {
-                  UserNotifications::resetCounters($arCounters, $id);
-                }
-                $view = 'vacancy/index';
-              }
-              else
-                throw new CHttpException(404, 'Error');
-            }
-            else
-            {
-                $data = $model->getVacancyView($id);
+          if($data['error']==1 || $data['vac']['in_archive'])
+              throw new CHttpException(404, 'Error');
+          // индексируем только если владелец вакансии с этого региона
+          $res = Yii::app()->db->createCommand()
+              ->select('id_city')
+              ->from('user_city')
+              ->where('id_user=:id',array(':id'=>$data['vac']['idus']))
+              ->queryRow();
 
-                if($isOwner) // для владельца проверка на отношение вакансии к архиву
-                {
-                  // сбрасываем счетчики при наличии
-                  UserNotifications::resetCounters(
-                    [UserNotifications::$EMP_START_VACANCY,UserNotifications::$EMP_END_VACANCY],
-                    $id
-                  );
-                  $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
-                }
-
-                if(Share::isApplicant())
-                {
-                  // сбрасываем счетчики для С при наличии
-                  UserNotifications::resetCounters([UserNotifications::$APP_NEW_VACANCIES],$id);
-                }
-
-                if($data['error']==1 || $data['vac']['in_archive'])
-                    throw new CHttpException(404, 'Error'); 
-                // индексируем только если владелец вакансии с этого региона
-                $res = Yii::app()->db->createCommand()
-                    ->select('id_city')
-                    ->from('user_city')
-                    ->where('id_user=:id',array(':id'=>$data['vac']['idus']))
-                    ->queryRow();
-
-                if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
-                    Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-            }
-            //
-            //
-            $Termostat = new Termostat();
-            $Termostat->setTermostat($id, $id_user?:0, 'vacancy' );
-            $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
-            $this->render($view,['viData'=>$data, 'id'=>$id], ['pageTitle'=>$title]);
+          if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
+              Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+          //
+          //
+          $Termostat = new Termostat();
+          $Termostat->setTermostat($id, $id_user?:0, 'vacancy' );
+          $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
+          $this->render($view,['viData'=>$data, 'id'=>$id], ['pageTitle'=>$title]);
         }
         else
         {

@@ -1,6 +1,3 @@
-<?
-$model = new ResponsesApplic();
-?>
 <style type="text/css">
 	#DiContent.page-responses .responses .row.-new .border{ margin: 0 }
 	@media (min-width: 768px){
@@ -83,7 +80,7 @@ $model = new ResponsesApplic();
                                         Responses::$STATUS_APPLICANT_RATED,
                                         Responses::$STATUS_FULL_RATING
                                       ])): ?>
-                                  <span class="status"><?=$model->getStatus($val['isresponse'],$val['status'])?></span>
+                                  <span class="status"><?=ResponsesApplic::getStatus($val['isresponse'],$val['status'])?></span>
                                 <? endif; ?>
                               </div>
                           </div>

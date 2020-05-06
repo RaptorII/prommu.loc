@@ -719,7 +719,7 @@ class ResponsesEmpl extends Responses
      * @param $status int status from vacancy_stat
      * получаем человекопонятный статус
      */
-    public function getStatus($isResponse, $status)
+    public static function getStatus($isResponse, $status)
     {
         $result = '';
         if($isResponse==1) // отклик
@@ -816,8 +816,8 @@ class ResponsesEmpl extends Responses
             // Отклонение, отказ
             if($v['status']==self::$STATUS_REJECT)
             {
-                $v['isresponse']==Responses::$STATE_INVITE && $arRes[MainConfig::$VACANCY_REJECTED]++;
-                $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_REFUSED]++;
+                $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_REJECTED]++;
+                $v['isresponse']==Responses::$STATE_INVITE && $arRes[MainConfig::$VACANCY_REFUSED]++;
             }
             // утвержденные
             if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
@@ -955,8 +955,8 @@ class ResponsesEmpl extends Responses
                     {
                         $arT[] = array(
                             'user' => $v['vs_user'],
-                            'status' => $this->getStatus($v['isresponse'], $v['vs_status']),
-                            'type' => 'site',
+                            'status' => static::getStatus($v['isresponse'], $v['vs_status']),
+                            'type' => 'сайт',
                             'date' => $v['vs_date']
                         );
                         $arVS[] = $v['vs_id'];

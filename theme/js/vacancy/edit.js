@@ -6,6 +6,10 @@ var EditVacancy = (function () {
   //
   function EditVacancy()
   {
+    if(!$('#edit_vacancy').is('*'))
+    {
+      return;
+    }
     this.init();
   }
   //
@@ -109,11 +113,6 @@ var EditVacancy = (function () {
       'selector':'#location-edit',
       'state':'edit'
     });
-    // Прячем блок, если в нем нет данных
-    if(!$('#activate_module').text().trim().length)
-    {
-      $('#activate_module').addClass('block__hide');
-    }
     // событие активации вакансии
     $(document).on('click','#activate',function(){
       MainScript.stateLoading(true);
@@ -1239,8 +1238,64 @@ var CustomSalaryTime = (function () {
   return CustomSalaryTime;
 }());
 /**
+ *  Страница заявок
+ */
+var VacancyStatements = (function () {
+  //
+  function VacancyStatements() {
+    if(!$('.vacancy__statements').is('*'))
+    {
+      return;
+    }
+    this.init();
+  }
+  //
+  VacancyStatements.prototype.init = function ()
+  {
+    let self = this;
+    $.each($('.vacancy__statements-select'),function(i,e){
+      $('.vacancy__statements-select:eq(' + i + ')').initSelect();
+    });
+
+    $(document).on('change','.vacancy__statements-select select',function(e){
+      let select = e.target,
+          value = $(e.target).find('option:selected').val();
+
+      MainScript.stateLoading(true);
+      $.ajax({
+        type: 'POST',
+        data: {event:'change_statement', idres:select.dataset.sid, s:value},
+        success: function(result){
+          $('#statements_vacancy').replaceWith(result);
+          self.init();
+          MainScript.stateLoading(false);
+        },
+        error: function()
+        {
+          confirm('Системная ошибка');
+          MainScript.stateLoading(false);
+        }
+      });
+    });
+
+    setTimeout(function () {
+      $.each($('#statements_vacancy').find('.js-g-hashint'),function(){
+        if(!$(this).hasClass('tooltipstered'))
+        {
+          $(this).tooltipster({theme:['tooltipster-noir', 'tooltipster-noir-customized']});
+        }
+      });
+    }, 100);
+
+
+  };
+  //
+  return VacancyStatements;
+}());
+/**
  *
  */
 $(document).ready(function () {
   new EditVacancy();
+  new VacancyStatements();
 });

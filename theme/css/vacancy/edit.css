@@ -32,6 +32,15 @@
   margin: 0 0 15px;
   white-space: nowrap;
 }
+#statements_vacancy .vacancy-top__link-active{
+  color: var(--color-orange);
+}
+.vacancy-top__link-return:before{
+  transform: rotate(180deg);
+}
+#statements_vacancy .vacancy-top__link-return{
+  color: var(--color-red);
+}
 .prmu-icon:before{
   font-family: "PrommuFont";
 }
@@ -45,6 +54,7 @@
   text-align: center;
   font-size: 20px;
   line-height: 20px;
+  display: block;
 }
 #chat_list{
   position: relative;
@@ -52,7 +62,7 @@
 }
 .vacancy-chat__list{
   background: var(--color-white);
-  padding: 5px 0;
+  padding: 0;
   position: absolute;
   border-radius: 4px;
   border: 2px solid var(--color-green);
@@ -85,11 +95,16 @@
   padding: 5px 10px 5px;
 }
 .vacancy-chat__item img{
-  width: 65px;
+  width: 50px;
   display: block;
   border-radius: 50%;
   border: 2px solid #CBD880;
   margin-right: 10px;
+}
+.vacancy-chat__item span{
+  display: inline-block;
+  white-space: initial;
+  text-align: left;
 }
 #chat_list .vacancy-top__cnt{
   position: relative;
@@ -143,6 +158,7 @@
   display: inline-block;
   line-height: 30px;
   padding-left: 10px;
+  text-align: center;
 }
 .vacancy__services-link:before,
 .vacancy__services-link span{
@@ -178,6 +194,9 @@
 .icon-vkontakte:before{ content: "\e9df"; }
 .icon-facebook:before{ content: "\e9dd"; }
 .icon-telegram:before{ content: "\e9de"; }
+.icon-return:before{ content: "\e9dc"; }
+
+
 .vacancy__buttons{
   display: flex;
   justify-content: center;
@@ -205,6 +224,79 @@
   cursor: default;
   display: block;
   line-height: 30px;
+}
+/**
+*   Statements
+ */
+.vacancy__statements{
+
+}
+.vacancy__statements-table{
+  width: 100%;
+}
+.vacancy__statements-table th{
+  display: none;
+}
+.vacancy__statements-row{
+  display: block;
+}
+.vacancy__statements-row-empty{
+  display: block;
+  clear: both;
+  border-bottom: 1px solid var(--color-l2-grey);
+  margin: 5px 0 10px;
+}
+.vacancy__statements-row-empty:last-child{
+  border-bottom: none;
+  margin: 0;
+}
+.vacancy__statements-cell{
+  width: 50%;
+  display: block;
+  padding: 0 5px;
+}
+.vacancy__statements-cell:nth-child(1){
+  float: left;
+}
+.vacancy__statements-cell:nth-child(2),
+.vacancy__statements-cell:nth-child(3),
+.vacancy__statements-cell:nth-child(4){
+  float: right;
+}
+.vacancy__applicant{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.vacancy__applicant-avatar{
+  width: 65px;
+  border-radius: 50%;
+  border: 2px solid var(--color-green);
+}
+.vacancy__applicant-name{
+  font-size: 16px;
+  display: block;
+  padding:10px 0 0;
+  text-align: center;
+}
+.vacancy__statements-btn{
+  display: flex;
+  margin-bottom: 10px;
+  line-height: normal!important;
+  align-items: center;
+  min-height: 40px;
+  justify-content: center;
+}
+.vacancy__statements-select{
+  margin-bottom: 10px;
+}
+.vacancy__statements .vacancy__services-list{
+  display: flex;
+  flex-wrap: wrap;
+}
+.vacancy__statements .vacancy__services-item{
+  padding: 0 0 5px;
+  width: 100%;
 }
 /**
 *   MEDIA
@@ -247,6 +339,45 @@
   .vacancy-top__list-small{
     flex-wrap: nowrap;
   }
+  .vacancy__statements-table th{
+    display: table-cell;
+    padding: 5px;
+  }
+  .vacancy__statements-row{
+    display: table-row;
+  }
+  .vacancy__statements-row-empty{ display: none; }
+  .vacancy__statements-cell{
+    display: table-cell;
+    padding: 10px 5px;
+    text-align: center;
+    border-top: 1px solid var(--color-l2-grey);
+  }
+  .vacancy__statements-cell:nth-child(1){
+    width:50%;
+    float: none;
+  }
+  .vacancy__statements-cell:nth-child(2),
+  .vacancy__statements-cell:nth-child(3){
+    width: 15%;
+    float: none;
+  }
+  .vacancy__statements-cell:nth-child(4){
+    width:20%;
+    float: none;
+  }
+  .vacancy__statements-cell b{display: none}
+  .vacancy__applicant{
+    flex-direction: row;
+  }
+  .vacancy__applicant-name{
+    padding: 0 0 0 10px;
+    display: initial;
+  }
+  .vacancy__statements .vacancy__services-item{
+    padding: 0 5px 5px;
+    width: 50%;
+  }
 }
 @media (min-width: 992px) {
   .vacancy-top__list{
@@ -258,6 +389,9 @@
     width: 12%;
     display: table-cell;
     padding: 0 10px;
+  }
+  .vacancy__statements .vacancy__services-item{
+    width: 25%;
   }
 }
 @media (min-width: 1200px) {

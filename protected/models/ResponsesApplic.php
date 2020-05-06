@@ -1227,7 +1227,7 @@ class ResponsesApplic extends Responses
      * @param $status int status from vacancy_stat
      * получаем человекопонятный статус
      */
-    public function getStatus($isResponse, $status)
+    public static function getStatus($isResponse, $status)
     {
         $result = '';
         if($isResponse==1) // отклик
