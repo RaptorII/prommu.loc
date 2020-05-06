@@ -82,15 +82,17 @@ $linkService = MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData->data->id}&servic
           <tbody>
           <? foreach ($viData->responses->items as $v): ?>
             <? $arUser = $viData->responses->users[$v['user']]; ?>
-            <td class="vacancy__statements-cell">
-              <a href="<?=$arUser['profile']?>" target="_blank" class="vacancy__applicant">
-                <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" class="vacancy__applicant-avatar">
-                <span class="vacancy__applicant-name"><?=$arUser['name']?></span>
-              </a>
-            </td>
-            <td class='vacancy__statements-cell'><b>Дата приглашения:</b> <?=$v['date']?></td>
-            <td class='vacancy__statements-cell'><b>Статус:</b> <?=$v['status']?></td>
-            <td class='vacancy__statements-cell'><b>Тип:</b> <?=$v['type']?></td>
+            <tr class="vacancy__statements-row">
+              <td class="vacancy__statements-cell">
+                <a href="<?=$arUser['profile']?>" target="_blank" class="vacancy__applicant">
+                  <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" class="vacancy__applicant-avatar">
+                  <span class="vacancy__applicant-name"><?=$arUser['name']?></span>
+                </a>
+              </td>
+              <td class='vacancy__statements-cell'><b>Дата приглашения:</b> <?=$v['date']?></td>
+              <td class='vacancy__statements-cell'><b>Статус:</b> <?=$v['status']?></td>
+              <td class='vacancy__statements-cell'><b>Тип:</b> <?=$v['type']?></td>
+            </tr>
           <? endforeach; ?>
           </tbody>
         </table>
