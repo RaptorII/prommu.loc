@@ -1052,27 +1052,35 @@ $this->pageTitle = $title;
 
                         <?php
                         //messangers
+                        $idSkype = $viData['userAllInfo']['userAttribs']['4']['val'];
                         $idViber = $viData['userAllInfo']['userAttribs']['5']['val'];
                         $idWhatsApp = $viData['userAllInfo']['userAttribs']['156']['val'];
                         $idTelegram = $viData['userAllInfo']['userAttribs']['157']['val'];
                         $idGoogleAllo = $viData['userAllInfo']['userAttribs']['158']['val'];
                         ?>
 
-                        <?php if(isset($idViber)) : ?>
+                        <?php if($idSkype) : ?>
+                            <div class="group">
+                                <div class="group__about">Skype</div>
+                                <div class="group__info"><?=$idSkype?></div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if($idViber) : ?>
                         <div class="group">
                             <div class="group__about">Viber</div>
                             <div class="group__info"><?=$idViber?></div>
                         </div>
                         <?php endif; ?>
 
-                        <?php if(isset($idWhatsApp)) : ?>
+                        <?php if($idWhatsApp) : ?>
                         <div class="group">
                             <div class="group__about">Whatsapp</div>
                             <div class="group__info"><?=$idWhatsApp?></div>
                         </div>
                         <?php endif; ?>
 
-                        <?php if(isset($idTelegram)) : ?>
+                        <?php if($idTelegram) : ?>
                         <div class="group">
                             <div class="group__about">Telegram</div>
                             <div class="group__info"><?=$idTelegram?></div>

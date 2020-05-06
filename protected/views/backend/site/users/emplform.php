@@ -150,6 +150,14 @@ echo '<div class="control-group small-bl">'
                 )
             . '</div>';
     echo '<div class="control-group small-bl">'
+        . '<label class="control-label">Skype</label>'
+        . CHtml::textField(
+            'attr[skype]',
+            $data['attr']['skype'],
+            array('class'=>'form-control','disabled'=>true)
+        )
+        . '</div>';
+    echo '<div class="control-group small-bl">'
             . '<label class="control-label">Viber</label>'
                 . CHtml::textField(
                     'User[viber]', 

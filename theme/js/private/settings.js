@@ -266,9 +266,9 @@ $(function(){
 	//
 	$('#email-code input, #phone-code-inp input').keyup(function(){ // проверка ввода кода для email
 		if($(this).closest('#email-code').length)
-			$(this).val().length==6 ? $('#email-code div').fadeIn() : $('#email-code div').fadeOut();
+			$(this).val().length==4 ? $('#email-code div').fadeIn() : $('#email-code div').fadeOut();
 		else
-			$(this).val().length==6 ? $('#phone-code-inp div').fadeIn() : $('#phone-code-inp div').fadeOut();
+			$(this).val().length==4 ? $('#phone-code-inp div').fadeIn() : $('#phone-code-inp div').fadeOut();
 	});
 	//
 	//	отправка введенного кода для почты и телефона

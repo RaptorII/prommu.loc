@@ -20,6 +20,7 @@
 		$viData['phone-code'] = substr($viData['phone'], 0,$pos);
 		$viData['phone'] = substr($viData['phone'], $pos);       
   }
+
 ?>
 <script type="text/javascript">
 	var selectPhoneCode = <?=json_encode($viData['phone-code'])?>;

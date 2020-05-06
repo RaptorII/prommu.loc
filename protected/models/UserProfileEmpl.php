@@ -1059,6 +1059,7 @@ class UserProfileEmpl extends UserProfile
                 $arRes['phone'] = $v['phone'];
                 $arRes['phone-code'] = $v['phone-code'];
             }
+            $v['key']=='skype' && $arMess[]='Skype';
             $v['key']=='viber' && $arMess[]='Viber';
             $v['key']=='whatsapp' && $arMess[]='WhatsApp';
             $v['key']=='telegram' && $arMess[]='Telegram';
@@ -1068,7 +1069,6 @@ class UserProfileEmpl extends UserProfile
 
         }
         $arRes['messengers'] = implode(',',$arMess);
-        
 
         // считываем типы пользователя
         $arRes['cotype'] = Yii::app()->db->createCommand()
