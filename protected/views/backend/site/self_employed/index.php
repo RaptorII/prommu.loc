@@ -146,7 +146,8 @@
             $(parent).removeClass('load');
             message = r.response.message;
           }
-          $(parent).remove('span').append('<span>' + message + '</span>');
+          $(parent).find('span').remove();
+          $(parent).append('<span>' + message + '</span>');
           if($(arValid[cnt+1]).is('*'))
           {
             ajaxRequest(arValid, cnt+1);
