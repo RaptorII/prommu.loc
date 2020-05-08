@@ -96,7 +96,7 @@ $this->pageTitle = $title;
                         <?if( $flagOwnProfile ):?>
                             <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
                         <?php elseif($viData['userInfo']['is_online']): ?>
-                        <span class="upp-logo__item-onl"><span>В сети</span>
+                        <span class="upp-logo__item-onl"><span>В сети</span></span>
                     <?php endif; ?>
                     </div>
                 </div>
@@ -555,13 +555,14 @@ $this->pageTitle = $title;
                                     Yii::app()->user->setFlash('prommu_flash', $message);
                                 }
                                 ?>
-                            <? endif; ?>
+                                <? endif; ?>
                             <?if( $flagOwnProfile ):?>
                                 <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
-                            <?php elseif($viData['userInfo']['is_online']): ?>
-                            <span class="upp-logo__item-onl"><span>В сети</span>
-                        <?php endif; ?>
+                            <?php endif; ?>
                         </div>
+                        <?php if($viData['userInfo']['is_online']): ?>
+                            <span class="upp-logo__item-onl"><span>В сети</span></span>
+                        <?php endif; ?>
                     </div>
 
                     <div class="personal__area--item personal__area--item-index-top">

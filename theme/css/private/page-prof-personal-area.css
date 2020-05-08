@@ -31,7 +31,7 @@
 @media screen and (min-width: 768px) {
     .personal__area--item {
         flex: 1 0 auto;
-        height: 100px;
+        height: 90px; /*100px;*/
     }
     .upp__rating-block {
         text-align: unset;
@@ -192,6 +192,14 @@
         text-align: left;
         display: table;
     }
+
+}
+
+.upp__title--forall {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    text-align: left;
 }
 
 .upp__star-block {

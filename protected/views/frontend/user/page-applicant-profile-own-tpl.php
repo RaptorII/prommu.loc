@@ -1137,13 +1137,14 @@ if (!share::isApplicant()):
                     <?php endif; ?>
                 </div>
                 <?php if($flagOwnProfile && $attr['is_online']): ?>
-                    <span class="upp-logo__item-onl"><span>В сети</span>
+                    <span class="upp-logo__item-onl"><span>В сети</span></span>
                 <? endif; ?>
                 <?if(!$attr['is_online']):?>
                     <span class="disable">Был<?=$attr['isman']?'':'а'?> на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
             <?endif;?>
             </div>
 
+            <? if ($flagOwnProfile): ?>
             <div class="personal__area--item">
                 <span class="upp__title">
                     <?=$attr['firstname']?> <?=$attr['lastname']?>
@@ -1181,10 +1182,53 @@ if (!share::isApplicant()):
                             </span>
                         </span>
                     </div>
-
                 </div>
             </div>
-
+            <? else: ?>
+            <div class="personal__area--item">
+                <div class="upp__rating-block">
+                    <span class="upp__title--forall">
+                        <?=$attr['firstname']?> <?=$attr['lastname']?>
+                        <span class="upp__title--date js-g-hashint" title="Дата регистрации">
+                            <?= date("d.m.Y", strtotime($viData['userInfo']['userAttribs'][1]['mdate'])); ?>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="personal__area--item">
+                <div class="upp__rating-block">
+                    <span class="upp__subtitle">Общий рейтинг:</span>
+                    <div class="upp__subtitle">
+                        <?=Share::getRating($attr['rate'],$attr['rate_neg'])?>
+                        <span class="upp__info">
+                            <i class="icn-info-three"></i>
+                            <span class="upp__info--hint">
+                                <table class="upp__table">
+                                    <tbody>
+                                    <?php foreach ($viData['rating']['pointRate'] as $key => $val): ?>
+                                        <tr>
+                                            <td class="upp__table-name">
+                                                <span><?=$viData['rating']['rateNames'][$key]?></span>
+                                            </td>
+                                            <td class="upp__table-cnt">
+                                                <span class="upp__table-cnt-plus js-g-hashint" title="Положительная оценка"><?=$val[0]?></span>
+                                            </td>
+                                            <td class="upp__table-cnt">
+                                                <span class="upp__table-cnt-zero js-g-hashint" title="Нейтральная оценка">0</span>
+                                            </td>
+                                            <td class="upp__table-cnt">
+                                                <span class="upp__table-cnt-minus js-g-hashint" title="Отрицательная оценка"><?=$val[1]?></span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <? endif; ?>
 
             <div class="personal__area--item personal__area--item-index">
                 <div class="upp__rating-block">
@@ -1193,8 +1237,9 @@ if (!share::isApplicant()):
                     <?php endif; ?>
                 </div>
             </div>
+
+            <? if ($flagOwnProfile): ?>
             <div class="personal__area--item personal__area--item-index">
-                <? if ($flagOwnProfile): ?>
                 <div class="upp__rating-block">
                     <? if(!empty($info['self_employed'])): ?>
                         <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
@@ -1343,11 +1388,11 @@ if (!share::isApplicant()):
                     <? // ?>
 
                 </div>
-                <? endif; ?>
             </div>
+            <? endif; ?>
 
+            <? if ($flagOwnProfile): ?>
             <div class="personal__area--item personal__area--item-index">
-                <? if ($flagOwnProfile): ?>
                 <div class="upp__rating-affective">
                     <div class="upp__subtitle">
                         <span class="upp__subtitle">Эффективность размещения:</span>
@@ -1599,8 +1644,8 @@ if (!share::isApplicant()):
                     <?//end efficiency popup?>
 
                 </div>
-                <? endif; ?>
             </div>
+        <? endif; ?>
 
         </div>
     </div>
