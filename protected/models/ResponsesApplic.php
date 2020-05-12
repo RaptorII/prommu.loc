@@ -911,7 +911,7 @@ class ResponsesApplic extends Responses
 
       $cntInv = ResponsesApplic::getCntVacStat($id_vacancy);
       // проверяем лимит приглашений на вакансию
-      if (($cntInv >= 10) && $sql['status'] != (int) 1)
+      if (($cntInv >= 10) && ($sql['status'] != 1))
       {
         return [
           'error' => -101,
