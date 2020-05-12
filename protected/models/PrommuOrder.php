@@ -972,7 +972,22 @@ class PrommuOrder {
                           ['in','region',$arRegions]
                         ])
                         ->queryScalar();
-      $arRes[] = ['id_city'=>$v['id_city'], 'price'=>$query];
+
+      $arr = ['id_city'=>$v['id_city'], 'price'=>$query];
+      if($v['region']==1) // МСК
+      {
+        $arr['description'] = 'для Москвы и Московской области';
+      }
+      elseif($v['region']==2) // СПБ
+      {
+        $arr['description'] = 'для Санкт-Петербурга и Ленинградской области';
+      }
+      else // Регионы
+      {
+        $arr['description'] = 'для регионов';
+      }
+
+      $arRes[] = $arr;
     }
     return $arRes;
   }

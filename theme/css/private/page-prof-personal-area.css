@@ -919,6 +919,12 @@ try google material design
 .text__red{
     color: var(--color-red);
 }
+.text__grey{
+    color: var(--color-l-grey);
+}
+.text__small{
+    font-size: 14px;
+}
 .text__justify{
     text-align: justify;
 }
