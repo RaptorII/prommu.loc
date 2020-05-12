@@ -2,7 +2,7 @@
 <? if($viData->data->is_actual): ?>
 <div class="vacancy__module">
   <div class="personal__area--capacity">
-    <div class="personal__area--capacity-name">Аналитика</div>
+    <div class="personal__area--capacity-name">Услуги</div>
     <div class="vacancy__services">
       <div class="vacancy__services-title">Бесплатные услуги</div>
       <div class="vacancy__services-list">

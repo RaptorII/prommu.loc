@@ -24,9 +24,7 @@ else
     <? endif; ?>
     <div class="col-xs-12 col-sm-6 col-md-<?=$col?> vacancy__buttons-item">
       <a href="<?=MainConfig::$PAGE_VACPUB . "?duplicate=Y&id={$viData->data->id}"?>" class="btn__orange">Дублировать вакансию</a>
-      <span class="form__field-hint tooltip" title="Выберите одну должность, которая необходима Вам для набора персонала.
-            Если Вам необходимо подобрать несколько должностей Вы сможете дублировать размещенную
-            вакансию и при этом изменить должность или другие параметры вакансии"></span>
+      <span class="form__field-hint tooltip" title="Создайте копию текущей вакансии изменив всего-лишь период работы"></span>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-<?=$col?> vacancy__buttons-item">
       <a href="<?=MainConfig::$VIEW_CHECK_SELF_EMPLOYED?>" class="btn__orange">Проверка налогового статуса</a>
