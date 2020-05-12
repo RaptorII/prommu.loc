@@ -1504,8 +1504,7 @@ class Vacancy extends ARModel
                
         //  $email[0] = "susgresk@gmail.com";
         // $email[1] = "prommu.servis@gmail.com";
-        // $email[2] = "denisgresk@gmail.com";
-        // for($i = 0; $i <3; $i++){
+        // for($i = 0; $i <2; $i++){
         //   Share::sendmail($email[$i], "Prommu.com Изменение вакансии №" . $idvac, $content);
        
         // }

@@ -35,7 +35,6 @@ class MedRequest {
                Контакты: '.$cloud['email'].' '.$cloud['phone'].'<br/>
                Комментарий: '.$cloud['comment'].'<br/>
                     <br/>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);

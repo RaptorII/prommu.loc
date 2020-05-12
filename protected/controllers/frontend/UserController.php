@@ -1800,7 +1800,7 @@ class UserController extends AppController
 
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
                 $vac = new Vacancy();
-                $data = $vac->getModerCurrentVacs();
+                $data = $vac->getMVacsForPayService();
                 break;
 
             case 'podnyatie-vacansyi-vverh':
@@ -1808,7 +1808,7 @@ class UserController extends AppController
 
                 $view = MainConfig::$VIEWS_SERVICES_VACUP_VIEW;
                 $vac = new Vacancy();
-                $data = $vac->getModerCurrentVacs();
+                $data = $vac->getMVacsForPayService();
 
                 break;
 

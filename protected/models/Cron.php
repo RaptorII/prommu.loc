@@ -48,7 +48,7 @@ class Cron
         
         $template = $template->getActiveTemplate();
         
-        $receiver = 'denisgresk@gmail.com';
+       /* $receiver = 'denisgresk@gmail.com';
         $title = 'Активируйте аккаунт';
         $rdate = "2019-09-25 14:35";
         $body = str_replace(
@@ -57,7 +57,7 @@ class Cron
                     $template->body
                 );
       
-        $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
+        $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);*/
         // $MailingLetter = new MailingLetter();
         // $result = $MailingLetter->getData($_GET['id']);
         

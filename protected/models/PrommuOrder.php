@@ -211,7 +211,6 @@ class PrommuOrder {
           ->where('e.id_user=:id', [':id' => $id_user])
           ->queryRow();
       // Письмо для С о том, что его приглашают на работу
-         $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
       //$arEmails[] = 'mikekarpenko@gmail.com'; // Добавляем в рассылку Мих
 
       Mailing::set(34,
@@ -280,7 +279,7 @@ class PrommuOrder {
                 <br/>Компания: '.$empl[0]['name'].'<br/>
                Вакансия: '.$name.' '.$vacancy[0]['title'].'
                     <br/>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
+            Share::sendmail('prommucom@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             $result = Yii::app()->db->createCommand()
               ->insert('service_cloud', array('id_user' => $id_user,
                       'name' => $name,
@@ -320,7 +319,6 @@ class PrommuOrder {
                 <br/>Компания: '.$empl[0]['name'].'<br/>
                Вакансия: '.$name.' '.$vacancy[0]['title'].'
                     <br/>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
@@ -376,7 +374,6 @@ class PrommuOrder {
                 <br/>Компания: '.$empl[0]['name'].'<br/>
                Вакансия: '.$name.' '.$vacancy[0]['title'].'
                     <br/>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
@@ -408,7 +405,11 @@ class PrommuOrder {
                   'status' => $status,
                   'sum' => $sum,
                   'city' => $city,
-                  'date' => date("Y-m-d H:i:s")
+                  'date' => date("Y-m-d H:i:s"),
+                  'key' => '',
+                  'text' => '',
+                  'user' => '',
+                  'stack' => ''
                 ]
               );
       // записываем инфу, если юр. лицо
@@ -438,7 +439,6 @@ class PrommuOrder {
           <br/>Компания: ' . $arUser['name'] . '<br/>
          Вакансия: ' . $name . ' ' . $title . '<br/>';
 
-      Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
       Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
       Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
       Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);

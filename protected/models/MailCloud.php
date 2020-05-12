@@ -115,7 +115,6 @@ class MailCloud extends Model
                 <p style=" font-size:16px;"><br/>Текст обращения: '.$cloud['text'].'.</p><br/>
                 <p style=" font-size:16px;"><br/>Ответ администратора Prommu: '.$adminMess.'.</p><br/>';
             Share::sendmail('projekt.sergey@gmail.com', "Prommu.com. Ответ на вопрос", $message);
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Ответ на вопрос", $message);
         }
         else
         {
