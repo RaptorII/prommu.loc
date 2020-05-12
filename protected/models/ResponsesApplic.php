@@ -903,7 +903,11 @@ class ResponsesApplic extends Responses
         WHERE 
             name = {$id_vacancy}
         AND 
-            type = 'personal-invitation'        
+            type = 'personal-invitation'  
+        AND 
+            status = 1
+        GROUP BY 
+            name              
         ";
 
     $sql = Yii::app()->db->createCommand($sql)->queryRow();
