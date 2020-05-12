@@ -117,12 +117,16 @@ $(function(){
       // записуем выбраный ID
       if($.inArray(id, arSelectIdies)<0){ arSelectIdies.push(id) };
       if(arSelectIdies.length == arIdies.length) 
-        $('#all-workers').prop('checked',true);  
+        $('#all-workers').prop('checked',true);
     }
     else{
       // убираем ID
-      if($.inArray(id, arSelectIdies)>=0){ arSelectIdies.splice(arSelectIdies.indexOf(id),1) }
+      //if($.inArray(id, arSelectIdies)>=0){
+        arSelectIdies.splice(arSelectIdies.indexOf(id),1);
+      //}
+
       $('#all-workers').prop('checked',false);
+
     }
     $('#mess-workers').val(arSelectIdies);
     $('#mess-wcount').html(arSelectIdies.length);
