@@ -149,6 +149,12 @@ var EditVacancy = (function () {
         }
       });
     });
+    // бутафорная кнопка
+    $(document).off('click','#location_save_btn');
+    $(document).on('click','#location_save_btn',function(e){
+      e.preventDefault();
+      $('#geo_module .personal__area--capacity-cancel').click();
+    });
     // проверяем обязательные поля
     new CheckRequiredFields(self);
   };

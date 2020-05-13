@@ -22,6 +22,9 @@ $showEditBlock = $rq->isAjaxRequest && !in_array($module,[2,4]) && !in_array($ev
     <a href="javascript:void(0)" class="personal__area--capacity-cancel js-g-hashint" title="Отмена"></a>
     <div id="location-edit"></div>
     <span class="btn__orange" id="city-add">Добавить город</span>
+    <div class="form__container">
+      <button class="btn__orange" id="location_save_btn">Сохранить</button>
+    </div>
   </form>
 </div>
 <script>

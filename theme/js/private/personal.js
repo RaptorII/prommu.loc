@@ -854,6 +854,9 @@ var InitPeriod = (function () {
         eParams.maxDate = params.maxDate;
       }
 
+      bParams.firstDay = 1;
+      eParams.firstDay = 1;
+
       $(arInputs[0]).datepicker(bParams);
       $(arInputs[1]).datepicker(eParams);
 

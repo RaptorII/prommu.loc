@@ -468,7 +468,7 @@ class SiteController extends AppController
           $section = $rq->getParam('section');
           $module = $rq->getParam('module');
           $event = $rq->getParam('event');
-          $arEvents = ['activate','deactivate','create_city','delete_city','change_city','create_loc','edit_loc'];
+          $arEvents = ['activate','deactivate','create_city','delete_city','change_city','create_loc','edit_loc','delete_loc'];
           $model = new Vacancy;
           if($rq->isAjaxRequest && in_array($event,$arEvents)) // локации редактируем не так, как остальные модули
           {

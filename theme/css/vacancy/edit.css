@@ -5,9 +5,9 @@
 #DiContent input.form__field-input{
   padding: 10px;
 }
-.module_form{
+/*.module_form{
   margin: 0 -10px 20px 10px;
-}
+}*/
 #DiContent .form__checkbox-label{
   font-size: 14px;
 }
@@ -138,11 +138,13 @@
   margin: 0;
 }
 .vacancy__services-link{
-  display: block;
+  /*display: block;*/
   background-color: var(--color-green);
   border-radius: 17px;
   color: #ffffff;
   border: 2px solid var(--color-green);
+  display: flex;
+  align-items: center
 }
 .vacancy__services-link:hover{
   background-color: var(--color-orange);
@@ -297,6 +299,9 @@
 .vacancy__statements .vacancy__services-item{
   padding: 0 0 5px;
   width: 100%;
+}
+#location_save_btn{
+  margin-top: 15px;
 }
 /**
 *   MEDIA

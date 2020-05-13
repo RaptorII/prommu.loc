@@ -76,13 +76,13 @@ class VacancyEdit
         {
           foreach ($object->data->locations as $location)
           {
-            foreach ($location as $period)
+            foreach ($location['periods'] as $period)
             {
-              if($bDate > $period['bdate'])
+              if(strtotime($bDate) > $period['bdate'])
               {
                 $object->errors['bdate'] = true;
               }
-              if($bDate < $period['edate'])
+              if(strtotime($eDate) < $period['edate'])
               {
                 $object->errors['edate'] = true;
               }
