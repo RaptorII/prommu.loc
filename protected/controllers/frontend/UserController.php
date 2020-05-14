@@ -191,6 +191,12 @@ class UserController extends AppController
       }
       elseif ($serviceType=='personal-invitation') // personal-invitation
       {
+          $arIdOrder = [];
+          for ($i=1, $n=count($arParams); $i<($n-2); $i++)
+          {
+              $arIdOrder[] = $arParams[$i];
+          }
+
           // set invite after send moneypay-service unitpay
           $arRes = Yii::app()->db->createCommand()
               ->select('id, id_user, name, user')
@@ -200,13 +206,17 @@ class UserController extends AppController
                   [
                       ':idp'=>$id_user
                   ])
-              ->order('id_user DESC')
+              ->order('id DESC')
               ->queryRow();
 
           $props = [];
           $props['idvac'] = $arRes['name'];
 
-          $users = explode(',', $arRes['user']);
+          if (explode(',',$arRes['user'])) {
+              $users = explode(',', $arRes['user']);
+          } else {
+              $users = $arRes['user'];
+          }
 
           for($i=0; $i<=count($users); ++$i)
           {
